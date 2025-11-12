@@ -1,0 +1,334 @@
+/*******************************************************************************************
+********************************************************************************************
+********************************************************************************************
+NAME:						NewMMIS REGRESSION TEST SUITE
+Created By: 				Anshul Gandhi, Priya Kantamneni
+Created Date: 				05/08/2013
+Modified Date & Comments:	
+
+
+
+********************************************************************************************
+********************************************************************************************
+********************************************************************************************/
+
+package newMMIS_Subsystems;
+import java.awt.AWTException;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.concurrent.TimeUnit;
+
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
+//import static org.hamcrest.CoreMatchers.*;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.Reporter;
+import org.testng.SkipException;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+@SuppressWarnings("unused")
+
+//Main class starts here 
+@Listeners({ newMMIS_Subsystems.TestNGCustom.class })
+public class Login  {
+	//public static FirefoxProfile firefoxProfile;
+	public static ChromeOptions options;
+	public static String className = "";
+	public static String tempDirPath=System.getProperty("user.dir")+"\\temp\\";
+	public static String uid, pwd, selectorg, apppath;
+	public static String vgmain, envpath;
+	protected static WebDriver driver;
+	public static boolean LoginSuccess, dbConnect, mipConnect;
+	public static String winHandleCurrent="empty";
+	public static Alert alert;
+	public static String env;
+	//The execute query variables needed by each subsystem class
+	
+    public static String sqlStatement;
+    public static ArrayList<String> colValues = new ArrayList<String>();
+    public static ArrayList<String> colNames = new ArrayList<String>();
+    
+     //Create file and bufferedwriter for logs
+	public static BufferedWriter out;
+
+	//create variable for unix directory mod or acc
+	public static String unixDir;
+		
+	//environment variable is passed from testng*.xml file do define the environment the
+	//application needs to run e.g. MO,UAT
+	@Parameters({ "environment" })
+	@BeforeClass
+	public void init(String environment) throws Exception {
+	  this.env = environment;
+	  if (env.equals("MO"))
+		  unixDir = "mod";
+	  else if (env.equals("PERF"))
+		  unixDir = "perf";
+	  else if (env.equals("MO2"))
+		  unixDir = "tstx";
+	  else if (env.equals("AWSMO"))
+		  unixDir = "mod";
+	  else if (env.equals("AWSUAT"))
+		  unixDir = "acc";
+	  else if (env.equals("AWSMO2"))
+		  unixDir = "tstx";
+	  else if (env.equals("AWSPERF"))
+		  unixDir = "perf";
+	  else if (env.equals("AWSPROD"))
+		  unixDir = "prod";
+	  else
+		  unixDir = "acc";
+	}
+	
+	@Test
+	public static void testDBconnect() throws Exception {
+		
+		//Create log file
+    	out = new BufferedWriter(new FileWriter(System.getProperty("user.dir")+"\\logs.txt"));
+    	out.newLine();
+    	Date date = new Date();
+    	log("****************************Starting NewMMIS regression test Suite in " +env
+				+ " on "+date.toString()+"****************************"); 
+    	
+		//Connect to MIP Database
+		mipConnect = Common.connectMIP();
+
+		//connect to MO/UAT DB
+		dbConnect=Common.connectDB(env);
+	}
+	
+	@Test
+	public static void testLoginBase() throws Exception {
+
+//		setFireFoxProfile();
+		
+		//Fetch VG Main URL
+		sqlStatement = "select * from s_login where environment ='VGMAIN'";
+		colNames.add("APPPATH");
+		colValues=Common.executeQuery1(sqlStatement, colNames);
+		vgmain = colValues.get(0);
+		
+		//Fetch the id password for BASE app in this environment
+		sqlStatement = "select * from s_login where environment ='"+env+"' and application ='BASE'";
+		colNames.add("APPPATH");
+		colNames.add("USERID");
+		colNames.add("PASSWORD");
+		colValues=Common.executeQuery1(sqlStatement, colNames);
+		envpath = colValues.get(0);
+		uid = colValues.get(1);
+		pwd = colValues.get(2);
+
+		System.out.println("****************************" +env+" BASE"
+				+ "****************************");
+
+        //setting chrome profile for download xml without user interaction
+		System.setProperty("webdriver.chrome.driver","C:\\Users\\agandhi20\\chromedriver new\\chromedriver.exe");
+		options = new ChromeOptions(); 
+		options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"}); 
+		options.addArguments("--ignore-certificate-errors"); //for disabling SSL warnings
+		options.addArguments("--disable-notifications");
+		
+		Map<String, Object> prefs = new HashMap<String, Object>();
+		prefs.put("credentials_enable_service", false);
+		prefs.put("profile.password_manager_enabled", false); //For disabling do you want to save this password
+		prefs.put("safebrowsing.enabled", true); //For MA21 file download-no popup
+		prefs.put("autofill.profile_enabled", false); //For disabling save address popup
+		prefs.put("download.default_directory", tempDirPath); //For auto download to tempDirPath
+		prefs.put("plugins.plugins_disabled", new String[] { "Chrome PDF Viewer" }); //For not opening PDF files in a new chrome tab/chrome viewer
+		prefs.put("plugins.always_open_pdf_externally", true); //Downloads the pdf file on launching the respective file link
+		options.setExperimentalOption("prefs", prefs);
+		
+		System.out.println("Chrome is set with profile settings...");
+
+//		//Create an instance of selenium webdriver
+//		driver = new FirefoxDriver(firefoxProfile);
+//		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+//		driver.manage().window().maximize();
+		
+		//Create an instance of chrome webdriver
+		driver = new ChromeDriver(options); 
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS); //Added by Anshul for page load issues on 04/26/2024
+		driver.manage().window().maximize();
+		
+		//Logon to Base
+		driver.get(vgmain);
+//		driver.findElement(By.xpath("//button[text()='Legacy Log In']")).click();
+		driver.findElement(By.id("acceptDisclaimerBtn")).click();
+//		driver.get("https://sso-st.hhs.state.ma.us/oam/server/obrareq.cgi?encquery%3Dmai%2FjdRKajfcAPkVxN%2BPN61%2F%2Fl2eVDZVGOhDZVd%2BWE1DKyBdaAPBDOxFaR17mH%2FBAlMt5k%2BeM73ixO5QJbntdtN7MNg2Yb1hkF9wGIHHH6pDOjy3STneDXe%2FT6QHIe3dLdzG9XeZoFo9PIcv1ItafJBETQpYHymnzM06nT8QWa75HuwDfwhElP6LvNMqkPWRl6Ziv6c2S5EnIGybp6IZeGc9W%2BdUdSjaE9cjW7OtRX%2FrBBJRQ70o8mEuHxcSrYV1buytvUQTvRu%2F82N9P1jRSdMXXEQQhZvx%2FnSH2E5cvo0%3D%20agentid%3Dmmiswebgate%20ver%3D1%20crmethod%3D2");
+		driver.findElement(By.name("username")).clear();
+	    driver.findElement(By.name("username")).sendKeys(uid);
+	    driver.findElement(By.name("password")).clear();
+	    driver.findElement(By.name("password")).sendKeys(pwd);
+	    //driver.findElement(By.name("submit")).click();
+//	    driver.findElement(By.xpath("//input[@value='Login']")).click();
+	    driver.findElement(By.xpath("//*[@id='loginForm']/button")).click();
+	    //For userid(s) present in multiple orgs
+		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+		if(driver.findElements(By.xpath("//select[@name='aims2Location']")).size()>0) {
+			new Select(driver.findElement(By.xpath("//select[@name='aims2Location']"))).selectByVisibleText("EOHHS");
+			driver.findElement(By.xpath("//*[@class='btn btn-block btn-primary']")).click();
+		}
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+	    driver.get(envpath); //This is done because at this point we get a "New Medicaid System" link, which opens application in a new tab, so to avoid this we send the envpath again
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);		
+		//Check if you got the login limit exceeded error
+		if (driver.findElements(By.cssSelector("h1.header")).size()==0) {
+			if (env.equals("UAT"))
+				driver.get("https://mmis-uat.ehs.state.ma.us/newMMIS/Home.jsf");
+			else
+				driver.get("https://mmis-modeloffice.ehs.state.ma.us/newMMIS/Home.jsf"); //MO URL
+		}
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+	    String PostLoginText = driver.findElement(By.cssSelector("h1.header")).getText();
+
+	    if (!(PostLoginText.equals("MMIS Home")))
+	    	throw new SkipException("Skipping further tests because user not logged into Base successfully");
+	}
+	
+	
+	
+	@Test
+	public static void testLoginPortal() throws Exception {
+
+//		setFireFoxProfile();
+		
+		//Get portal logon info
+		sqlStatement = "select * from s_login where environment ='"+env+"' and application ='PORTAL'";
+		colNames.add("APPPATH");
+		colNames.add("USERID");
+		colNames.add("PASSWORD");
+		colValues=Common.executeQuery1(sqlStatement, colNames);
+		envpath = colValues.get(0);
+		uid = colValues.get(1);
+		pwd = colValues.get(2);
+		
+		System.out.println("****************************" +env+" PORTAL"
+				+ "****************************");
+		
+//		//Create an instance of selenium webdriver
+//		driver = new FirefoxDriver(firefoxProfile);
+//		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+//		driver.manage().window().maximize();
+		
+		//only uncomment if you are trying to skip logging into base
+	    //setting chrome profile for download xml without user interaction
+		System.setProperty("webdriver.chrome.driver","C:\\Users\\agandhi20\\chromedriver new\\chromedriver.exe");
+		options = new ChromeOptions(); 
+		options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"}); 
+		options.addArguments("--ignore-certificate-errors"); //for disabling SSL warnings
+		options.addArguments("--disable-notifications");
+		
+		Map<String, Object> prefs = new HashMap<String, Object>();
+		prefs.put("credentials_enable_service", false);
+		prefs.put("profile.password_manager_enabled", false); //For disabling do you want to save this password
+		prefs.put("safebrowsing.enabled", true); //For MA21 file download-no popup
+		prefs.put("autofill.profile_enabled", false); //For disabling save address popup
+		prefs.put("download.default_directory", tempDirPath); //For auto download to tempDirPath
+		prefs.put("plugins.plugins_disabled", new String[] { "Chrome PDF Viewer" }); //For not opening PDF files in a new chrome tab/chrome viewer
+		prefs.put("plugins.always_open_pdf_externally", true); //Downloads the pdf file on launching the respective file link
+		options.setExperimentalOption("prefs", prefs);
+		
+		//Create an instance of chrome webdriver
+		driver = new ChromeDriver(options); 
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS); //Added by Anshul for page load issues on 04/26/2024
+		driver.manage().window().maximize();
+		
+		//Logon to portal
+		driver.get(vgmain);
+		driver.findElement(By.id("acceptDisclaimerBtn")).click();
+		driver.findElement(By.name("username")).clear();
+	    driver.findElement(By.name("username")).sendKeys(uid);
+	    driver.findElement(By.name("password")).clear();
+	    driver.findElement(By.name("password")).sendKeys(pwd);
+	    driver.findElement(By.xpath("//*[@id='loginForm']/button")).click();
+	    driver.get(envpath); //This and below step is done because at this point we get a "Medicaid Provider Portal" link, which opens application in a new tab, so to avoid this we send the envpath again
+		driver.findElement(By.linkText("LOGIN")).click(); //Additional step needed to login to portal
+		if (!(driver.findElement(By.xpath("/html/body/div/div[1]/div[2]/div/div/span")).getText().equals("Welcome "+uid)))
+	    	throw new SkipException("Skipping further tests because user not logged into portal successfully");
+	}
+	
+	@Test
+	public static void closeLogs() throws IOException {
+		out.newLine();
+		out.newLine();
+		out.newLine();
+    	log("****************************End of NewMMIS regression test Suite in " +env
+				+ "****************************"); 
+		out.close();
+
+	}
+	
+	public static void testCheckDBLoginSuccessful() throws  IOException, AWTException {
+	    
+	    if (!dbConnect) {
+	    	System.out.println("Database connection failed!!");
+		    throw new SkipException("Skipping further tests because"+env+" database connection was not successful");
+	    }
+	    if (!mipConnect) {
+	    	System.out.println("MIP Database connection failed!!");
+		    throw new SkipException("Skipping further tests because MIP database connection was not successful");
+	    }
+	}
+	
+//	public static FirefoxProfile setFireFoxProfile() {
+//		
+//        //setting firefox profile for download xml without user interaction
+//		firefoxProfile = new FirefoxProfile();
+//		firefoxProfile.setPreference("browser.download.folderList",2); 
+//		firefoxProfile.setPreference("browser.download.manager.showWhenStarting",false);
+//		firefoxProfile.setPreference("browser.download.dir",tempDirPath);
+//		firefoxProfile.setPreference("browser.helperApps.alwaysAsk.force", false);
+//		firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk","text/xml, text/html, text/csv, text/x-rtf, text/rtf, text/plain, text/x-plain, plain/text, application/xml, application/plain, application/pdf, application/x-msdos-program, application/x-unknown-application-octet-stream, application/vnd.ms-powerpoint, application/vnd.ms-word, application/excel, application/vnd.ms-publisher, application/x-unknown-message-rfc822, application/vnd.ms-excel, application/msword, application/x-mspublisher, application/x-tar, application/zip, application/x-gzip,application/x-stuffit,application/vnd.ms-works, application/powerpoint, application/rtf, application/postscript, application/x-gtar, application/octet-stream, application/x-excel, application/x-msexcel, application/x-word, application/x-msword, video/quicktime, video/x-msvideo, video/mpeg, audio/x-wav, audio/x-midi, audio/x-aiff, application/x-download");
+//		firefoxProfile.setPreference("pdfjs.disabled", true);
+//		System.out.println("Firefox is set with profile settings...");
+//		return firefoxProfile;
+//		
+//	}
+	
+	public static void log(String input) throws IOException {
+		if (input.contains("//TC") || input.contains("Subsystem")) {
+			System.out.println(input);
+			out.newLine();
+			out.newLine();
+			out.write(input);
+		} 
+		else {
+			out.newLine();
+			out.write(input);
+		}
+	}
+	
+}

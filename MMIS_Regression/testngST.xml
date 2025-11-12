@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<suite name="NewMMIS regression test suite">
+
+ <parameter name="selenium.host" value="localhost"></parameter>
+ <parameter name="selenium.port" value="4444"></parameter>
+ <parameter name="selenium.browser" value="*firefox"></parameter>
+ <parameter name="selenium.url" value="www.google.com"></parameter>
+ <parameter name="environment" value="ST"></parameter>
+ <listeners>
+	<listener class-name="org.uncommons.reportng.HTMLReporter"/>
+ </listeners> 
+ 
+   <test name="Login test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.Login">
+        <methods>
+      	    <include name="testDBconnect"/>
+      	    <include name="testLoginBase"/>		
+        </methods>
+      </class> 
+    </classes>
+  </test> 
+  
+  
+   <!--   <test name="AVR_EVS test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.AVR_EVS">
+        <methods>
+			<include name="RM_2_111"/>
+			<include name="RM_3_116"/>
+			<include name="RM_5_480"/>
+			<include name="RM_6_480"/>
+			<include name="RM_7_485"/>
+			<include name="RM_8_485"/>
+			<include name="RM_9_516"/> 
+			<include name="RM_10_006"/> 
+			<include name="RM_12_031"/> 
+			<include name="RM_13_036"/> 
+			<include name="RM_14_041"/> 
+			<include name="RM_15_046"/> 
+			<include name="RM_16_051"/>
+			<include name="RM_19_171"/>
+			<include name="RM_20_201"/>
+			<include name="RM_20_231"/> 
+			<include name="RM_28_391"/>
+			<include name="RM_29_495"/> 
+			<include name="RM_30_495"/> 
+			<include name="RM_31_495"/>
+			<include name="RM_32_495"/>
+			<include name="RM_34_520"/> 
+			<include name="RM_40_601"/>
+			<include name="RM_41_602"/>
+			<include name="RM_42_603"/>
+			<include name="RM_43_604"/>
+			<include name="RM_45_608"/> 
+			<include name="RM_46_611"/>
+			<include name="RM_48_612"/>
+			<include name="RM_49_612"/>
+			<include name="RM_50_613"/> 
+			<include name="RM_51_613"/> 
+			<include name="RM_68_126"/>
+			<include name="RM_71_071"/>
+			<include name="RM_74_74"/>
+			<include name="RM_76_525"/> 
+			<include name="RM_89_646"/> 
+			<include name="RM_121_121"/>
+			<include name="RM_186_186"/> 
+			<include name="RM_246_246"/> 
+			<include name="RM_271_271"/>
+			<include name="RM_366_366"/>
+			<include name="RM_461_461"/>
+			<include name="RM_530_530"/> 
+			<include name="RM_596_596"/>
+			<include name="RM_597_597"/>
+			<include name="RM_614_614"/>
+			<include name="RM_650_650"/>
+			<include name="RM_740_311"/>
+			<include name="RM_741_311"/>
+			<include name="RM_742_311"/>
+			<include name="RM_747_021"/> 
+			<include name="RM_748_021"/> 
+			<include name="RM_749_021"/>
+			<include name="RM_770_648"/>
+			<include name="RM_773_500"/>
+			<exclude name="RM_791_637"/> //DF 32098 on this
+			<include name="RM_792_637"/>
+			<include name="RM_827_386"/>
+			<include name="RM_831_386"/>
+			<include name="RM_832_386"/>
+			<include name="RM_840_386"/>
+			<include name="RM_841_386"/>
+			<include name="RM_853_636"/> 
+			<include name="RM_915_647"/>
+			<include name="RM_936_656"/>
+			<include name="RM_937_656"/>
+			<include name="RM_938_656"/>
+			<include name="RM_939_656"/>
+			<include name="RM_940_656"/>
+			<include name="RM_941_656"/> 
+			<include name="RM_942_656"/>
+			<include name="RM_985_658"/>
+			<include name="RM_986_661"/>
+			<include name="RM_987_662"/>
+			<include name="RM_1055_617"/>
+			<include name="RM_1056_617"/>
+			<include name="RM_1059_618"/>
+			<include name="RM_1060_618"/>
+			<include name="RM_1061_618"/>
+			<include name="RM_1063_619"/>
+			<include name="RM_1064_619"/> 
+			<include name="RM_1065_619"/> 
+			<include name="RM_1119_663"/>
+			<include name="RM_1120_664"/>
+			<include name="RM_1136_616"/>
+			<include name="RM_1137_616"/>
+			<include name="RM_1138_616"/>
+			<include name="RM_1144_056"/>
+			<include name="RM_1145_056"/>
+			<include name="RM_1146_056"/>
+			<include name="RM_1147_056"/>
+			<include name="RM_1148_616"/> 
+			<include name="RM_1151_634"/> 
+			<include name="RM_1155_634"/>
+			<include name="RM_1156_634"/>
+			<include name="RM_1157_634"/>
+			<include name="RM_1158_634"/>
+			<include name="RM_1231_665"/> 
+			<include name="RM_950_611"/> 
+			<include name="RM_951_611"/>
+			<include name="RM_952_611"/>
+			<include name="RM_953_611"/>
+			<include name="RM_954_611"/>
+			<include name="RM_955_611"/>
+			<include name="RM_956_611"/> 
+			<include name="RM_957_611"/>
+			<include name="RM_958_611"/>
+			<include name="RM_959_611"/>
+			<include name="RM_960_611"/> 
+			<include name="RM_961_611"/>
+			<include name="RM_962_611"/>
+			<include name="RM_963_611"/>
+			<include name="RM_964_611"/>
+			<include name="RM_965_611"/>
+			<include name="RM_966_611"/>
+			<include name="RM_967_611"/>
+			<include name="RM_968_611"/>
+			<include name="RM_969_611"/>
+			<include name="RM_970_611"/>
+			<include name="RM_971_611"/>
+			<include name="RM_972_611"/>
+			<include name="RM_973_611"/>
+			<include name="RM_974_611"/>
+			<include name="RM_975_611"/>
+			<include name="RM_976_611"/>
+			<include name="RM_977_611"/>
+			<include name="RM_980_611"/> 
+			<include name="RM_981_611"/>
+			<include name="RM_982_611"/>
+			<include name="connectorFullHSN"/>
+			<include name="qhpFullHSN"/>
+			<include name="connectorPartHSN"/> 
+			<include name="qhpPartHSN"/>
+			<include name="RM_1503_679"/>
+			<include name="RM_1539_636"/>
+			<exclude name="RM_35_522"/> //Gloria-Remove 35-522 edit for no longer valid
+			<exclude name="RM_943_657"/> [GN] removed from prod
+			<exclude name="RM_949_657"/> [GN] removed from prod
+			<exclude name="RM_640_640"/> [GN] Currently we don’t have CommCare assignments therefore we cannot test this RM
+			[GN] No longer found
+			<exclude name="RM_944_657"/>
+			<exclude name="RM_945_657"/>
+			<exclude name="RM_946_657"/>
+			<exclude name="RM_947_657"/>
+			<exclude name="RM_948_657"/> 
+			<exclude name="RM_1_035"/>
+		    <include name="RM_1540"/>
+			<include name="RM_1541"/>
+			<include name="RM_1560"/>
+        </methods>
+      </class> 
+    </classes>
+  </test> -->
+  
+  <test name="AVR_EVS test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.AVR_EVS">
+        <methods>
+			<include name="RM_2_111"/>
+			<include name="RM_3_116"/>
+			<include name="RM_5_480"/>
+			<include name="RM_6_480"/>
+			<include name="RM_7_485"/>
+			<include name="RM_8_485"/>
+			<include name="RM_9_516"/> 
+			<include name="RM_10_006"/> 
+			<include name="RM_12_031"/> 
+			<include name="RM_13_036"/> 
+			<include name="RM_14_041"/> 
+			<include name="RM_15_046"/> 
+			<include name="RM_16_051"/>
+			<include name="RM_19_171"/>
+			<include name="RM_20_201"/>
+			<include name="RM_20_231"/> 
+			<include name="RM_28_391"/>
+			<include name="RM_29_495"/> 
+			<include name="RM_30_495"/> 
+			<include name="RM_31_495"/>
+			<include name="RM_32_495"/>
+			<include name="RM_34_520"/> 
+			<include name="RM_40_601"/>
+			<include name="RM_41_602"/>
+			<include name="RM_42_603"/>
+			<include name="RM_43_604"/>
+			<include name="RM_45_608"/> 
+			<include name="RM_46_611"/>
+			<include name="RM_48_612"/>
+			<include name="RM_49_612"/>
+			<include name="RM_50_613"/> 
+			<include name="RM_51_613"/> 
+			<include name="RM_68_126"/>
+			<include name="RM_71_071"/>
+			<include name="RM_74_74"/>
+			<include name="RM_76_525"/> 
+			<include name="RM_89_646"/> 
+			<include name="RM_121_121"/>
+			<include name="RM_186_186"/> 
+			<include name="RM_246_246"/> 
+			<include name="RM_271_271"/>
+			<include name="RM_366_366"/>
+			<include name="RM_461_461"/>
+			<include name="RM_530_530"/> 
+			<include name="RM_596_596"/>
+			<include name="RM_597_597"/>
+			<include name="RM_614_614"/>
+			<include name="RM_650_650"/>
+			<include name="RM_740_311"/>
+			<include name="RM_741_311"/>
+			<include name="RM_742_311"/>
+			<include name="RM_747_021"/> 
+			<include name="RM_748_021"/> 
+			<include name="RM_749_021"/>
+			<include name="RM_770_648"/>
+			<include name="RM_773_500"/>
+			<exclude name="RM_791_637"/>
+			<include name="RM_792_637"/>
+			<include name="RM_827_386"/>
+			<include name="RM_831_386"/>
+			<include name="RM_832_386"/>
+			<include name="RM_840_386"/>
+			<include name="RM_841_386"/>
+			<include name="RM_853_636"/> 
+			<include name="RM_915_647"/>
+			<include name="RM_936_656"/>
+			<include name="RM_937_656"/>
+			<include name="RM_938_656"/>
+			<include name="RM_939_656"/>
+			<include name="RM_940_656"/>
+			<include name="RM_941_656"/> 
+			<include name="RM_942_656"/>
+			<include name="RM_985_658"/>
+			<include name="RM_986_661"/>
+			<include name="RM_987_662"/>
+			<include name="RM_1055_617"/>
+			<include name="RM_1056_617"/>
+			<include name="RM_1059_618"/>
+			<include name="RM_1060_618"/>
+			<include name="RM_1061_618"/>
+			<include name="RM_1063_619"/>
+			<include name="RM_1064_619"/> 
+			<include name="RM_1065_619"/> 
+			<include name="RM_1119_663"/>
+			<include name="RM_1120_664"/>
+			<include name="RM_1136_616"/>
+			<include name="RM_1137_616"/>
+			<include name="RM_1138_616"/>
+			<include name="RM_1144_056"/>
+			<include name="RM_1145_056"/>
+			<include name="RM_1146_056"/>
+			<include name="RM_1147_056"/>
+			<include name="RM_1148_616"/> 
+			<include name="RM_1151_634"/> 
+			<include name="RM_1155_634"/>
+			<include name="RM_1156_634"/>
+			<include name="RM_1157_634"/>
+			<include name="RM_1158_634"/>
+			<include name="RM_1231_665"/> 
+			<include name="RM_950_611"/> 
+			<include name="RM_951_611"/>
+			<include name="RM_952_611"/>
+			<include name="RM_953_611"/>
+			<include name="RM_954_611"/>
+			<include name="RM_955_611"/>
+			<include name="RM_956_611"/> 
+			<include name="RM_957_611"/>
+			<include name="RM_958_611"/>
+			<include name="RM_959_611"/>
+			<include name="RM_960_611"/> 
+			<include name="RM_961_611"/>
+			<include name="RM_962_611"/>
+			<include name="RM_963_611"/>
+			<include name="RM_964_611"/>
+			<include name="RM_965_611"/>
+			<include name="RM_966_611"/>
+			<include name="RM_967_611"/>
+			<include name="RM_968_611"/>
+			<include name="RM_969_611"/>
+			<include name="RM_970_611"/>
+			<include name="RM_971_611"/>
+			<include name="RM_972_611"/>
+			<include name="RM_973_611"/>
+			<include name="RM_974_611"/>
+			<include name="RM_975_611"/>
+			<include name="RM_976_611"/>
+			<include name="RM_977_611"/>
+			<include name="RM_980_611"/> 
+			<include name="RM_981_611"/>
+			<include name="RM_982_611"/>
+			<include name="connectorFullHSN"/>
+			<include name="qhpFullHSN"/>
+			<include name="connectorPartHSN"/> 
+			<include name="qhpPartHSN"/>
+			<include name="RM_1503_679"/>
+			<include name="RM_1539_636"/>
+		    <include name="RM_1540"/>
+			<include name="RM_1541"/>
+			<include name="RM_1560"/>
+        </methods>
+      </class> 
+    </classes>
+  </test>
+
+  
+    <test name="Close Logs test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.Login">
+        <methods>
+      	    <include name="closeLogs"/>	
+        </methods>
+      </class> 
+    </classes>
+  </test> 
+  
+</suite> 

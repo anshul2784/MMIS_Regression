@@ -1,0 +1,1706 @@
+package newMMIS_Subsystems;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.SkipException;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
+
+@Listeners({ newMMIS_Subsystems.TestNGCustom.class })
+public class EPSDT extends Login{
+	
+	public static HashMap<String,String> icn = new HashMap<String, String>();
+	public static String rfrl= "";
+	public static String icdDiagCode = "";
+	public static boolean icdDiagPresent = false;
+	public static String icdDesc = "ZY";
+	public static String clmStatus = "";
+	
+	@BeforeTest
+    public void EPSDTStartup() throws Exception {
+    	log("Starting EPSDT Subsystem......");
+    	className = this.getClass().getName();
+
+    }
+	
+	@BeforeMethod
+	public void LoginBaseCheck() throws Exception {
+		Common.resetBase();
+		testCheckDBLoginSuccessful();	
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_EPSDT")).click();
+	}
+	
+	public void LoginPortalCheck() throws Exception {
+		Common.resetPortal();
+		testCheckDBLoginSuccessful();	
+	}
+	
+    @Test
+    public void test22379() throws Exception{
+    	TestNGCustom.TCNo="22379";
+    	log("//TC 22379");
+    	
+		//Select Related data
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RelatedData")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("h2.panel-header")).getText().equals(" Related Data Maintenance"));
+		Assert.assertTrue(driver.findElement(By.cssSelector("strong")).getText().equals("Other"));
+
+		//Click on abnormality Codes
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRelatedDataNavigatorPanel:EPSDTRelatedDataNavigatorId:ITM_n5")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("th > table > tbody > tr > td > h2.panel-header")).getText().equals(" EPSDT Abnormality Codes"));
+
+		//Add a new abnormality code
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_newAction_btn")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("h3.panel-header")).getText().equals(" Abnormality Diagnosis Code"));
+
+		//Click on Diagnosis  pop-up search icon against Diagnosis code field.
+		driver.findElement(By.cssSelector("img[alt=\"Diagnosis pop-up search\"]")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("h4.panel-header")).getText().equals(" Diagnosis Code Pop-up Search"));
+
+		//Click on Search button
+		Common.search();
+		Assert.assertTrue(driver.findElement(By.cssSelector("th > table > tbody > tr > td > h5.panel-header")).getText().equals(" Search Results"));
+
+		//Click on the first Diagnosis Code from the search results 
+		String diag=driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:_id15:DiagnosisPopupSearchResults_0:column1Value")).getText();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:_id15:DiagnosisPopupSearchResults_0:column1Value")).click();
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagnosis")).getAttribute("value").equals(diag));
+
+		//Click on "New" button in the Procedure Code Treatment Panel.
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTProcedureCodeList_newAction_btn")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("th > table > tbody > tr > td > h3.panel-header")).getText().equals(" Procedure Code Treatment"));
+
+		//Click on Procedure  pop-up search icon against Procedure code field.
+		driver.findElement(By.cssSelector("img[alt=\"Procedure pop-up search\"]")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("h5.panel-header")).getText().equals(" Procedure Code Pop-up Search"));
+		
+		//Click on Search button
+		Common.search();
+		Assert.assertTrue(driver.findElement(By.cssSelector("th > table > tbody > tr > td > h6.panel-header")).getText().equals(" Search Results"));
+
+		//Click on the first Procedure Code from the search results 
+		String proc=driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:_id15:HCPCSProcedureCodeSearchResults_0:column1Value")).getText();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:_id15:HCPCSProcedureCodeSearchResults_0:column1Value")).click();
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:procedureCodePop")).getAttribute("value").trim().equals(proc));
+
+		//Click on "New" button in the Drug Treatment Panel.
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTDrugPanel:EPSDTDrugTreatmentList_newAction_btn")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("th > table > tbody > tr > td > h4.panel-header")).getText().equals(" Drug Treatment"));
+
+		//Click on NDC  pop-up search icon.
+		driver.findElement(By.cssSelector("img[alt=\"NDC pop-up search\"]")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("h6.panel-header")).getText().equals(" NDC Pop-up Search"));
+		
+		//Click on Search button
+		Common.search();
+		Assert.assertTrue(driver.findElement(By.cssSelector("table.nested.panel > thead > tr > th > table > tbody > tr > td > h6.panel-header")).getText().equals(" Search Results"));
+
+		//Click on the first Procedure Code from the search results 
+		String drug=driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTDrugPanel:_id15:NDCCodePopupSearchResults_0:column1Value")).getText();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTDrugPanel:_id15:NDCCodePopupSearchResults_0:column1Value")).click();
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTDrugPanel:ndc")).getAttribute("value").trim().equals(drug));
+
+		//Click Add - this step is added as app was giving an error to hit Add button. Confirmed with Praveen that Add button is needed
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTDrugPanel:EPSDTDrugTreatmentPanel_addAction_btn")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTProcedureCodePanel_addAction_btn")).click();
+		
+		//Save All
+        Common.saveAll();
+        
+        //Adding below extra steps as direct click of abnormality code at this point is throwing stack trace. This has been reported many times but not addressed, so adding workaround.
+        Common.cancelAll();
+		driver.findElement(By.linkText("Abnormality Codes")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_cdeICDVersion")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_serviceCode")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_serviceCode")).click();
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText().trim().equals("A00"));
+
+
+		//Delete the abnormality code for next run
+		String abnDiag = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText();
+		String abnDiagDesc = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_name")).getText();
+		
+		log ("The abnormality diag code to be deleted is "+abnDiag+" - "+abnDiagDesc);
+
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("h3.panel-header")).getText().equals(" Abnormality Diagnosis Code"));
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagnosis")).getAttribute("value").trim().equals(abnDiag));
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagnosisDescription")).getAttribute("value").trim().equals(abnDiagDesc));
+
+
+		driver.findElement(By.id("EPSDTAbnormalityDiagnosisCodePanel_deleteAction_btn")).click();
+		//Declare Alert to handle Popup
+		alert = driver.switchTo().alert();
+		System.out.println(alert.getText());
+		alert.accept();
+		Assert.assertTrue(driver.findElement(By.cssSelector("td.message-text")).getText().equals("Save Successful."));
+		log("Successfully Deleted");
+		Common.cancelAll();
+		
+    }
+    
+    @Test
+	public void test23426() throws Exception {
+		TestNGCustom.TCNo="23426";
+    	log("//TC 23426");
+		
+		//Select Related data
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RelatedData")).click();
+		
+		//Click on Periodicity Screening Schedule
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRelatedDataNavigatorPanel:EPSDTRelatedDataNavigatorId:ITM_n4")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("th > table > tbody > tr > td > h2.panel-header")).getText().equals(" Periodicity Screening Schedule"));
+
+		//Add a new Periodicity Screening Schedule
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityCodeList_newAction_btn")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("h3.panel-header")).getText().equals(" Periodicity Screening Schedule Maintenance"));
+
+		//Enter the description in the description field and select atleast one of the option from the dropdown for all the required fields in the panel 
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_ScreenDsc")).clear();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_ScreenDsc")).sendKeys("001 Regression test");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_W12"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_M1"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_M2"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_M4"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_M6"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_M9"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_M12"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_M15"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_M18"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_M24"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y3"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y4"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y5"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y6"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y7"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y8"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y9"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y10"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y11"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y12"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y13"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y14"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y15"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y16"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y17"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y18"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y19"))).selectByVisibleText("- No action should be performed");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y20"))).selectByVisibleText("- No action should be performed");
+		
+		//Click on "New" button in the Note panel.
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:EpsdtPeriodNotesPanel:NoteList_newAction_btn")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("h4.panel-header")).getText().equals(" Note Maintenance"));
+		
+		//Enter the notes/comments in the note field of the Note Maintenance Panel.
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:EpsdtPeriodNotesPanel:NoteDescription")).clear();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:EpsdtPeriodNotesPanel:NoteDescription")).sendKeys("Regression automation");
+		
+		//Click on "Save All" button.
+        Common.saveAll();
+
+		//Update the added Periodicity Code List
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicitySearchResults_0:PeriodicityBean_ColValue_screenDsc")).click();
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityDataPanel_Y20"))).selectByVisibleText("A Assess need");
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:EpsdtPeriodNotesPanel:NoteList_newAction_btn")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:EpsdtPeriodNotesPanel:NoteDescription")).clear();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:EpsdtPeriodNotesPanel:NoteDescription")).sendKeys("Regression automation update reason");
+        Common.saveAll();
+		
+		//Delete the added Periodicity Code List for next test
+		String pss = driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicitySearchResults_0:PeriodicityBean_ColValue_screenDsc")).getText();		
+		log ("The  Periodicity Screening Schedule to be deleted is "+pss);
+
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicitySearchResults_0:PeriodicityBean_ColValue_screenDsc")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("h3.panel-header")).getText().equals(" Periodicity Screening Schedule Maintenance"));
+
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PeriodicityPanel:PeriodicityPanel_deleteAction_btn")).click();
+		alert = driver.switchTo().alert();
+		System.out.println(alert.getText());
+		alert.accept();
+		}	
+    
+    @Test
+    public void test22371a() throws Exception{
+    	TestNGCustom.TCNo="22371a";
+    	log("//TC 22371a");
+    	
+    	//Navigate to member subsystem
+	 	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Recipient")).click();
+
+      	//Get Parent Member ID
+    	Member.otherid = Common.generateRandomTaxID();
+    	Member.fname=Common.generateRandomName();
+    	String pName = Member.fname;
+    	Member.casenum=Common.generateRandomTaxID();
+    	Member.ssn="1"+Common.generateRandomTaxID().substring(0,8);
+    	Member.dob =Member.fileSysdateCustom(-8030); //22 year old
+    	Member.adr1="100 HANCOCK ST";
+    	Member.city="QUINCY";
+    	Member.zip="02171";
+
+    	//Get Member ID
+		String xml=("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><EligibilityRequest\nxmlns=\"http://xmlns.hhs.ma.gov/HHS/serviceobjects/versions/1.0/EligibilityServices\"\nxmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n<transactionsource id_medicaid=\" \" "+
+				"id_other=\""+Member.otherid+"\" id_source=\"MHO\"/>\n<demographic cde_citizen=\"C\" cde_lang_written=\"ENG\" cde_race=\"WHITE\" cde_sex=\"F\" dte_birth=\""+Member.dob+"\" nam_first=\""+Member.fname+"\" nam_last=\"BURNS\" nam_mid_init=\" \" num_primary_ssn=\""+Member.ssn+"\" res_adr_city=\""+Member.city+"\" res_adr_state=\"MA\" res_adr_street_1=\""+Member.adr1+"\" res_adr_street_2=\" \" res_adr_zip_code=\""+Member.zip+"\"/>"+
+				"<case cde_case_status=\"1\" hoh_nam_first=\""+Member.fname+"\" hoh_nam_init=\" \" hoh_nam_last=\"BURNS\" num_case=\""+Member.casenum+"\"/>\n"+
+				"<eligibility amt_gross_income=\"14198.22\" cde_cat=\"08\" cde_elig_status=\"1\" cde_line=\"00\" cde_office=\"600\" cde_open_reason=\"01\" cde_region=\"01\" dte_appl=\""+Member.dob+"\" dte_begin_elig=\""+Member.dob+"\" family_size=\"07\" />\n</EligibilityRequest>");    	
+        String Pmem = Member.getCustomMemebr(xml);
+        log("Parent Member: "+Pmem+", Parent Name: "+pName+" BURNS");
+
+    	
+    	//Get Child Member ID
+    	Member.otherid = Common.generateRandomTaxID();
+    	Member.fname=Common.generateRandomName();
+    	Member.ssn="1"+Common.generateRandomTaxID().substring(0,8);
+    	Member.dob =Member.fileSysdateCustom(-5475); //15 year old
+    	Member.adr1="3 CENTER PLZ";
+    	Member.city="BOSTON";
+    	Member.zip="02108";
+        String nameContact=Common.generateRandomName();
+        String nameCare=Common.generateRandomName();
+        String idContact=Common.generateRandomTaxID();
+
+
+    	//Get Member ID
+		 xml=("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><EligibilityRequest\nxmlns=\"http://xmlns.hhs.ma.gov/HHS/serviceobjects/versions/1.0/EligibilityServices\"\nxmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n<transactionsource id_medicaid=\" \" "+
+				"id_other=\""+Member.otherid+"\" id_source=\"DYS\"/>\n<demographic cde_citizen=\"C\" cde_lang_written=\"ENG\" cde_race=\"WHITE\" cde_sex=\"F\" dte_birth=\""+Member.dob+"\" nam_first=\""+Member.fname+"\" nam_last=\"BURNS\" nam_mid_init=\" \" num_primary_ssn=\""+Member.ssn+"\" res_adr_city=\""+Member.city+"\" res_adr_state=\"MA\" res_adr_street_1=\""+Member.adr1+"\" res_adr_street_2=\" \" res_adr_zip_code=\""+Member.zip+"\"/>"+
+				"<case cde_case_status=\"1\" hoh_nam_first=\""+pName+"\" hoh_nam_init=\" \" hoh_nam_last=\"BURNS\" num_case=\""+Member.casenum+"\"/>\n"+
+				"<contacts id_contact=\""+idContact+"\" nam_contact=\""+nameContact+"\" cde_contact_type=\"DYS\" nam_care_of=\""+nameCare+"\" adr_street_1=\"101 FEDERAL STREET\" adr_street_2=\" \" adr_city=\"BOSTON\" adr_state=\"MA\" adr_zip_code=\"02110\" dte_begin_contact=\""+Member.fileSysdateCustom(0)+"\" dte_end_contact=\"2299-12-31\"/>\n"+
+				"<eligibility amt_gross_income=\"14198.22\" cde_cat=\"08\" cde_elig_status=\"1\" cde_line=\"01\" cde_office=\"600\" cde_open_reason=\"01\" cde_region=\"01\" dte_appl=\""+Member.dob+"\" dte_begin_elig=\""+Member.dob+"\" family_size=\"07\" />\n</EligibilityRequest>");    	
+        String mem = Member.getCustomMemebr(xml);
+        
+        log("Child Member: "+mem+", Child Name: "+Member.fname+" BURNS");
+
+        //Store Member in DB for EPSDT letter for Day 2
+		Statement statement = Common.connection1.createStatement();
+		sqlStatement = "select * from r_day2 where TC = '22371'";
+		colNames.add("ID");
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+		if (!(colValues.get(0).equals("null"))) {
+			sqlStatement = "delete from  r_day2 where TC = '22371'";
+			statement.executeQuery(sqlStatement);
+		}
+		sqlStatement = "insert into  r_day2 values ('22371', '"+mem+"', 'EPSDT child member', '"+Common.convertSysdate()+"')";
+		statement.executeQuery(sqlStatement);
+		
+    }
+    
+    @Test
+    public void test22371b() throws Exception{
+    	TestNGCustom.TCNo="22371b";
+    	log("//TC 22371b");
+    	
+	 	//get the member for EPSDT Letter
+		sqlStatement = "select * from r_day2 where TC = '22371'";
+		colNames.add("ID");
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+		if (colValues.get(0).equals("null"))
+		    throw new SkipException("Skipping this test because there was no member enrolled for EPSDT letter");
+
+		String partMem = colValues.get(0);
+		log("EPSDT Letter Member is: "+partMem);
+		
+		//Verify EPSDT Letter
+        driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RptsAndLetters")).click();
+        driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRptsAndLettersNavigatorPanel:EPSDTRptsAndLettersNavigationId:ITM_n4")).click();
+        driver.findElement(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterRequestBean_CriteriaPanel:LetterRequestDataPanel_MemberId")).sendKeys(partMem);
+        Common.search();
+        //Generate first letter
+        driver.findElement(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults_0:_id58")).click();
+		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Generate and Print']")).click();
+        //Generate second letter
+        driver.findElement(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults_1:_id58")).click();
+		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Generate and Print']")).click();
+    }
+    
+	@Test	
+    public void test22378() throws Exception {
+		TestNGCustom.TCNo="22378";
+    	log("//TC 22378");
+
+    	//Get EPSDT member with dental claim
+    	//sqlStatement = "select a.id_medicaid from t_re_base a, T_Hist_Directory b, t_re_eps_hist_ext c, aim01.T_PD_DNTL_DTL d, t_proc e where a.sak_recip = b.sak_recip and a.sak_recip = c.sak_recip  and b.cde_clm_type = 'D' and B.Cde_Clm_Status = 'P' and A.Dte_Birth > 19970101  and a.ind_active = 'Y' and b.sak_claim =d.sak_claim and d.sak_procedure=e.sak_procedure and e.cde_proc in ('D0150', 'D0120', 'D1110', 'D1120') and rownum < 2";
+    	
+    	sqlStatement = "select distinct gg.id_medicaid from T_RE_EPS_HIST_EXT ab, T_hist_directory ph, t_re_base gg where ab.sak_claim=ph.SAK_CLAIM and gg.sak_recip=ab.sak_recip and ph.CDE_CLM_STATUS='P' and ph.CDE_CLM_TYPE='D' and rownum<2";
+    	colNames.add("ID_MEDICAID");
+    	colValues=Common.executeQuery(sqlStatement, colNames);
+    	String id_member = colValues.get(0);
+    	log("Member is: "+id_member);
+    	
+    	searchEPSDTmem(id_member);
+	    
+	    
+	    //Verify Last Dental Screening date appears
+	    String lastDental = driver.findElement(By.id("MMISForm:MMISBodyContent:EpsdtSearchResultDataPanel_LastDentalDate")).getAttribute("value").trim();
+	    Assert.assertTrue(lastDental.substring(2, 3).equals("/"), "Last Dental Screening date was not found");
+	    
+	    //Get row for last dental screening date claim
+	    int size = driver.findElements(By.xpath("//a[contains(@id, 'id18')]")).size();
+	    int i=0;
+	    for (;i<size;i++) {
+	    	if (driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_"+i+":_id18")).getText().equals(lastDental))
+	    		break;
+	    }
+	    
+	    String proc = driver.findElement(By.xpath("//tbody[@id='MMISForm:MMISBodyContent:EPSDTSearchResults:tbody_element']/tr["+(i+1)+"]/td[4]/span")).getText();
+		//Select the dental claim
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_"+i+":_id25")).click();
+		
+		//Store the current window Handle
+		winHandleCurrent=driver.getWindowHandle();
+		
+		//Switch to new window
+		for(String winHandle:driver.getWindowHandles())
+			driver.switchTo().window(winHandle);
+		
+		//Assert DoS
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:DentalClaimHeaderPanel:DentalClmDataPanel_FirstServiceDate")).getAttribute("value").equals(lastDental), "Dos Mismatch");
+		//Assert Proc
+		driver.findElement(By.id("MMISForm:MMISBodyContent:DentalClaimNavigatorPanel:DentalClaimNavigator:ITM_DentalClaim5")).click();
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:DentalClaimDetailPanel:_id54_0:DentalDetailBean_ColValue_procedureCodeString")).getText().equals(proc), "Procedure code mismatch");
+
+		//Close the second window
+		driver.close();
+		
+		//Switch back to main window
+		Common.switchToMainWin();
+		
+		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Clear']")).click();
+
+
+	}
+	
+	public static void searchEPSDTmem(String mem) {
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchBean_CriteriaPanel:EpsdtSearchResultDataPanel_MedicareId")).clear();
+	    driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchBean_CriteriaPanel:EpsdtSearchResultDataPanel_MedicareId")).sendKeys(mem);
+	    driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchBean_CriteriaPanel:SEARCH")).click();
+	}
+	
+	@DataProvider
+	public  Iterator<String[]> dpEPSDTClaims() throws Exception {
+		ArrayList<String[]> rowList = new ArrayList<String[]>();
+		
+		sqlStatement="select * from R_CLAIMS_BILLING where CT='M' and TC in ('22798', '22380','23137a', '23137b', '22382')";
+//		sqlStatement="select * from R_CLAIMS_BILLING where CT='M' and TC in ('23137a', '23137b')";
+
+
+		rowList=Common.getDBTestData(sqlStatement, 10, Common.connection1);
+
+		if (rowList.get(0).equals("null"))
+			throw new SkipException("No test data returned from database");
+		else
+			return rowList.iterator();
+	}
+	
+	@Test(dataProvider = "dpEPSDTClaims")	
+    public void enterClaims(String testCase, String CT, String provider, String Amount, String TOB, String NPI, String referral, String pas, String fdos, String tdos) throws Exception {
+		TestNGCustom.TCNo="enterClaims";
+    	log("//TC enterClaims for TC "+testCase);
+    	Common.resetPortal();
+    	
+    	//Get member for claims
+    	String sql="";
+    	if (testCase.equals("22798")||testCase.equals("22380")||testCase.equals("22382")) {
+        	sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+    				"t_cde_aid aid,t_re_aid_elig elig where " +
+    				"elig.sak_recip=base.sak_recip " +
+    				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+    				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+    				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+    				"and pgm. CDE_PGM_HEALTH='STD' " +
+    				"and elig.DTE_END='22991231' " + 
+    				"and elig.cde_status1<>'H' " +
+    				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+    				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+    				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> 20130401) " +
+    				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+    				"and base.ind_active='Y' "+ 
+    				"and base.sak_recip > dbms_random.value * 6300000 " +
+    				"and rownum<2 " +
+    				"and dte_death = 0 "+
+    				"and base.dte_birth > "+HIPAA.datePaneltoSQL(Common.convertSysdatecustom(-4380))+" "+ //less than 12
+//    				"and base.dte_birth < "+HIPAA.datePaneltoSQL(Common.convertSysdatecustom(-1900)); //more than 5
+					"and base.dte_birth < "+HIPAA.datePaneltoSQL(Common.convertSysdatecustom(-2200)); //more than 6 ([AG]Changed it to more than 6 as per Praveen Nitalla on 10/7/2014)
+
+    	}
+    	
+    	if (testCase.equals("23137a")) {
+//    		sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+//    				"t_cde_aid aid,t_re_aid_elig elig where " +
+//    				"elig.sak_recip=base.sak_recip " +
+//    				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+//    				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+//    				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+//    				"and pgm. CDE_PGM_HEALTH='STD' " +
+//    				"and elig.DTE_END='22991231' " + 
+//    				"and elig.cde_status1<>'H' " +
+//    				"and exists (Select Sak_Recip From T_Re_Pmp_Assign Asg Where Asg.Sak_Recip=Base.Sak_Recip And Asg.Dte_End =  22991231 and asg.sak_pub_hlth = 23 and asg.cde_status1<>'H' and sak_pmp_ser_loc=508) " +
+//    				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+//    				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> 20130401) " +
+//    				"And not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+//    				"and base.ind_active='Y' "+ 
+//    				"and dte_death = 0 "+
+//    				"and base.sak_recip > dbms_random.value * 6300000 " +
+//    				"and rownum<2 " +
+//    				"and base.dte_birth > "+HIPAA.datePaneltoSQL(Common.convertSysdatecustom(-4380))+" "+ //less than 12
+//    				"and base.dte_birth < "+HIPAA.datePaneltoSQL(Common.convertSysdatecustom(-1900)); //more than 5
+    		
+    		sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+    				"t_cde_aid aid,t_re_aid_elig elig where " +
+    				"elig.sak_recip=base.sak_recip " +
+    				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+    				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+    				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+    				"and pgm. CDE_PGM_HEALTH='STD' " +
+    				"and  aid.CDE_AID_CATEGORY='02' "+
+    				"and elig.DTE_END='22991231' " + 
+    				"and elig.cde_status1<>'H' " +
+    				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+    				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> 20130401) " +
+    				"And not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+    				"And not Exists ( Select Sak_Recip From t_re_pmp_assign pmp Where pmp.Sak_Recip=Base.Sak_Recip) " + //This is important so we do not select a member with any pcp so we dont have to submit any referral
+    				"and base.ind_active='Y' "+ 
+    				"and dte_death = 0 "+
+    				"and base.sak_recip > dbms_random.value * 6300000 " +
+    				"and rownum<2 " +
+    				"and base.dte_birth > "+HIPAA.datePaneltoSQL(Common.convertSysdatecustom(-4380))+" "+ //less than 12
+    				"and base.dte_birth < "+HIPAA.datePaneltoSQL(Common.convertSysdatecustom(-1900)); //more than 5
+
+    	}
+    	
+    	if (testCase.equals("23137b")) {
+    		
+    		//commenting out below referral submission steps because its no longer needed
+
+    		//Submit referral
+//    		Common.portalLogout();
+    		
+    		//Get member
+    		sqlStatement = "select ID_MEDICAID from t_re_base where sak_recip = (select sak_recip from t_hist_directory where num_icn_fl ='"+icn.get("23137a")+"')";
+    		colNames.add("ID_MEDICAID");
+    		colValues=Common.executeQuery(sqlStatement, colNames);
+    		String patient=colValues.get(0);
+//    		rfrl=SubmitClaims.createRefClm("110022129", "F", "110029098", "A", patient, Common.convertSysdatecustom(-1), Common.convertSysdatecustom(1), "1");
+//    		log("Referral#: "+rfrl);
+//    		Common.portalLogin();
+    		sql = "select * from t_re_base where ID_MEDICAID = "+patient;
+//    		referral=rfrl;
+    		advSubmitClaims.pos="12 - HOME";
+    		advSubmitClaims.orderingProv[0]="110000254";
+    		advSubmitClaims.orderingProv[1]="110000254";
+
+    	}
+    	
+    	advSubmitClaims.initiateClaim();
+    	advSubmitClaims.M(testCase, CT, provider, Amount, TOB, NPI, referral, pas, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	icn.put(testCase, clmNo);
+       	log("ICN: "+clmNo);
+	}
+	
+	@Test	
+    public void test22798() throws Exception {
+		TestNGCustom.TCNo="22798";
+    	log("//TC 22798");
+    	
+    	String clmICN = icn.get(TestNGCustom.TCNo);
+    	log ("ICN is: "+clmICN);    	
+    	
+    	//Get Member for this ICN
+    	sqlStatement = "Select b.ID_MEDICAID, c.cde_clm_status, d.id_provider from t_re_base b, t_hist_directory c, t_pr_prov d where b.sak_recip = c.sak_recip and c.sak_prov=d.sak_prov and c.num_icn_fl = '"+clmICN+"'";
+    	colNames.add("ID_MEDICAID");
+    	colNames.add("CDE_CLM_STATUS");
+    	colNames.add("ID_PROVIDER");
+    	colValues=Common.executeQuery(sqlStatement, colNames);
+    	String memBer = colValues.get(0);
+    	String status = colValues.get(1);
+    	String prov = colValues.get(2);
+
+    	
+    	if (!(status.equals("P")))
+    		throw new SkipException("Skipping this test because ICN "+clmICN+" submitted for this TC is Denied/Suspended");
+    	
+    	searchEPSDTmem(memBer);
+    	
+    	//Sort on procedure code
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults:_id38")).click();
+
+    	
+	    //Verify Last Medical Screening date = Dos on claim
+	    String lastMed = driver.findElement(By.id("MMISForm:MMISBodyContent:EpsdtSearchResultDataPanel_LastMedicalDate")).getAttribute("value").trim();
+	    Assert.assertTrue(lastMed.equals(Common.convertSysdate()), "Last Medical Screening date != Dos on claim");
+	    
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id18")).getText().equals(Common.convertSysdate()), "DoS for Proc 1 on panel != Dos on claim");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_1:_id18")).getText().equals(Common.convertSysdate()), "DoS for Proc 2 on panel != Dos on claim");
+
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id25")).getText().equals(clmICN), "ICN for Proc 1 on panel != ICN on claim");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_1:_id25")).getText().equals(clmICN), "ICN for Proc 2 on panel != ICN on claim");
+		
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id33")).getText().equals(prov), "Prov for Proc 1 on panel != Prov on claim");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_1:_id33")).getText().equals(prov), "Prov for Proc 2 on panel != Prov on claim");
+		
+		Assert.assertTrue(driver.findElement(By.cssSelector("td.listTextBlack > span")).getText().equals("99393"), "Proc 1 on panel != Proc 1 on claim");
+		Assert.assertTrue(driver.findElement(By.cssSelector("tr.listBlueBg > td.listTextBlack > span")).getText().equals("S0302"), "Proc 2 on panel != Proc 2 on claim");
+
+	}
+	
+	@Test	
+    public void test22380() throws Exception {
+		TestNGCustom.TCNo="22380";
+    	log("//TC 22380");
+    	
+    	String clmICN = icn.get(TestNGCustom.TCNo);
+    	log ("ICN is: "+clmICN);    	
+    	
+    	//Get Member for this ICN
+    	sqlStatement = "Select b.ID_MEDICAID, c.cde_clm_status, b.nam_first, b.nam_last, b.dte_birth from t_re_base b, t_hist_directory c where b.sak_recip = c.sak_recip and c.num_icn_fl = '"+clmICN+"'";
+    	log(sqlStatement);
+    	colNames.add("ID_MEDICAID");
+    	colNames.add("CDE_CLM_STATUS");
+    	colNames.add("NAM_FIRST");
+    	colNames.add("NAM_LAST");
+    	colNames.add("DTE_BIRTH");
+    	colValues=Common.executeQuery(sqlStatement, colNames);
+    	String memBer = colValues.get(0);
+    	String status = colValues.get(1);
+    	String fName = colValues.get(2);
+    	String lName = colValues.get(3);
+    	String dob = colValues.get(4);
+
+    	
+    	if ((status.equals("P")))
+    		throw new SkipException("Skipping this test because ICN "+clmICN+" submitted for this TC is not Denied/Suspended");
+    	
+    	searchEPSDTmem(memBer);
+		Assert.assertTrue(driver.findElement(By.cssSelector("span.redreg")).getText().equals("***No records found***"), "Member was found in EPSDT for a denied claim (ICN "+clmICN+")");
+		
+		//Verfiy claims subsystem
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmICN);
+		Common.search();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+		
+		Assert.assertTrue(driver.findElement(By.xpath("//table[@id='MMISForm:MMISBodyContent:PhysicianClaimHeaderPanel:PhysicianClmBean_DataPanel']/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]")).getText().equals("PHYSICIAN CLAIM"), "The claim is not a PHYSICIAN CLAIM");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimHeaderPanel:PhysicianClmDataPanel_FirstServiceDate")).getAttribute("value").equals(Common.convertSysdate()), "FDOS mismatch");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimHeaderPanel:PhysicianClmDataPanel_LastServiceDate")).getAttribute("value").equals(Common.convertSysdate()), "TDOS mismatch");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimHeaderPanel:PhysicianClmDataPanel_MedicaidID")).getAttribute("value").equals(memBer), "Member mismatch");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimHeaderPanel:PhysicianClmDataPanel_LastName")).getText().equals(lName), "Member Last name mismatch");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimHeaderPanel:PhysicianClmDataPanel_FirstName")).getText().equals(fName), "Member First name mismatch");
+		Assert.assertTrue(driver.findElement(By.xpath("//table[@id='MMISForm:MMISBodyContent:PhysicianClaimHeaderPanel:PhysicianClmBean_DataPanel']/tbody/tr/td/table/tbody/tr/td/table/tbody/tr[7]/td[2]")).getText().equals(dob.substring(4, 6)+"/"+dob.substring(6, 8)+"/"+dob.substring(0, 4)), "Member DoB mismatch");
+
+		//Claim Detail
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_procedureCodeString")).getText().equals("99392"), "Procedure code mismatch");
+
+		//Error
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim10")).click();
+		int rws=driver.findElements(By.xpath("//span[contains(@id,'ClaimErrorHdrBean_ColValue_errorCode')]")).size();
+		boolean errFound = false;
+		for (int i=0;i<rws;i++) {
+			if (driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_errorCode")).getText().equals("2803")) {
+				Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_genericDate")).getText().equals(Common.convertSysdate()), "Date on Error code != Dos");
+				errFound=true;
+				break;
+			}
+		}
+		if (!errFound)
+			Assert.assertTrue(false, "Claim error code 2803 was not found");
+	}
+	
+	@Test	
+    public void test23137a() throws Exception {
+		TestNGCustom.TCNo="23137a";
+    	log("//TC 23137a");
+    	
+    	String clmICN = icn.get(TestNGCustom.TCNo);
+    	log ("ICN is: "+clmICN); 
+    	
+    	//Get Claim Status for this ICN
+    	sqlStatement = "Select c.cde_clm_status from t_hist_directory c where c.num_icn_fl = '"+clmICN+"'";
+    	colNames.add("CDE_CLM_STATUS");
+    	colValues=Common.executeQuery(sqlStatement, colNames);
+    	String status = colValues.get(0);
+    	
+    	//Store this ICN for day2
+    	String SelSql="select * from r_day2 where TC = '23137a'";
+    	String col="ID";
+    	String DelSql="delete from r_day2 where TC = '23137a'";
+    	String InsSql="insert into r_day2 values ('23137a', '"+clmICN+"', 'PCC prov claim "+status+"', '"+Common.convertSysdate()+"')";
+    	Common.insertData(SelSql, col, DelSql, InsSql);
+    	
+    	if (!(status.equals("P"))) 
+    		throw new SkipException("Skipping this test because ICN "+clmICN+" submitted for this TC is Denied/Suspended");
+    	
+	}
+	
+	@Test	
+    public void test23137b() throws Exception {
+		TestNGCustom.TCNo="23137b";
+    	log("//TC 23137b");
+    	
+    	String clmICN = icn.get(TestNGCustom.TCNo);
+    	log ("ICN is: "+clmICN+". PoS used was 12 - HOME.");  
+    	
+    	//Get Claim Status for this ICN
+    	sqlStatement = "Select c.cde_clm_status from t_hist_directory c where c.num_icn_fl = '"+clmICN+"'";
+    	colNames.add("CDE_CLM_STATUS");
+    	colValues=Common.executeQuery(sqlStatement, colNames);
+    	String status = colValues.get(0);
+    	
+    	//Store this ICN for day2
+    	String SelSql="select * from r_day2 where TC = '23137b'";
+    	String col="ID";
+    	String DelSql="delete from r_day2 where TC = '23137b'";
+    	String InsSql="insert into r_day2 values ('23137b', '"+clmICN+"', 'linc prov claim "+status+"', '"+Common.convertSysdate()+"')";
+    	Common.insertData(SelSql, col, DelSql, InsSql);
+    	
+    	if (!(status.equals("P"))) 
+    		throw new SkipException("Skipping this test because ICN "+clmICN+" submitted for this TC is Denied/Suspended");
+    	
+	}
+	
+	@Test	
+    public void test23137aday2() throws Exception {
+		TestNGCustom.TCNo="23137aday2";
+    	log("//TC 23137aday2");
+    	
+	 	//get the claim that was submitted and DoS
+		sqlStatement = "select * from r_day2 where TC = '23137a'";
+		colNames.add("ID");
+		colNames.add("DATE_REQUESTED");
+		colNames.add("DES");
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+		if (colValues.get(0).equals("null"))
+		    throw new SkipException("Skipping this test because there was no claim generated");
+
+		String icnClm = colValues.get(0);
+		String dos = colValues.get(1);
+		String status = colValues.get(2);
+		log("ICN is: "+icnClm);
+		
+		if(status.contains("D")||status.contains("S"))
+    		throw new SkipException("Skipping this test because ICN "+icnClm+" submitted for this TC on day 1 is Denied/Suspended");
+
+		//Get member details
+		sqlStatement = "select a.ID_MEDICAID, a.NAM_LAST, a.NAM_FIRST, c.ID_PROVIDER, b.CDE_SERVICE_LOC from t_re_base a, t_hist_directory b, t_pr_prov c where a.sak_recip = b.sak_recip and b.sak_prov=c.sak_prov and b.num_icn_fl ='"+icnClm+"'";
+		colNames.add("ID_MEDICAID");
+		colNames.add("NAM_LAST");
+		colNames.add("NAM_FIRST");
+		colNames.add("ID_PROVIDER");
+		colNames.add("CDE_SERVICE_LOC");
+		colValues=Common.executeQuery(sqlStatement, colNames);
+		String patient=colValues.get(0);
+		String lastName=colValues.get(1);
+		String firstName=colValues.get(2);
+		String prov=colValues.get(3);
+		String sl=colValues.get(4);
+		log("Member is: "+patient);
+		
+		searchEPSDTmem(patient);
+		
+		//Get Member name from panel
+		String panelComparisonstring=driver.findElement(By.id("MMISForm:MMISBodyContent:EpsdtSearchResultDataPanel_Name")).getAttribute("value");
+		//Assert Member Name is displayed on panel correctly
+		Assert.assertTrue(panelComparisonstring.contains(lastName));
+		Assert.assertTrue(panelComparisonstring.contains(firstName));
+		
+	    //Verify Last Medical Screening date = Dos on claim
+	    String lastMed = driver.findElement(By.id("MMISForm:MMISBodyContent:EpsdtSearchResultDataPanel_LastMedicalDate")).getAttribute("value").trim();
+	    Assert.assertTrue(lastMed.equals(dos), "Last Medical Screening date != Dos on claim");
+	    
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id18")).getText().equals(dos), "DoS for Proc on panel != Dos on claim");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id25")).getText().equals(icnClm), "ICN for Proc on panel != ICN on claim");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id33")).getText().equals(prov), "Prov for Proc on panel != Prov on claim");		
+		Assert.assertTrue(driver.findElement(By.cssSelector("td.listTextBlack > span")).getText().equals("99393"), "Proc on panel != Proc on claim");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EpsdtSearchResultDataPanel_HasHlthCond")).getAttribute("value").equals("YES"), "Special Health condition is not YES");
+		
+		//Click on claim
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id25")).click();
+		
+		//Store the current window Handle
+		winHandleCurrent=driver.getWindowHandle();
+		
+		//Switch to new window
+		for(String winHandle:driver.getWindowHandles())
+			driver.switchTo().window(winHandle);
+		
+		//Validate claim info
+		Assert.assertTrue(driver.findElement(By.xpath("//table[@id='MMISForm:MMISBodyContent:PhysicianClaimHeaderPanel:PhysicianClmBean_DataPanel']/tbody/tr/td/table/tbody/tr/td/table/tbody/tr[14]/td[2]")).getText().equals(prov+"  "+sl), "Provider on the claim mismatch");
+		//Click on Diagnosis
+		driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim7")).click();
+		//Sort on diag
+		driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimDiagnosisPanel:ClaimDiagnosis_dataTable:ClaimDiagnosisBean_ColHeader_diagnosisCode")).click();
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimDiagnosisPanel:ClaimDiagnosis_dataTable_0:ClaimDiagnosisBean_ColValue_diagnosisCode")).getText().equals("J45991"), "Diag code 49322 was not found");
+
+		//Close the second window
+		driver.close();
+		
+		//Switch back to main window
+		Common.switchToMainWin();
+		
+		//select record
+		Common.search(); //clicking on search button again in EPSDT panel (main window) as chrome is losing control for selecting search results, after switching back to main window
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id18")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EpsdtNavigatorPanel:EPSDTNavigatorId:ITM_n2")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:ReEpsAbnormalPanel:ReEpsAbnormal_dataTable_0:ReEpsAbnormalBean_ColValue_dsc6")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("h3.panel-header")).getText().equals(" Special Health Condition Maintenance"), "Special Health Condition Maintenance panel did not appear");
+		Assert.assertTrue(driver.findElement(By.xpath("//table[@id='MMISForm:MMISBodyContent:ReEpsAbnormalPanel:ReEpsAbnormalBean_DataPanel']/tbody/tr/td/table/tbody/tr/td/table/tbody/tr[2]/td[2]")).getText().equals(dos), "Screening Date mismatch");
+		Assert.assertTrue(driver.findElement(By.xpath("//table[@id='MMISForm:MMISBodyContent:ReEpsAbnormalPanel:ReEpsAbnormalBean_DataPanel']/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]")).getText().equals("COUGH VARIANT ASTHMA"), "Abnormality mismatch");
+		Assert.assertTrue(driver.findElement(By.xpath("//table[@id='MMISForm:MMISBodyContent:ReEpsAbnormalPanel:ReEpsAbnormalBean_DataPanel']/tbody/tr/td/table/tbody/tr/td/table/tbody/tr[3]/td[2]")).getText().equals("NEBULIZER;WITH COMPRESSOR,E.G.,DEVILBIS"), "Treatment mismatch");
+		
+	}
+	
+	@Test	
+    public void test22382() throws Exception {
+		TestNGCustom.TCNo="22382";
+    	log("//TC 22382");
+    	
+    	String clmICN = icn.get(TestNGCustom.TCNo);
+    	log ("ICN is: "+clmICN);    	
+    	
+    	//Get Member for this ICN
+    	sqlStatement = "Select b.ID_MEDICAID, c.cde_clm_status, d.id_provider from t_re_base b, t_hist_directory c, t_pr_prov d where b.sak_recip = c.sak_recip and c.sak_prov=d.sak_prov and c.num_icn_fl = '"+clmICN+"'";
+    	colNames.add("ID_MEDICAID");
+    	colNames.add("CDE_CLM_STATUS");
+    	colNames.add("ID_PROVIDER");
+    	colValues=Common.executeQuery(sqlStatement, colNames);
+    	String memBer = colValues.get(0);
+    	String status = colValues.get(1);
+    	String prov = colValues.get(2);
+
+    	
+    	if (!(status.equals("P")))
+    		throw new SkipException("Skipping this test because ICN "+clmICN+" submitted for this TC is Denied/Suspended");
+    	
+    	searchEPSDTmem(memBer);
+    	
+    	//Sort on procedure code
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults:_id38")).click();
+
+	    //Verify Last Medical/Hearing/Vision Screening date = Dos on claim
+	    String lastMed = driver.findElement(By.id("MMISForm:MMISBodyContent:EpsdtSearchResultDataPanel_LastMedicalDate")).getAttribute("value").trim();
+	    String lastHearing = driver.findElement(By.id("MMISForm:MMISBodyContent:EpsdtSearchResultDataPanel_LastHearingDate")).getAttribute("value").trim();
+	    String lastVision = driver.findElement(By.id("MMISForm:MMISBodyContent:EpsdtSearchResultDataPanel_LastVisionDate")).getAttribute("value").trim();
+	    Assert.assertTrue(lastMed.equals(Common.convertSysdate()), "Last Medical Screening date != Dos on claim");
+	    Assert.assertTrue(lastHearing.equals(Common.convertSysdate()), "Last Hearing Screening date != Dos on claim");
+	    Assert.assertTrue(lastVision.equals(Common.convertSysdate()), "Last Vision Screening date != Dos on claim");
+	    
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id18")).getText().equals(Common.convertSysdate()), "DoS for Proc 1 on panel != Dos on claim");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_1:_id18")).getText().equals(Common.convertSysdate()), "DoS for Proc 2 on panel != Dos on claim");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_2:_id18")).getText().equals(Common.convertSysdate()), "DoS for Proc 3 on panel != Dos on claim");
+		
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id25")).getText().equals(clmICN), "ICN for Proc 1 on panel != ICN on claim");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_1:_id25")).getText().equals(clmICN), "ICN for Proc 2 on panel != ICN on claim");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_2:_id25")).getText().equals(clmICN), "ICN for Proc 3 on panel != ICN on claim");		
+		
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id33")).getText().equals(prov), "Prov for Proc 1 on panel != Prov on claim");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_1:_id33")).getText().equals(prov), "Prov for Proc 2 on panel != Prov on claim");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_2:_id33")).getText().equals(prov), "Prov for Proc 3 on panel != Prov on claim");
+		
+		Assert.assertTrue(driver.findElement(By.cssSelector("td.listTextBlack > span")).getText().equals("92552"), "Proc 1 on panel != Proc 1 on claim");
+		Assert.assertTrue(driver.findElement(By.cssSelector("tr.listBlueBg > td.listTextBlack > span")).getText().equals("99173"), "Proc 2 on panel != Proc 2 on claim");
+		Assert.assertTrue(driver.findElement(By.xpath("//tbody[@id='MMISForm:MMISBodyContent:EPSDTSearchResults:tbody_element']/tr[3]/td[4]/span")).getText().equals("99204"), "Proc 3 on panel != Proc 3 on claim");
+		
+		//Click on Provider
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id33")).click();
+		
+		//Store the current window Handle
+		winHandleCurrent=driver.getWindowHandle();
+		
+		//Switch to new window
+		for(String winHandle:driver.getWindowHandles())
+			driver.switchTo().window(winHandle);
+		
+		//Validate provider info
+		Assert.assertTrue(driver.findElement(By.xpath("//table[@id='MMISForm:MMISBodyContent:ProviderInformationBean_DataPanel']/tbody/tr/td/table/tbody/tr/td/table/tbody/tr[2]/td[2]")).getText().equals(prov), "Provider ID mismatch");
+
+		
+		//Close the second window
+		driver.close();
+		
+		//Switch back to main window
+		Common.switchToMainWin();
+		
+		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Clear']")).click();
+
+	}
+	
+	@Test	
+    public void test31968() throws Exception {
+		TestNGCustom.TCNo="31968";
+    	log("//TC 31968 - Validate ICD Version display - ICD 10 Test Case");
+    	    	
+		//Select Related data
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RelatedData")).click();
+		
+		//Click on abnormality Codes
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRelatedDataNavigatorPanel:EPSDTRelatedDataNavigatorId:ITM_n5")).click();
+		
+		//Sort ICD version in descending
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_serviceCode")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_cdeICDVersion")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_cdeICDVersion")).click();
+		
+		if (driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_cdeICDVersion")).getText().equals("9")) {
+			insertICD("10");
+			log("Now restarting this TC");
+			test31968();
+		}
+		else {
+			Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_cdeICDVersion")).getText().equals("10"), "The ICD version is not 10 in EPSDT Abnormality codes panel");
+			String diagToSelect = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText();
+			driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).click();
+			Assert.assertTrue(driver.findElement(By.xpath("//input[@id='MMISForm:MMISBodyContent:AbnormalityCodesPanel:DiagnosisDataPanel_ListOfICDVersions2' and @checked='checked']")).getAttribute("value").equals("10"), "The ICD version is not 10 in  Abnormality Diagnosis Code (search results) panel");
+			log("Successfully validated that ICD version is 10 (for diag code "+diagToSelect+") in both EPSDT Abnormality codes panel and Abnormality Diagnosis Code (search results) panel");
+		}
+		
+		if(icdDiagPresent)
+			deleteICD();
+    	
+	}
+	
+	@Test	
+    public void test31979() throws Exception {
+		TestNGCustom.TCNo="31979";
+    	log("//TC 31979- Validate ICD Version display - ICD 9 Test Case");
+    	    	
+		//Select Related data
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RelatedData")).click();
+		
+		//Click on abnormality Codes
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRelatedDataNavigatorPanel:EPSDTRelatedDataNavigatorId:ITM_n5")).click();
+		
+		//Sort ICD version in ascending
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_serviceCode")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_cdeICDVersion")).click();
+		
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_cdeICDVersion")).getText().equals("9"), "The ICD version is not 9 in EPSDT Abnormality codes panel");
+		String diagToSelect = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).click();
+		Assert.assertTrue(driver.findElement(By.xpath("//input[@id='MMISForm:MMISBodyContent:AbnormalityCodesPanel:DiagnosisDataPanel_ListOfICDVersions1' and @checked='checked']")).getAttribute("value").equals("9"), "The ICD version is not 9 in  Abnormality Diagnosis Code (search results) panel");
+		log("Successfully validated that ICD version is 9 (for diag code "+diagToSelect+") in both EPSDT Abnormality codes panel and Abnormality Diagnosis Code (search results) panel");
+		
+	}
+	
+	@Test	
+    public void test31980() throws Exception {
+		TestNGCustom.TCNo="31980 ";
+    	log("//TC 31980- Validate ICD Help Tip Test Case");
+    	    	
+		//Select Related data
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RelatedData")).click();
+		
+		//Click on abnormality Codes
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRelatedDataNavigatorPanel:EPSDTRelatedDataNavigatorId:ITM_n5")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).click();
+
+		//Check ICD Help Tip
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:DiagnosisDataPanel_ListOfICDVersions_Error_Highlight")).click();
+		//Store the current window Handle
+		winHandleCurrent=driver.getWindowHandle();
+		
+		//Switch to new window
+		for(String winHandle:driver.getWindowHandles())
+			driver.switchTo().window(winHandle);
+		
+		//Validate Help text
+		Assert.assertTrue(driver.findElement(By.cssSelector("div.helpDiv")).getText().equals("ICD Version\nThe version number of the International Classification of Diseases associated with the diagnosis code."), "Did not get the ICD Help Tip text");
+		log("Successfully validated ICD Help Tip text for Abnormality Diagnosis Code");
+		
+		//Close the second window
+		driver.close();
+		
+		//Switch back to main window
+		Common.switchToMainWin();
+	}
+	
+	@Test	
+    public void test31991() throws Exception {
+		TestNGCustom.TCNo="31991";
+    	log("//TC 31991 - Add New Record ICD 10 Abnormality Panel Test Case");
+    	
+		insertICD("10");
+
+		LoginBaseCheck();
+    	
+		//Select Related data
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RelatedData")).click();
+		
+		//Click on abnormality Codes
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRelatedDataNavigatorPanel:EPSDTRelatedDataNavigatorId:ITM_n5")).click();
+		
+		//sort on description desc
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_serviceCode")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_name")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_name")).click();
+		
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_cdeICDVersion")).getText().equals("10"), "The ICD version is not 10 in EPSDT Abnormality codes panel");
+		String diagToSelect = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).click();
+		Assert.assertTrue(driver.findElement(By.xpath("//input[@id='MMISForm:MMISBodyContent:AbnormalityCodesPanel:DiagnosisDataPanel_ListOfICDVersions2' and @checked='checked']")).getAttribute("value").equals("10"), "The ICD version is not 10 in  Abnormality Diagnosis Code (search results) panel");
+		log("Successfully validated that ICD version is 10 (for diag code "+diagToSelect+") in both EPSDT Abnormality codes panel and Abnormality Diagnosis Code (search results) panel");
+		
+		deleteICD();
+    	
+	}
+	
+	@Test	
+    public void test32002() throws Exception {
+		TestNGCustom.TCNo="32002";
+    	log("//TC 32002 - Add New Record ICD 9 Abnormality Panel Test Case");
+    	
+		insertICD("9");
+
+		LoginBaseCheck();
+    	
+		//Select Related data
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RelatedData")).click();
+		
+		//Click on abnormality Codes
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRelatedDataNavigatorPanel:EPSDTRelatedDataNavigatorId:ITM_n5")).click();
+		
+		//sort on description desc
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_serviceCode")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_name")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_name")).click();
+		
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_cdeICDVersion")).getText().equals("9"), "The ICD version is not 9 in EPSDT Abnormality codes panel");
+		String diagToSelect = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).click();
+		Assert.assertTrue(driver.findElement(By.xpath("//input[@id='MMISForm:MMISBodyContent:AbnormalityCodesPanel:DiagnosisDataPanel_ListOfICDVersions1' and @checked='checked']")).getAttribute("value").equals("9"), "The ICD version is not 9 in  Abnormality Diagnosis Code (search results) panel");
+		log("Successfully validated that ICD version is 9 (for diag code "+diagToSelect+") in both EPSDT Abnormality codes panel and Abnormality Diagnosis Code (search results) panel");
+		
+		deleteICD();
+    	
+	}
+	
+	@Test	
+    public void test32013() throws Exception {
+		TestNGCustom.TCNo="32013";
+    	log("//TC 32013 - EPSDT - Duplicate Diagnosis Code/Diff Ver Abnormality Panel Test Case");
+    	
+    	String icdCode = "E8350"; //This code is chosen because its description starts with W in icd9 and U in icd10. This is to facilitate addition and deletion of ICD code in EPSDT abnormality codes panel using the common functions, as they will come on top when sorted in descending order
+    	
+    	//Get details of both version of diag code in reference
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Reference")).click();
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Diagnosis")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:DiagnosisSearchBean_CriteriaPanel:DiagnosisSearchResultsDataPanel_ListOfICDVersions1")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:DiagnosisSearchBean_CriteriaPanel:DiagnosisSearchResultsDataPanel_ServiceCode")).sendKeys(icdCode);
+		Common.search();
+		String icd9Desc = driver.findElement(By.xpath("//tbody[@id='MMISForm:MMISBodyContent:DiagnosisSearchResultsList:tbody_element']/tr/td[3]")).getText();
+
+		driver.findElement(By.id("MMISForm:MMISBodyContent:DiagnosisSearchBean_CriteriaPanel:DiagnosisSearchResultsDataPanel_ServiceCode")).clear();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:DiagnosisSearchBean_CriteriaPanel:DiagnosisSearchResultsDataPanel_ServiceCode")).sendKeys(icdCode);
+		driver.findElement(By.id("MMISForm:MMISBodyContent:DiagnosisSearchBean_CriteriaPanel:DiagnosisSearchResultsDataPanel_ListOfICDVersions2")).click();
+		Common.search();
+		String icd10Desc = driver.findElement(By.xpath("//tbody[@id='MMISForm:MMISBodyContent:DiagnosisSearchResultsList:tbody_element']/tr/td[3]")).getText();
+		
+		log("The icd 9 code "+icdCode+" desc is '"+icd9Desc+"'");
+		log("The icd 10 code "+icdCode+" desc is '"+icd10Desc+"'");
+		    	
+		icdDesc = icd9Desc;
+		insertICD("9");
+		
+		icdDesc = icd10Desc;
+		insertICD("10");
+		
+		LoginBaseCheck();
+    	
+		//Select Related data
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RelatedData")).click();
+		
+		//Click on abnormality Codes
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRelatedDataNavigatorPanel:EPSDTRelatedDataNavigatorId:ITM_n5")).click();
+		
+		//sort on description desc
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_serviceCode")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_name")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_name")).click();
+		
+		//Get the two codes and assert they are same 
+		String cde1 = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText();
+		String cde2 = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_1:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText();
+		Assert.assertTrue(cde1.equals(cde2), "Did not insert same diag code "+icdCode+", or you are comparing wrong codes ("+cde1+" and "+cde2+")");
+		
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_cdeICDVersion")).getText().equals("9"), "The ICD version is not 9 in EPSDT Abnormality codes panel");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_1:EPSDTAbnormalityDiagnosisCodeBean_ColValue_cdeICDVersion")).getText().equals("10"), "The ICD version is not 9 in EPSDT Abnormality codes panel");
+		
+		deleteICD();
+		deleteICD();
+
+	}
+	
+	@Test	
+    public void test32025() throws Exception {
+		TestNGCustom.TCNo="32025";
+    	log("//TC 32025 - EPSDT - Help Panel Displays - Abnormality Panel Test Case");
+    	    	
+		//Select Related data
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RelatedData")).click();
+		
+		//Click on abnormality Codes
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRelatedDataNavigatorPanel:EPSDTRelatedDataNavigatorId:ITM_n5")).click();
+		
+		//Click on Help link
+	    driver.findElement(By.xpath("/html/body/form/table/tbody/tr/td[2]/span/table[2]/tbody/tr/td/table/tbody/tr/td/div/table/thead/tr/th/table/tbody/tr/td[2]/a[5]")).click();
+ 	    Thread.sleep(1000); //Added for chrome because its running through the new window
+
+		//Store the current window Handle
+		winHandleCurrent=driver.getWindowHandle();
+
+		//Switch to new window
+		for(String winHandleNew:driver.getWindowHandles()) 
+			driver.switchTo().window(winHandleNew);
+		driver.manage().window().maximize();
+
+		String helpText = driver.findElement(By.cssSelector("h1")).getText();
+		Assert.assertTrue(helpText.equals("EPSDT ABNORMALITY CODES HELP"), "Did not get 'EPSDT ABNORMALITY CODES HELP' on help page. Instad got "+helpText);
+		Assert.assertTrue(driver.findElement(By.xpath("//html/body/table/tbody/tr/td/table[3]/tbody/tr/td/div/table/tbody/tr[6]/td[2]/p/b/span")).getText().equals("Abnormality Diagnosis Code"), "Did not find the text 'Abnormality Diagnosis Code' in help page.");
+
+		log("Successfully received Help Page.");
+		
+		//Close the second window
+		driver.close();
+				
+		//Switch back to main window
+		Common.switchToMainWin();
+
+	}
+	
+	@Test	
+    public void test32026() throws Exception {
+		TestNGCustom.TCNo="32026";
+    	log("//TC 32026 - EPSDT - Cascade. Test Case");
+    	
+		insertICD("10");
+		
+		LoginBaseCheck();
+    	
+		//Select Related data
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RelatedData")).click();
+		
+		//Click on abnormality Codes
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRelatedDataNavigatorPanel:EPSDTRelatedDataNavigatorId:ITM_n5")).click();
+		
+		//sort on description desc
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_serviceCode")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_name")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_name")).click();
+		
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_cdeICDVersion")).getText().equals("10"), "The ICD version is not 10 in EPSDT Abnormality codes panel");
+		String diagToSelect = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).click();
+		Assert.assertTrue(driver.findElement(By.xpath("//input[@id='MMISForm:MMISBodyContent:AbnormalityCodesPanel:DiagnosisDataPanel_ListOfICDVersions2' and @checked='checked']")).getAttribute("value").equals("10"), "The ICD version is not 10 in  Abnormality Diagnosis Code (search results) panel");
+		log("Successfully validated that ICD version is 10 (for diag code "+diagToSelect+") in both EPSDT Abnormality codes panel and Abnormality Diagnosis Code (search results) panel");
+		
+		//Procedure Code
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTProcedureCodeList_0:EPSDTProcedureCodeBean_ColValue_procedure_serviceCode")).click();
+		log("Procedure code was successfully added.");
+		
+		//NDC Code
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTDrugPanel:EPSDTDrugTreatmentList_0:EPSDTDrugTreatmentBean_ColValue_drug_serviceCode")).click();
+		log("NDC code was successfully added.");
+
+		deleteICD();
+    	
+	}
+	
+	public void insertICD(String ver) throws Exception {
+		LoginBaseCheck();
+		
+		//Select Related data
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RelatedData")).click();
+		
+		//Click on abnormality Codes
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRelatedDataNavigatorPanel:EPSDTRelatedDataNavigatorId:ITM_n5")).click();
+		
+		//Add a new abnormality code
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_newAction_btn")).click();
+
+		//Click on Diagnosis  pop-up search icon against Diagnosis code field.
+		driver.findElement(By.cssSelector("img[alt=\"Diagnosis pop-up search\"]")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("h4.panel-header")).getText().equals(" Diagnosis Code Pop-up Search"));
+
+		//Select ICD 9/10 radio button
+		if (ver.equals("9"))
+			driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:_id15:DiagnosisPopupSearchCriteriaPanel:ICDVersion1")).click();
+		else
+			driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:_id15:DiagnosisPopupSearchCriteriaPanel:ICDVersion2")).click();
+		//Enter search string
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:_id15:DiagnosisPopupSearchCriteriaPanel:Description")).sendKeys(icdDesc);
+		
+		//Click on Search button
+		Common.search();
+
+		//Click on the first Diagnosis Code from the search results 
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:_id15:DiagnosisPopupSearchResults_0:column4Value")).getText().contains(icdDesc), "The ICD search description string did not match search results");
+		icdDesc="ZY"; //Resets the search string in case it was changed in the TC.
+		String diag=driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:_id15:DiagnosisPopupSearchResults_0:column1Value")).getText();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:_id15:DiagnosisPopupSearchResults_0:column1Value")).click();
+		
+		//Click on "New" button in the Procedure Code Treatment Panel.
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTProcedureCodeList_newAction_btn")).click();
+
+		//Click on Procedure  pop-up search icon against Procedure code field.
+		driver.findElement(By.cssSelector("img[alt=\"Procedure pop-up search\"]")).click();
+		
+		//Click on Search button
+		Common.search();
+
+		//Click on the first Procedure Code from the search results 
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:_id15:HCPCSProcedureCodeSearchResults_0:column1Value")).click();
+
+		//Click on "New" button in the Drug Treatment Panel.
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTDrugPanel:EPSDTDrugTreatmentList_newAction_btn")).click();
+
+		//Click on NDC  pop-up search icon.
+		driver.findElement(By.cssSelector("img[alt=\"NDC pop-up search\"]")).click();
+		
+		//Click on Search button
+		Common.search();
+
+		//Click on the first Procedure Code from the search results 
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTDrugPanel:_id15:NDCCodePopupSearchResults_0:column1Value")).click();
+		
+		//Click Add - this step is added as app was giving an error to hit Add button. Confirmed with Praveen that Add button is needed
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTDrugPanel:EPSDTDrugTreatmentPanel_addAction_btn")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:EPSDTProcedureCodePanel:EPSDTProcedureCodePanel_addAction_btn")).click();
+
+		//Save All
+        Common.saveAll();
+		log("Successfully Inserted icd "+ver+" diag code "+diag);
+        icdDiagCode = diag;
+        icdDiagPresent = true;        
+	}
+	
+	public void deleteICD() throws Exception {
+		LoginBaseCheck();
+		
+		//Select Related data
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RelatedData")).click();
+		
+		//Click on abnormality Codes
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRelatedDataNavigatorPanel:EPSDTRelatedDataNavigatorId:ITM_n5")).click();
+		
+		//sort on description desc
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_serviceCode")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_name")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_name")).click();
+		
+		//verify abnormality code to be deleted is the same as added
+		String abnormDiag = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText();
+		Assert.assertTrue(abnormDiag.equals(icdDiagCode), "The abnormality code to be deleted ("+abnormDiag+") is the not the same as added ("+icdDiagCode+")");
+		
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).click();
+		driver.findElement(By.id("EPSDTAbnormalityDiagnosisCodePanel_deleteAction_btn")).click();
+		//Declare Alert to handle Popup
+		alert = driver.switchTo().alert();
+		System.out.println(alert.getText());
+		alert.accept();
+		String saveMsg = driver.findElement(By.cssSelector("td.message-text")).getText();
+		Assert.assertTrue(saveMsg.equals("Save Successful."), "Didnt save successfully because got the message "+saveMsg);
+		log("Successfully deleted EPSDT abnormality diag code "+icdDiagCode);
+        icdDiagPresent = false;        
+		
+	}
+	
+    @Test
+    public void test174() throws Exception{
+    	TestNGCustom.TCNo="174";
+    	log("//TC "+TestNGCustom.TCNo);
+    	
+    	//Get the report name
+		String command, error;
+		command = "ls -ltr /customer/dsma/"+unixDir+"/rpt01/epspm107.rpt.* | tail -1"; 
+		error = "There was no report found";
+		String fileName = Common.connectUNIX(command, error);
+		log("The EPSDT SUMMARY OF NOTICES SENT REPORT is: "+fileName);
+		fileName = fileName.substring(fileName.indexOf("/"), fileName.length());
+		
+		//Get the REPORT PERIOD
+		command = "grep 'REPORT PERIOD : ' "+fileName+" | tail -1"; ;
+		error = "The selected file is not correct/ or it is empty/ or it does not have the 'REPORT PERIOD :' string in it";
+		String resp = Common.connectUNIX(command, error).trim();
+		log("\r\n"+resp);
+		//Get the from and to date from the report period
+		String fromDT=resp.substring(16,26);
+		String toDT=resp.substring(29);
+		//Make sure the reporting period is the last month
+		Assert.assertTrue(Common.StrtoDT(toDT).after(Common.StrtoDT(Common.convertSysdatecustom(-31))), "The report period on the date is not the last month. Investigate why a report is not produced with last month as the reporting period");
+    	
+		//Get Member details for Reminder Letter
+		sqlStatement = "Select b.ID_MEDICAID, b.NAM_FIRST, b.NAM_LAST, b.DTE_BIRTH, o.ADDRESS_LINE_1, o.ADR_CITY, o.ADR_STATE, o.ADR_ZIP_CODE from t_re_base b, T_LETTER_REQUEST l, t_re_other_address o where b.id_medicaid = l.id_medicaid and b.sak_recip=o.sak_recip and o.CDE_ADDR_USAGE='MM' and l.sak_letter = '107' and to_char(l.DTE_GENERATE,'MM/DD/YYYY') between '"+fromDT+"' and '"+toDT+"' and rownum < 2";
+		colNames.add("ID_MEDICAID");
+		colNames.add("NAM_FIRST");
+		colNames.add("NAM_LAST");
+		colNames.add("DTE_BIRTH");
+		colNames.add("ADDRESS_LINE_1");
+		colNames.add("ADR_CITY");
+		colNames.add("ADR_STATE");
+		colNames.add("ADR_ZIP_CODE");
+		
+		colValues=Common.executeQuery(sqlStatement, colNames);
+		String mem = colValues.get(0);
+		String f = colValues.get(1);
+		String l = colValues.get(2);
+		String dob = colValues.get(3);
+		String adr1 = colValues.get(4);
+		String city = colValues.get(5);
+		String state = colValues.get(6);
+		String zip = colValues.get(7);
+				
+		//Verify Member details are in the report
+		command = "awk '/"+mem+"/{_=3}_&&_--' "+fileName; //This greps the member + next 2 lines (it was next line before and then i had to grep the 3rd line because the city was in 3rd line for a member, so made the count to 3 in this line of code, and it worked)
+		error = "The selected file is not correct/ or it is empty/ or it does not have the desired Member ID '"+mem+"'";
+		resp = Common.connectUNIX(command, error).trim();;
+		log("\r\n"+resp);
+		Assert.assertTrue(resp.contains(l), "Member Last Name '"+l+"' not found in report");
+		Assert.assertTrue(resp.contains(f), "Member First Name '"+f+"' not found in report");
+		Assert.assertTrue(resp.contains(adr1), "Member Address 1 '"+adr1+"' not found in report");
+		Assert.assertTrue(resp.contains(Common.convertDate(dob)), "Member DoB '"+dob+"' not found in report");
+		Assert.assertTrue(resp.contains(city), "Member City '"+city+"' not found in report");
+		Assert.assertTrue(resp.contains(state), "Member State '"+state+"' not found in report");
+		Assert.assertTrue(resp.contains(zip), "Member Zip '"+zip+"' not found in report");
+
+    }
+    
+    @Test
+    public void test32082() throws Exception{
+    	TestNGCustom.TCNo="32082";
+    	log("//TC "+TestNGCustom.TCNo+" - Diag Grp 20 - EPSDT Screening ICD9 Test Case");
+    	    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '32082'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> 20130401) " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 " +
+				"and dte_death = 0 "+
+				"and base.dte_birth > "+HIPAA.datePaneltoSQL(Common.convertSysdatecustom(-4380))+" "+ //less than 12
+				"and base.dte_birth < "+HIPAA.datePaneltoSQL(Common.convertSysdatecustom(-1900)); //more than 5
+
+    	claims.LoginCheck();
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (!(clmStatus.equals("Paid")))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is not PAID. It is "+clmStatus);
+       	
+       	//Get member id
+       	sqlStatement = "select ID_MEDICAID from t_re_base where sak_recip = (select sak_recip from t_hist_directory where num_icn_fl = '"+clmNo+"')";
+       	colNames.add("ID_MEDICAID");
+       	colValues=Common.executeQuery(sqlStatement, colNames);
+       	String mem=colValues.get(0);
+       	       	
+       	LoginBaseCheck();
+    	searchEPSDTmem(mem);
+    	
+		Assert.assertTrue(driver.findElements(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id25")).size()==1, "No records found found in EPSDT subsystem for member id "+mem);
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id25")).getText().equals(clmNo), "Claim not found in EPSDT subsystem for member id "+mem);
+		log ("Claim found in EPSDT subsystem for member id "+mem);
+    }
+    
+    @Test
+    public void test32083() throws Exception{
+    	TestNGCustom.TCNo="32083";
+    	log("//TC "+TestNGCustom.TCNo+" - Diag Grp 20 - EPSDT Screening ICD10 Test Case");
+    	    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '32083'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> 20130401) " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 " +
+				"and dte_death = 0 "+
+				"and base.dte_birth > "+HIPAA.datePaneltoSQL(Common.convertSysdatecustom(-4380))+" "+ //less than 12
+				"and base.dte_birth < "+HIPAA.datePaneltoSQL(Common.convertSysdatecustom(-1900)); //more than 5
+	    
+    	claims.LoginCheck();
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (!(clmStatus.equals("Paid")))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is not PAID. It is "+clmStatus);
+     
+       	
+       	//Get member id
+       	sqlStatement = "select ID_MEDICAID from t_re_base where sak_recip = (select sak_recip from t_hist_directory where num_icn_fl = '"+clmNo+"')";
+       	colNames.add("ID_MEDICAID");
+       	colValues=Common.executeQuery(sqlStatement, colNames);
+       	String mem=colValues.get(0);
+       	       	
+       	LoginBaseCheck();
+    	searchEPSDTmem(mem);
+    	
+		Assert.assertTrue(driver.findElements(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id25")).size()==1, "No records found found in EPSDT subsystem for member id "+mem);
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id25")).getText().equals(clmNo), "Claim not found in EPSDT subsystem for member id "+mem);
+		log ("Claim found in EPSDT subsystem for member id "+mem);
+    	
+
+    	
+    }
+    
+    @Test
+    public void test22383() throws Exception{
+    	TestNGCustom.TCNo="22383";
+    	log("//TC "+TestNGCustom.TCNo);
+    	    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '22383'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists (select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 " +
+				"and dte_death = 0 "+
+				"and base.dte_birth > "+HIPAA.datePaneltoSQL(Common.convertSysdatecustom(-4380))+" "+ //less than 12
+				"and base.dte_birth < "+HIPAA.datePaneltoSQL(Common.convertSysdatecustom(-1900)); //more than 5
+
+    	claims.LoginCheck();
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+
+       	log("ICN: "+clmNo);
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))    		
+       		throw new SkipException("Skipping this test because ICN "+clmNo+" submitted for this TC is Denied");
+       	log("The claim is not denied. It is "+clmStatus);
+
+       	//Get member id
+       	sqlStatement = "select ID_MEDICAID from t_re_base where sak_recip = (select sak_recip from t_hist_directory where num_icn_fl = '"+clmNo+"')";
+       	colNames.add("ID_MEDICAID");
+       	colValues=Common.executeQuery(sqlStatement, colNames);
+       	String mem=colValues.get(0);
+       	       	
+       	LoginBaseCheck();
+    	searchEPSDTmem(mem);
+    	
+	    //Get proc code
+		sqlStatement="select * from R_PROC where TC = '22383' and DTL='1'";
+		colNames.add("PROC"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    String proc1 = colValues.get(0); 
+	    
+		sqlStatement="select * from R_PROC where TC = '22383' and DTL='2'";
+		colNames.add("PROC"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    String proc2 = colValues.get(0); 
+    	
+		Assert.assertTrue(driver.findElements(By.xpath("//a[contains(@id,':_id25')]")).size()>0, "No records found found in EPSDT subsystem for member id "+mem);
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id25")).getText().equals(clmNo), "Claim not found at ist search result in EPSDT subsystem for member id "+mem);
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_1:_id25")).getText().equals(clmNo), "Claim not found at 2nd search result in EPSDT subsystem for member id "+mem);
+		Assert.assertTrue(driver.findElement(By.cssSelector("td.listTextBlack > span")).getText().equals(proc1), "Proc code 1 not found at 1st search result in EPSDT subsystem for member id "+mem);
+		Assert.assertTrue(driver.findElement(By.cssSelector("tr.listBlueBg > td.listTextBlack > span")).getText().equals(proc2), "Proc code 2 not found at 2nd search result in EPSDT subsystem for member id "+mem);
+		log ("Claim found in EPSDT subsystem for member id "+mem);
+    	
+		//check special health conditon
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTSearchResults_0:_id18")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EpsdtNavigatorPanel:EPSDTNavigatorId:ITM_n2")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:ReEpsAbnormalPanel:ReEpsAbnormal_dataTable_0:ReEpsAbnormalBean_ColValue_dsc6")).click();
+		Assert.assertTrue(driver.findElement(By.cssSelector("h3.panel-header")).getText().equals(" Special Health Condition Maintenance"), "Special Health Condition Maintenance panel did not appear");
+		Assert.assertTrue(driver.findElement(By.xpath("//table[@id='MMISForm:MMISBodyContent:ReEpsAbnormalPanel:ReEpsAbnormalBean_DataPanel']/tbody/tr/td/table/tbody/tr/td/table/tbody/tr[2]/td[2]")).getText().equals(Common.convertSysdatecustom(Integer.parseInt(tdos))), "Screening Date mismatch");
+		Assert.assertTrue(driver.findElement(By.xpath("//table[@id='MMISForm:MMISBodyContent:ReEpsAbnormalPanel:ReEpsAbnormalBean_DataPanel']/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]")).getText().equals("CHRONIC OBSTRUCTIVE PULMONARY DISEASE W (ACUTE) EXACERBATION"), "Abnormality mismatch. Abnormality is not 'CHRONIC OBSTRUCTIVE PULMONARY DISEASE W (ACUTE) EXACERBATION'");
+//		Assert.assertTrue(driver.findElement(By.xpath("//table[@id='MMISForm:MMISBodyContent:ReEpsAbnormalPanel:ReEpsAbnormalBean_DataPanel']/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]")).getText().equals("CH OBST ASTH W (AC) EXAC"), "Abnormality mismatch. Abnormality is not 'CH OBST ASTH W (AC) EXAC'");
+		log("Special Health condition at first claim record search result is 'CH OBST ASTH W (AC) EXAC'");    	
+    }
+    
+    @Test
+    public void test18804a() throws Exception{
+    	TestNGCustom.TCNo="18804a";
+    	log("//TC "+TestNGCustom.TCNo+" - Generate a Re-open notice (EPS- 3012-M) Test Case - Day 1");
+    	
+    	//Get a member who has elig start date less than 1 month from now (so we can split it by end dating his elig and restarting it in the past month. Basically, and aid cat from 
+    	//(select sak_cde_aid from t_re_aid_cat_group where sak_aid_cat_type = '1' ) is fine, as sak_aid_cat_type = '1' is epsdt aid cat group type, but for ease of code we are selecting aid cat 08 (sak value 55)
+    	//Also excluding the required letter from notice table, so we make sure this letter is not produced for member before (we don't pick the same member again if retesting), and also so we only find one record in letter search results after letter is produced
+    	
+    	sqlStatement = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.id_medicaid, aid.sak_cde_aid from t_re_base base, t_re_aid_elig aid where base.sak_recip = aid.sak_recip  and base.ind_active = 'Y' "+
+    					"and aid.sak_cde_aid = '55' and aid.cde_agency = 'DSS' and aid.dte_effective < "+Common.convertDatetoInt(Common.convertSysdatecustom(-30))+" and aid.dte_end > "+Common.convertDatetoInt(Common.convertSysdate())+" "+
+    					"and not exists (select 1 from T_RE_EPSDT_REC_NOT n where n.sak_recip = base.sak_recip and n.sak_notice = '2' ) "+
+    					"and base.dte_birth between to_char(add_months(sysdate, -12*20), 'YYYYMMDD') and  to_char(add_months(sysdate, -12*19), 'YYYYMMDD') "+
+    					"and base.id_medicaid not in ('100020239669', '100200144581', '100029132774', '100052351879', '100034533339', '100052345988', '100051108651') "+
+    					"and rownum < 2";
+    	
+    	System.out.println(sqlStatement);
+    	colNames.add("ID_MEDICAID");
+    	colValues = Common.executeQuery(sqlStatement, colNames);
+    	String mem = colValues.get(0);
+    	log ("Member: "+mem);
+    	
+    	//Search for this member in member subsystem, and create the aid cat gap
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Recipient")).click();
+    	Member.memberSearch(mem);
+    	
+    	//Open Member benefit plan
+		driver.findElement(By.id("MMISForm:MMISBodyContent:RecipientNavigatorPanel:RecipientNavigator:ITM_n108")).click();
+		//Sort end date desc
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligList:EligBean_ColHeader_benefitPlan")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligList:EligBean_ColHeader_endDate")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligList:EligBean_ColHeader_endDate")).click();
+		//Select benefit plan
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligList_0:EligBean_ColValue_benefitPlan")).click();
+
+		//Sort the aid cat by end date desc
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligList:AidEligBean_ColHeader_aidDes")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligList:AidEligBean_ColHeader_endDate")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligList:AidEligBean_ColHeader_endDate")).click();
+		//Select aid cat
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligList_0:AidEligBean_ColValue_status")).click();
+		
+		//Capture info needed for creating new row later
+		String bp = new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligDataPanel_PubHlthPgm"))).getFirstSelectedOption().getText();
+		String caseNo = driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_CaseNumber")).getAttribute("value");
+		String depNo = driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_DepNumber")).getAttribute("value");
+		
+		//End date the aid cat and benefit plan
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_EligCodeStatus"))).selectByVisibleText("Closed");
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_EndDate")).clear();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_EndDate")).sendKeys(Common.convertSysdatecustom(-30));
+		
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligDataPanel_EndDate")).clear();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligDataPanel_EndDate")).sendKeys(Common.convertSysdatecustom(-30));
+		Common.saveAll();
+		
+		//Reopen 3 days later
+		Common.resetBase();
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Recipient")).click();
+    	Member.memberSearch(mem);
+    	
+    	//Open Member benefit plan
+		driver.findElement(By.id("MMISForm:MMISBodyContent:RecipientNavigatorPanel:RecipientNavigator:ITM_n108")).click();
+		//Add new
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:BenefitPlanList_newAction_btn")).click();
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligDataPanel_PubHlthPgm"))).selectByVisibleText(bp);
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligDataPanel_EffectiveDate")).sendKeys(Common.convertSysdatecustom(-27));
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligDataPanel_EndDate")).sendKeys("12/31/2299");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligDataPanel_FinancialPayer"))).selectByVisibleText("1 - EOHHS");
+
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidCategoryList_newAction_btn")).click();
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_CdeAid"))).selectByVisibleText("08 Multi Assistance Unit");
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_EffectiveDate")).sendKeys(Common.convertSysdatecustom(-27));
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_EligStart"))).selectByVisibleText("Reopened OR Dependent Approved for MassHealth Standard");
+		driver.findElement(By.xpath("//img[@alt='Case Number pop-up search']")).click();
+		driver.findElement(By.xpath("//input[contains(@id,'MemberCaseNumberPopUpSearchCriteriaPanel:CaseNumber')]")).sendKeys(caseNo);
+		driver.findElement(By.xpath("//*[contains(@id,'MemberCaseNumberPopUpSearchCriteriaPanel:SEARCH')]")).click();
+		driver.findElement(By.xpath("//*[contains(@id,'MemberCaseNumberPopUpSearchResults_0:column1Value')]")).click();
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_CountyOfficeList"))).selectByVisibleText("60-961 - MASSHEALTH CENTRAL OFFICE");
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_DepNumber")).sendKeys(depNo);
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_CertificationDate")).sendKeys(Common.convertSysdatecustom(-27));
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_EligCodeStatus"))).selectByVisibleText("Reopened");
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_EndDate")).sendKeys("12/31/2299");
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_AgencyCode"))).selectByVisibleText("DSS");
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_ApplicDate")).sendKeys(Common.convertSysdatecustom(-27));
+		Common.saveAll();
+		
+		//Save Member for Day 2
+		Statement statement = Common.connection1.createStatement();
+		sqlStatement = "select * from r_day2 where TC = '18804'";
+		colNames.add("ID");
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+		if (!(colValues.get(0).equals("null"))) {
+			sqlStatement = "delete from  r_day2 where TC = '18804'";
+			statement.executeQuery(sqlStatement);
+		}
+		sqlStatement = "insert into  r_day2 values ('18804', '"+mem+"', 'EPSDT reopen elig notice member', '"+Common.convertSysdate()+"')";
+		statement.executeQuery(sqlStatement);
+
+    }
+    
+    @Test
+    public void test18804b() throws Exception{
+    	TestNGCustom.TCNo="18804b";
+    	log("//TC "+TestNGCustom.TCNo+" - Generate a Re-open notice (EPS- 3012-M) Test Case - Day 2");
+    	
+		sqlStatement = "select * from r_day2 where TC = '18804'";
+		colNames.add("ID");
+    	colValues = Common.executeQuery1(sqlStatement, colNames);
+    	String mem = colValues.get(0);
+    	log ("Member is: "+mem);
+    	
+    	//Lookup this member in EPSDT>REPORTS AND LETTERS
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RptsAndLetters")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRptsAndLettersNavigatorPanel:EPSDTRptsAndLettersNavigationId:ITM_n4")).click();
+		driver.findElement(By.name("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterRequestBean_CriteriaPanel:LetterRequestDataPanel_MemberId")).sendKeys(mem);
+		Common.search();
+		
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+		if (driver.findElements(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults_0:_id58")).size()==0)
+			Assert.assertTrue(false, "No letter found.");
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults_0:_id58")).getText().equals("EPS-3012-M"), "EPS-3012-M letter not found.");
+		Assert.assertTrue(driver.findElement(By.xpath("//tbody[@id='MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults:tbody_element']/tr/td[2]")).getText().equals(Common.convertSysdatecustom(-1)), "Request date not equal to expected sysdate when letter was produced");
+		Assert.assertTrue(driver.findElement(By.xpath("//tbody[@id='MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults:tbody_element']/tr/td[3]")).getText().equals(Common.convertSysdatecustom(-1)), "Generate date not equal to expected sysdate when letter was produced");
+		Assert.assertTrue(driver.findElement(By.xpath("//tbody[@id='MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults:tbody_element']/tr/td[4]")).getText().equals(mem), "Member not found in search results.");
+
+		//Generate Letter
+		driver.findElement(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults_0:_id58")).click();
+		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Generate and Print']")).click();
+		log("EPS-3012-M letter name is :"+Common.fileName());
+		log("Successfully validated that letter was produced on "+Common.convertSysdatecustom(-1));
+	
+    }
+    
+    @Test
+    public void test18805() throws Exception{
+    	TestNGCustom.TCNo="18805";
+    	log("//TC "+TestNGCustom.TCNo+" - Generate a Reminder notice (EPS-3026-D) Test Case");
+    	
+    	sqlStatement = "select a.ID_MEDICAID from t_re_base a, t_re_aid_elig e where a.dte_birth = to_char(add_months(sysdate-1, -12*19)+30, 'YYYYMMDD') and e.sak_recip = a.sak_recip and e.dte_end > to_char(sysdate, 'YYYYMMDD') and sak_cde_aid = '182' and a.id_medicaid not in ('100028870051', '100049357179') and rownum < 2"; //This SQL fetches a member who is 30 days shy of turning 19, as of yesterday. So yesterday, the batch job would have triggered a letter for him.
+    	colNames.add("ID_MEDICAID");
+    	colValues = Common.executeQuery(sqlStatement, colNames);
+    	String mem = colValues.get(0);
+    	log ("Member is: "+mem);
+    	
+    	//Lookup this member in EPSDT>REPORTS AND LETTERS
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RptsAndLetters")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:EPSDTRptsAndLettersNavigatorPanel:EPSDTRptsAndLettersNavigationId:ITM_n4")).click();
+		driver.findElement(By.name("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterRequestBean_CriteriaPanel:LetterRequestDataPanel_MemberId")).sendKeys(mem);
+		Common.search();
+		
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+		if (driver.findElements(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults_0:_id58")).size()==0)
+			Assert.assertTrue(false, "No letter found.");
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults_0:_id58")).getText().equals("EPS-3026-D"), "EPS-3026-D letter not found.");
+		Assert.assertTrue(driver.findElement(By.xpath("//tbody[@id='MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults:tbody_element']/tr/td[2]")).getText().equals(Common.convertSysdatecustom(-1)), "Request date not equal to expected sysdate when letter was produced");
+		Assert.assertTrue(driver.findElement(By.xpath("//tbody[@id='MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults:tbody_element']/tr/td[3]")).getText().equals(Common.convertSysdatecustom(-1)), "Generate date not equal to expected sysdate when letter was produced");
+		Assert.assertTrue(driver.findElement(By.xpath("//tbody[@id='MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults:tbody_element']/tr/td[4]")).getText().equals(mem), "Member not found in search results.");
+
+		//Generate Letter
+		driver.findElement(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults_0:_id58")).click();
+		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Generate and Print']")).click();
+		log("EPS-3026-D letter name is :"+Common.fileName());
+		log("Successfully validated that letter was produced on "+Common.convertSysdatecustom(-1));
+	
+    }
+    
+
+
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [NewMMIS regression test suite]">
+  <parameter name="selenium.url" value="www.google.com"/>
+  <parameter name="selenium.browser" value="*firefox"/>
+  <parameter name="environment" value="MO"/>
+  <parameter name="selenium.port" value="4444"/>
+  <parameter name="selenium.host" value="localhost"/>
+  <listeners>
+    <listener class-name="org.uncommons.reportng.HTMLReporter"/>
+  </listeners>
+  <test name="Member test(failed)">
+    <classes>
+      <class name="newMMIS_Subsystems.Login">
+        <methods>
+          <include name="init"/>
+          <include name="init"/>
+        </methods>
+      </class> <!-- newMMIS_Subsystems.Login -->
+      <class name="newMMIS_Subsystems.Member">
+        <methods>
+          <include name="test28554"/>
+          <include name="LoginCheck"/>
+          <include name="memberStartup"/>
+          <include name="init"/>
+        </methods>
+      </class> <!-- newMMIS_Subsystems.Member -->
+    </classes>
+  </test> <!-- Member test(failed) -->
+</suite> <!-- Failed suite [NewMMIS regression test suite] -->

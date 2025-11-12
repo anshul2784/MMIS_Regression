@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+  <title>TestNG reports</title>
+
+    <link type="text/css" href="testng-reports.css" rel="stylesheet" />  
+    <script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="testng-reports.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type='text/javascript'>
+      google.load('visualization', '1', {packages:['table']});
+      google.setOnLoadCallback(drawTable);
+      var suiteTableInitFunctions = new Array();
+      var suiteTableData = new Array();
+    </script>
+    <!--
+      <script type="text/javascript" src="jquery-ui/js/jquery-ui-1.8.16.custom.min.js"></script>
+     -->
+  </head>
+
+  <body>
+    <div class="top-banner-root">
+      <span class="top-banner-title-font">Test results</span>
+      <br/>
+      <span class="top-banner-font-1">1 suite, 1 failed test</span>
+    </div> <!-- top-banner-root -->
+    <div class="navigator-root">
+      <div class="navigator-suite-header">
+        <span>All suites</span>
+        <a href="#" class="collapse-all-link" title="Collapse/expand all the suites">
+          <img class="collapse-all-icon" src="collapseall.gif">
+          </img> <!-- collapse-all-icon -->
+        </a> <!-- collapse-all-link -->
+      </div> <!-- navigator-suite-header -->
+      <div class="suite">
+        <div class="rounded-window">
+          <div class="suite-header light-rounded-window-top">
+            <a href="#" class="navigator-link" panel-name="suite-NewMMIS_regression_test_suite">
+              <span class="suite-name border-failed">NewMMIS regression test suite</span>
+            </a> <!-- navigator-link -->
+          </div> <!-- suite-header light-rounded-window-top -->
+          <div class="navigator-suite-content">
+            <div class="suite-section-title">
+              <span>Info</span>
+            </div> <!-- suite-section-title -->
+            <div class="suite-section-content">
+              <ul>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="test-xml-NewMMIS_regression_test_suite">
+                    <span>C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\testngUAT.xml</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="testlist-NewMMIS_regression_test_suite">
+                    <span class="test-stats">3 tests</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="group-NewMMIS_regression_test_suite">
+                    <span>0 groups</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="times-NewMMIS_regression_test_suite">
+                    <span>Times</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="reporter-NewMMIS_regression_test_suite">
+                    <span>Reporter output</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="ignored-methods-NewMMIS_regression_test_suite">
+                    <span>Ignored methods</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="chronological-NewMMIS_regression_test_suite">
+                    <span>Chronological view</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+              </ul>
+            </div> <!-- suite-section-content -->
+            <div class="result-section">
+              <div class="suite-section-title">
+                <span>Results</span>
+              </div> <!-- suite-section-title -->
+              <div class="suite-section-content">
+                <ul>
+                  <li>
+                    <span class="method-stats">4 methods, 1 failed,   3 passed</span>
+                  </li>
+                  <li>
+                    <span class="method-list-title failed">Failed methods</span>
+                    <span class="show-or-hide-methods failed">
+                      <a href="#" panel-name="suite-NewMMIS_regression_test_suite" class="hide-methods failed suite-NewMMIS_regression_test_suite"> (hide)</a> <!-- hide-methods failed suite-NewMMIS_regression_test_suite -->
+                      <a href="#" panel-name="suite-NewMMIS_regression_test_suite" class="show-methods failed suite-NewMMIS_regression_test_suite"> (show)</a> <!-- show-methods failed suite-NewMMIS_regression_test_suite -->
+                    </span>
+                    <div class="method-list-content failed suite-NewMMIS_regression_test_suite">
+                      <span>
+                        <img width="3%" src="failed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-NewMMIS_regression_test_suite" title="newMMIS_Subsystems.Member" hash-for-method="test28554">test28554</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                    </div> <!-- method-list-content failed suite-NewMMIS_regression_test_suite -->
+                  </li>
+                  <li>
+                    <span class="method-list-title passed">Passed methods</span>
+                    <span class="show-or-hide-methods passed">
+                      <a href="#" panel-name="suite-NewMMIS_regression_test_suite" class="hide-methods passed suite-NewMMIS_regression_test_suite"> (hide)</a> <!-- hide-methods passed suite-NewMMIS_regression_test_suite -->
+                      <a href="#" panel-name="suite-NewMMIS_regression_test_suite" class="show-methods passed suite-NewMMIS_regression_test_suite"> (show)</a> <!-- show-methods passed suite-NewMMIS_regression_test_suite -->
+                    </span>
+                    <div class="method-list-content passed suite-NewMMIS_regression_test_suite">
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-NewMMIS_regression_test_suite" title="newMMIS_Subsystems.Login" hash-for-method="closeLogs">closeLogs</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-NewMMIS_regression_test_suite" title="newMMIS_Subsystems.Login" hash-for-method="testDBconnect">testDBconnect</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-NewMMIS_regression_test_suite" title="newMMIS_Subsystems.Login" hash-for-method="testLoginBase">testLoginBase</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                    </div> <!-- method-list-content passed suite-NewMMIS_regression_test_suite -->
+                  </li>
+                </ul>
+              </div> <!-- suite-section-content -->
+            </div> <!-- result-section -->
+          </div> <!-- navigator-suite-content -->
+        </div> <!-- rounded-window -->
+      </div> <!-- suite -->
+    </div> <!-- navigator-root -->
+    <div class="wrapper">
+      <div class="main-panel-root">
+        <div panel-name="suite-NewMMIS_regression_test_suite" class="panel NewMMIS_regression_test_suite">
+          <div class="suite-NewMMIS_regression_test_suite-class-failed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="failed.png"/>
+              <span class="class-name">newMMIS_Subsystems.Member</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="test28554">
+                  </a> <!-- test28554 -->
+                  <span class="method-name">test28554</span>
+                  <div class="stack-trace"><b>"java.lang.AssertionError: Error(1) Your transaction was not processed. The transaction service is not currently available, please try your transaction again later.-Error Code: 200  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.EVS.RMreset(Unknown Source)
+	at newMMIS_Subsystems.Member.test28554(Unknown Source)
+... Removed 26 stack frames<br/> java.lang.AssertionError: Error(1) Your transaction was not processed. The transaction service is not currently available, please try your transaction again later.-Error Code: 200  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:494)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.EVS.RMreset(Unknown Source)
+	at newMMIS_Subsystems.Member.test28554(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1198)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1123)
+	at org.testng.TestNG.run(TestNG.java:1031)
+	at org.testng.TestNG.privateMain(TestNG.java:1338)
+	at org.testng.TestNG.main(TestNG.java:1307)
+"</b><br>org.testng.Assert.fail(Assert.java:94)<br>org.testng.Assert.failNotEquals(Assert.java:494)<br>org.testng.Assert.assertTrue(Assert.java:42)<br>newMMIS_Subsystems.Common.getPageError(Unknown Source)<br>newMMIS_Subsystems.EVS.RMreset(Unknown Source)<br>newMMIS_Subsystems.Member.test28554(Unknown Source)<br>sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br>sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br>sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br>java.lang.reflect.Method.invoke(Unknown Source)<br>org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)<br>org.testng.internal.Invoker.invokeMethod(Invoker.java:714)<br>org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)<br>org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)<br>org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)<br>org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)<br>org.testng.TestRunner.privateRun(TestRunner.java:767)<br>org.testng.TestRunner.run(TestRunner.java:617)<br>org.testng.SuiteRunner.runTest(SuiteRunner.java:334)<br>org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)<br>org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)<br>org.testng.SuiteRunner.run(SuiteRunner.java:240)<br>org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)<br>org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)<br>org.testng.TestNG.runSuitesSequentially(TestNG.java:1198)<br>org.testng.TestNG.runSuitesLocally(TestNG.java:1123)<br>org.testng.TestNG.run(TestNG.java:1031)<br>org.testng.TestNG.privateMain(TestNG.java:1338)<br>org.testng.TestNG.main(TestNG.java:1307)<br>
+</div> <!-- stack-trace -->
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-NewMMIS_regression_test_suite-class-failed -->
+          <div class="suite-NewMMIS_regression_test_suite-class-passed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="passed.png"/>
+              <span class="class-name">newMMIS_Subsystems.Login</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="closeLogs">
+                  </a> <!-- closeLogs -->
+                  <span class="method-name">closeLogs</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="testDBconnect">
+                  </a> <!-- testDBconnect -->
+                  <span class="method-name">testDBconnect</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="testLoginBase">
+                  </a> <!-- testLoginBase -->
+                  <span class="method-name">testLoginBase</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-NewMMIS_regression_test_suite-class-passed -->
+        </div> <!-- panel NewMMIS_regression_test_suite -->
+        <div panel-name="test-xml-NewMMIS_regression_test_suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\testngUAT.xml</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE suite SYSTEM &quot;http://testng.org/testng-1.0.dtd&quot;&gt;
+&lt;suite name=&quot;NewMMIS regression test suite&quot;&gt;
+  &lt;parameter name=&quot;selenium.url&quot; value=&quot;www.google.com&quot;/&gt;
+  &lt;parameter name=&quot;selenium.browser&quot; value=&quot;*firefox&quot;/&gt;
+  &lt;parameter name=&quot;environment&quot; value=&quot;MO&quot;/&gt;
+  &lt;parameter name=&quot;selenium.port&quot; value=&quot;4444&quot;/&gt;
+  &lt;parameter name=&quot;selenium.host&quot; value=&quot;localhost&quot;/&gt;
+  &lt;listeners&gt;
+    &lt;listener class-name=&quot;org.uncommons.reportng.HTMLReporter&quot;/&gt;
+  &lt;/listeners&gt;
+  &lt;test name=&quot;Login test&quot;&gt;
+    &lt;classes&gt;
+      &lt;class name=&quot;newMMIS_Subsystems.Login&quot;&gt;
+        &lt;methods&gt;
+          &lt;include name=&quot;testDBconnect&quot;/&gt;
+          &lt;include name=&quot;testLoginBase&quot;/&gt;
+        &lt;/methods&gt;
+      &lt;/class&gt; &lt;!-- newMMIS_Subsystems.Login --&gt;
+    &lt;/classes&gt;
+  &lt;/test&gt; &lt;!-- Login test --&gt;
+  &lt;test name=&quot;Member test&quot;&gt;
+    &lt;classes&gt;
+      &lt;class name=&quot;newMMIS_Subsystems.Member&quot;&gt;
+        &lt;methods&gt;
+          &lt;include name=&quot;test28554&quot;/&gt;
+        &lt;/methods&gt;
+      &lt;/class&gt; &lt;!-- newMMIS_Subsystems.Member --&gt;
+    &lt;/classes&gt;
+  &lt;/test&gt; &lt;!-- Member test --&gt;
+  &lt;test name=&quot;Close Logs test&quot;&gt;
+    &lt;classes&gt;
+      &lt;class name=&quot;newMMIS_Subsystems.Login&quot;&gt;
+        &lt;methods&gt;
+          &lt;include name=&quot;closeLogs&quot;/&gt;
+        &lt;/methods&gt;
+      &lt;/class&gt; &lt;!-- newMMIS_Subsystems.Login --&gt;
+    &lt;/classes&gt;
+  &lt;/test&gt; &lt;!-- Close Logs test --&gt;
+&lt;/suite&gt; &lt;!-- NewMMIS regression test suite --&gt;
+            </pre>
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="testlist-NewMMIS_regression_test_suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Tests for NewMMIS regression test suite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <ul>
+              <li>
+                <span class="test-name">Login test (1 class)</span>
+              </li>
+              <li>
+                <span class="test-name">Member test (1 class)</span>
+              </li>
+              <li>
+                <span class="test-name">Close Logs test (1 class)</span>
+              </li>
+            </ul>
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="group-NewMMIS_regression_test_suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Groups for NewMMIS regression test suite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="times-NewMMIS_regression_test_suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Times for NewMMIS regression test suite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <div class="times-div">
+              <script type="text/javascript">
+suiteTableInitFunctions.push('tableData_NewMMIS_regression_test_suite');
+function tableData_NewMMIS_regression_test_suite() {
+var data = new google.visualization.DataTable();
+data.addColumn('number', 'Number');
+data.addColumn('string', 'Method');
+data.addColumn('string', 'Class');
+data.addColumn('number', 'Time (ms)');
+data.addRows(4);
+data.setCell(0, 0, 0)
+data.setCell(0, 1, 'test28554')
+data.setCell(0, 2, 'newMMIS_Subsystems.Member')
+data.setCell(0, 3, 177062);
+data.setCell(1, 0, 1)
+data.setCell(1, 1, 'testLoginBase')
+data.setCell(1, 2, 'newMMIS_Subsystems.Login')
+data.setCell(1, 3, 11538);
+data.setCell(2, 0, 2)
+data.setCell(2, 1, 'testDBconnect')
+data.setCell(2, 2, 'newMMIS_Subsystems.Login')
+data.setCell(2, 3, 647);
+data.setCell(3, 0, 3)
+data.setCell(3, 1, 'closeLogs')
+data.setCell(3, 2, 'newMMIS_Subsystems.Login')
+data.setCell(3, 3, 0);
+window.suiteTableData['NewMMIS_regression_test_suite']= { tableData: data, tableDiv: 'times-div-NewMMIS_regression_test_suite'}
+return data;
+}
+              </script>
+              <span class="suite-total-time">Total running time: 3 minutes</span>
+              <div id="times-div-NewMMIS_regression_test_suite">
+              </div> <!-- times-div-NewMMIS_regression_test_suite -->
+            </div> <!-- times-div -->
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="reporter-NewMMIS_regression_test_suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Reporter output for NewMMIS regression test suite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <div class="reporter-method-div">
+              <span class="reporter-method-name">test28554</span>
+              <div class="reporter-method-output-div">
+                <span class="reporter-method-output">1.C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\ScreenShots\_02_May_2016__02_43_54PM_16.214.139.6_TC 28554.png</span>
+              </div> <!-- reporter-method-output-div -->
+            </div> <!-- reporter-method-div -->
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="ignored-methods-NewMMIS_regression_test_suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">85 ignored methods</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <div class="ignored-class-div">
+              <span class="ignored-class-name">newMMIS_Subsystems.Login</span>
+              <div class="ignored-methods-div">
+                <span class="ignored-method-name">testDBconnect</span>
+                <br/>
+                <span class="ignored-method-name">closeLogs</span>
+                <br/>
+                <span class="ignored-method-name">testLoginPortal</span>
+                <br/>
+                <span class="ignored-method-name">testLoginPortal</span>
+                <br/>
+                <span class="ignored-method-name">testLoginBase</span>
+                <br/>
+              </div> <!-- ignored-methods-div -->
+            </div> <!-- ignored-class-div -->
+            <div class="ignored-class-div">
+              <span class="ignored-class-name">newMMIS_Subsystems.Member</span>
+              <div class="ignored-methods-div">
+                <span class="ignored-method-name">test23397</span>
+                <br/>
+                <span class="ignored-method-name">test23396</span>
+                <br/>
+                <span class="ignored-method-name">test23395</span>
+                <br/>
+                <span class="ignored-method-name">test22541</span>
+                <br/>
+                <span class="ignored-method-name">test23394</span>
+                <br/>
+                <span class="ignored-method-name">test22551</span>
+                <br/>
+                <span class="ignored-method-name">test23393</span>
+                <br/>
+                <span class="ignored-method-name">test22550</span>
+                <br/>
+                <span class="ignored-method-name">test32957a</span>
+                <br/>
+                <span class="ignored-method-name">test23392</span>
+                <br/>
+                <span class="ignored-method-name">test23391</span>
+                <br/>
+                <span class="ignored-method-name">test23365</span>
+                <br/>
+                <span class="ignored-method-name">test22553_23372</span>
+                <br/>
+                <span class="ignored-method-name">test26281</span>
+                <br/>
+                <span class="ignored-method-name">closeLogs</span>
+                <br/>
+                <span class="ignored-method-name">test26282</span>
+                <br/>
+                <span class="ignored-method-name">test26280</span>
+                <br/>
+                <span class="ignored-method-name">test22549</span>
+                <br/>
+                <span class="ignored-method-name">test23389</span>
+                <br/>
+                <span class="ignored-method-name">test22530</span>
+                <br/>
+                <span class="ignored-method-name">demo</span>
+                <br/>
+                <span class="ignored-method-name">test22539</span>
+                <br/>
+                <span class="ignored-method-name">test32959a</span>
+                <br/>
+                <span class="ignored-method-name">test32951</span>
+                <br/>
+                <span class="ignored-method-name">test22531</span>
+                <br/>
+                <span class="ignored-method-name">test32950</span>
+                <br/>
+                <span class="ignored-method-name">test22532</span>
+                <br/>
+                <span class="ignored-method-name">test22534</span>
+                <br/>
+                <span class="ignored-method-name">testLoginPortal</span>
+                <br/>
+                <span class="ignored-method-name">testLoginBase</span>
+                <br/>
+                <span class="ignored-method-name">test32954</span>
+                <br/>
+                <span class="ignored-method-name">test22536</span>
+                <br/>
+                <span class="ignored-method-name">test32953</span>
+                <br/>
+                <span class="ignored-method-name">test22538</span>
+                <br/>
+                <span class="ignored-method-name">test32952</span>
+                <br/>
+                <span class="ignored-method-name">test32914a</span>
+                <br/>
+                <span class="ignored-method-name">test23376a</span>
+                <br/>
+                <span class="ignored-method-name">test32949</span>
+                <br/>
+                <span class="ignored-method-name">test32948</span>
+                <br/>
+                <span class="ignored-method-name">test23408</span>
+                <br/>
+                <span class="ignored-method-name">test32947</span>
+                <br/>
+                <span class="ignored-method-name">test32946</span>
+                <br/>
+                <span class="ignored-method-name">test32945</span>
+                <br/>
+                <span class="ignored-method-name">test32944</span>
+                <br/>
+                <span class="ignored-method-name">test32943</span>
+                <br/>
+                <span class="ignored-method-name">test32942</span>
+                <br/>
+                <span class="ignored-method-name">test32941</span>
+                <br/>
+                <span class="ignored-method-name">test23407</span>
+                <br/>
+                <span class="ignored-method-name">test32960a</span>
+                <br/>
+                <span class="ignored-method-name">test32940</span>
+                <br/>
+                <span class="ignored-method-name">test23380</span>
+                <br/>
+                <span class="ignored-method-name">test22552</span>
+                <br/>
+                <span class="ignored-method-name">test24486</span>
+                <br/>
+                <span class="ignored-method-name">test23387</span>
+                <br/>
+                <span class="ignored-method-name">test24485</span>
+                <br/>
+                <span class="ignored-method-name">test23385</span>
+                <br/>
+                <span class="ignored-method-name">test24487</span>
+                <br/>
+                <span class="ignored-method-name">test23384</span>
+                <br/>
+                <span class="ignored-method-name">test23381</span>
+                <br/>
+                <span class="ignored-method-name">test32955a</span>
+                <br/>
+                <span class="ignored-method-name">test22529</span>
+                <br/>
+                <span class="ignored-method-name">test23382</span>
+                <br/>
+                <span class="ignored-method-name">test22528</span>
+                <br/>
+                <span class="ignored-method-name">test32939</span>
+                <br/>
+                <span class="ignored-method-name">test32913a</span>
+                <br/>
+                <span class="ignored-method-name">test23375a</span>
+                <br/>
+                <span class="ignored-method-name">test26277</span>
+                <br/>
+                <span class="ignored-method-name">testDBconnect</span>
+                <br/>
+                <span class="ignored-method-name">test22554a_23403</span>
+                <br/>
+                <span class="ignored-method-name">test28553</span>
+                <br/>
+                <span class="ignored-method-name">test32937</span>
+                <br/>
+                <span class="ignored-method-name">test26278</span>
+                <br/>
+                <span class="ignored-method-name">test28552</span>
+                <br/>
+                <span class="ignored-method-name">test32956a</span>
+                <br/>
+                <span class="ignored-method-name">test23472a</span>
+                <br/>
+                <span class="ignored-method-name">testunix</span>
+                <br/>
+                <span class="ignored-method-name">test24488</span>
+                <br/>
+                <span class="ignored-method-name">test23388a</span>
+                <br/>
+                <span class="ignored-method-name">test23366</span>
+                <br/>
+                <span class="ignored-method-name">test23373</span>
+                <br/>
+              </div> <!-- ignored-methods-div -->
+            </div> <!-- ignored-class-div -->
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="chronological-NewMMIS_regression_test_suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Methods in chronological order</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <div class="chronological-class">
+              <div class="chronological-class-name">newMMIS_Subsystems.Login</div> <!-- chronological-class-name -->
+              <div class="configuration-class before">
+                <span class="method-name">init(MO)</span>
+                <span class="method-start">0 ms</span>
+              </div> <!-- configuration-class before -->
+              <div class="test-method">
+                <span class="method-name">testDBconnect</span>
+                <span class="method-start">16 ms</span>
+              </div> <!-- test-method -->
+              <div class="test-method">
+                <span class="method-name">testLoginBase</span>
+                <span class="method-start">663 ms</span>
+              </div> <!-- test-method -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">newMMIS_Subsystems.Member</div> <!-- chronological-class-name -->
+              <div class="configuration-test before">
+                <span class="method-name">memberStartup</span>
+                <span class="method-start">12219 ms</span>
+              </div> <!-- configuration-test before -->
+              <div class="configuration-class before">
+                <span class="method-name">init(MO)</span>
+                <span class="method-start">12220 ms</span>
+              </div> <!-- configuration-class before -->
+              <div class="configuration-method before">
+                <span class="method-name">LoginCheck</span>
+                <span class="method-start">12221 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">test28554</span>
+                <span class="method-start">15034 ms</span>
+              </div> <!-- test-method -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">newMMIS_Subsystems.Login</div> <!-- chronological-class-name -->
+              <div class="configuration-class before">
+                <span class="method-name">init(MO)</span>
+                <span class="method-start">192414 ms</span>
+              </div> <!-- configuration-class before -->
+              <div class="test-method">
+                <span class="method-name">closeLogs</span>
+                <span class="method-start">192415 ms</span>
+              </div> <!-- test-method -->
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+      </div> <!-- main-panel-root -->
+    </div> <!-- wrapper -->
+  </body>
+</html>

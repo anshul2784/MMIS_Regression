@@ -1,0 +1,223 @@
+package newMMIS_Subsystems;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.Assert;
+import org.testng.SkipException;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+public class misc extends Login {
+	
+	@BeforeTest
+    public void miscStartup() throws Exception {
+    	log("Starting Misc Subsystem......");
+    }
+	
+	@AfterMethod
+    public void quitDriver() throws Exception {
+    	driver.quit();
+    }
+	
+	@DataProvider
+	  public  Iterator<String[]> dpCP(Method m) throws Exception 
+	  {
+		    System.out.println("dp Change Password");
+			ArrayList<String[]> rowList = new ArrayList<String[]>();
+
+			if (m.getName().equals("changePwdBase"))
+				sqlStatement="Select Slno, Nuserid, Password1 From Sec_Users";
+			
+			rowList=Common.getDBTestData(sqlStatement, 3, Common.connection1);
+
+			if (rowList.get(0).equals("null"))
+				throw new SkipException("No test data returned from database");
+			else
+				return rowList.iterator();
+	  }
+	  
+	  
+		@Test(dataProvider = "dpCP")
+		public void changePwdBase(String ser, String usr, String pass)	 throws Exception {
+			TestNGCustom.TCNo="changePwd "+ser+"("+usr+", "+pass+")";
+			log("//TC "+TestNGCustom.TCNo);
+			
+			String checkText="";
+			String newPass="Boston156!";
+			String tgt="";
+			
+		    System.out.println(TestNGCustom.TCNo);
+
+
+				Login.setFireFoxProfile();
+				
+//				//Fetch the URL for BASE app in this environment
+//				sqlStatement = "select * from s_login where environment ='"+env+"' and application ='BASE'";
+//				colNames.add("APPPATH");
+//				colValues=Common.executeQuery1(sqlStatement, colNames);
+//				envpath = colValues.get(0);
+				
+				//Get the VG login page
+				envpath="https://sso-qa.hhs.state.ma.us/VGPortal";
+
+				System.out.println("****************************" +env+" BASE"
+						+ "****************************");
+
+
+				//Create an instance of selenium webdriver
+				driver = new FirefoxDriver(firefoxProfile);
+				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+				driver.manage().window().maximize();
+				
+				//Logon to Base
+				driver.get(envpath);
+				
+			    //Check if previous user is already logged in. If yes then log him out
+			    tgt="//span[@id='r1:0:pt1:ol1']/label";
+			    if (checkPostSize("xpath", tgt)) {
+			    	checkText = driver.findElement(By.xpath("//span[@id='r1:0:pt1:ol1']/label")).getText();
+			    	log(checkText+" was logged in already. Logging him out");
+			    	//logout
+			    	driver.findElement(By.id("r1:0:pt1:gl8")).click();
+			    }
+			    
+			    driver.findElement(By.id("userName")).clear();
+			    driver.findElement(By.id("userName")).sendKeys(usr);
+			    driver.findElement(By.id("password")).clear();
+			    driver.findElement(By.id("password")).sendKeys(pass);
+			    driver.findElement(By.xpath("//input[@value='Login']")).click();
+			    
+			    //check if you got error in login
+			    tgt="errorTxtAlignment";
+			    if (checkPostSize("id", tgt)) {
+			    	if (!(checkPostText("id",tgt,"Error:Invalid User Name or Password. Please try again."))) {
+			    		log("Error:Invalid User Name or Password. Please try again. Either the user id/temp password is incorrect or it has already been reset");
+			    		Assert.assertTrue(false, "Error:Invalid User Name or Password. Please try again. Either the user id/temp password is incorrect or it has already been reset");
+			    	}
+			    	else
+			    		Assert.assertTrue(false, "Error: "+checkText);
+			    }
+			    
+			    //check if you got the password change page
+			    tgt="//span[@id='r1:0:pt1:ol1']/label";
+			    if (!(checkPostSize("xpath", tgt))) 
+		    		Assert.assertTrue(false, "Login was succesfull with temp password but did not get password change screen");
+			    
+		    	if (!(checkPostText("xpath",tgt,"Logged in as : "+usr)))
+		    		Assert.assertTrue(false, "Login was succesfull with temp password but did not get password change screen message to change password of "+usr);
+		    	
+			    tgt="//div[@id='r1:0:pt1:pb1']/table/tbody/tr/td[2]/table/tbody/tr/td/h1";
+			    if (!(checkPostSize("xpath", tgt))) 
+		    		Assert.assertTrue(false, "Login was succesfull with temp password but did not get change password prompt");
+
+		    	if (!(checkPostText("xpath",tgt,"Change Password")))
+		    		Assert.assertTrue(false, "Login was succesfull with temp password but did not get change password prompt"); 	
+		    	
+		    	//Now change the password
+		    	driver.findElement(By.id("r1:0:pt1:it1::content")).clear();
+			    driver.findElement(By.id("r1:0:pt1:it1::content")).sendKeys(pass);
+		    	driver.findElement(By.id("r1:0:pt1:it2::content")).clear();
+		    	driver.findElement(By.id("r1:0:pt1:it2::content")).sendKeys(newPass);
+		    	driver.findElement(By.id("r1:0:pt1:it3::content")).clear();
+		    	driver.findElement(By.id("r1:0:pt1:it3::content")).sendKeys(newPass);
+		    	
+		    	driver.findElement(By.id("r1:0:pt1:it11::content")).clear();
+			    driver.findElement(By.id("r1:0:pt1:it11::content")).sendKeys("1");
+		    	driver.findElement(By.id("r1:0:pt1:it12::content")).clear();
+			    driver.findElement(By.id("r1:0:pt1:it12::content")).sendKeys("1");
+		    	driver.findElement(By.id("r1:0:pt1:it4::content")).clear();
+			    driver.findElement(By.id("r1:0:pt1:it4::content")).sendKeys("1");
+		    	driver.findElement(By.id("r1:0:pt1:it5::content")).clear();
+			    driver.findElement(By.id("r1:0:pt1:it5::content")).sendKeys("1");
+		    	driver.findElement(By.id("r1:0:pt1:it6::content")).clear();
+			    driver.findElement(By.id("r1:0:pt1:it6::content")).sendKeys("1");
+		    	driver.findElement(By.id("r1:0:pt1:it9::content")).clear();
+			    driver.findElement(By.id("r1:0:pt1:it9::content")).sendKeys("1");
+		    	driver.findElement(By.id("r1:0:pt1:it10::content")).clear();
+			    driver.findElement(By.id("r1:0:pt1:it10::content")).sendKeys("1");
+			    
+			    //Accept agreement
+		    	driver.findElement(By.id("r1:0:pt1:sor1:_0")).click();
+
+			    //Press submit
+		    	driver.findElement(By.id("r1:0:pt1:cb15")).click();
+		    	Common.getPageError("//div[contains(@id,'epgld16')]/div/span");
+		    	
+		    	//insert new password in DB
+		    	String SelSql="select * from sec_users where PASSWORD1='"+pass+"'";
+		    	String col="NPASSWORD";
+		    	String UpdtSql="update sec_users set NPASSWORD='"+newPass+"' where PASSWORD1='"+pass+"'";
+		    	updtPass(SelSql, col, UpdtSql);
+		    	log("Password updated to: "+newPass);
+
+			    //Check post password change page
+			    tgt="//span[@id='r1:0:pt1:ol1']/label";
+			    if (!(checkPostSize("xpath", tgt))) {
+			    	log("Password change may have been successful but did not get select medicaid services page");
+		    		Assert.assertTrue(false, "Password change may have been successful but did not get select medicaid services page");
+			    }
+			    
+			    //logout
+		    	driver.findElement(By.xpath("//a[contains(@id, 'pt1:gl8')]")).click();
+			
+		}
+		
+		public boolean checkPostSize(String property, String trgt) {
+			int size=0;
+
+			driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+			if (property.equals("xpath"))
+				size=driver.findElements(By.xpath(trgt)).size();
+			if (property.equals("id"))
+				size=driver.findElements(By.id(trgt)).size();
+			if (size==1) {
+				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+				return true;
+			}
+			else {
+				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+				return false;
+			}
+		}
+		
+		public boolean checkPostText(String property, String trgt, String expEnglish) {
+			String english="";
+			
+			driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);		
+			if (property.equals("xpath"))
+				english=driver.findElement(By.xpath(trgt)).getText();
+			if (property.equals("id"))
+				english=driver.findElement(By.id(trgt)).getText();
+			if (english.equals(expEnglish)) {
+				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);		
+				return true;
+			}
+			else {
+				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+				return false;
+			}
+		}
+		
+		public static void updtPass(String SelSql, String col, String updtSql) throws Exception {
+	    	Statement statement = Common.connection1.createStatement();
+			sqlStatement = SelSql;
+			colNames.add(col);
+			colValues = Common.executeQuery1(sqlStatement, colNames);
+			if (!(colValues.get(0).trim().equals(""))) {
+				log("There was already a value present for new password. Old value: "+colValues.get(0));
+			}
+			sqlStatement = updtSql;
+			statement.executeQuery(sqlStatement);
+		}
+
+}

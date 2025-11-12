@@ -1,0 +1,11 @@
+
+
+****************************Starting NewMMIS regression test Suite in AWSUAT on Tue Nov 04 13:52:14 EST 2025****************************
+
+Starting Claims Subsystem......
+
+//TC 31173
+
+
+
+****************************End of NewMMIS regression test Suite in AWSUAT****************************

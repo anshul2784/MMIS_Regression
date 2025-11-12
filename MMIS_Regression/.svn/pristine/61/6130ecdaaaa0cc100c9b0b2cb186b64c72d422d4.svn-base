@@ -1,0 +1,2925 @@
+package newMMIS_Subsystems;
+
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.sql.Statement;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.SkipException;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
+
+@Listeners({ newMMIS_Subsystems.TestNGCustom.class })
+public class claims extends Login{
+	
+	//These variables are for reporting.
+	public FileOutputStream fo;
+	public WritableWorkbook wwb;
+	public static WritableSheet ws;
+	public static Label l;
+	public static int row=0;
+	public String[] col;
+	public static String[] dtl = new String[3];
+	public static String clmStatus = "";
+	
+	@BeforeTest
+    public void claimsStartup() throws Exception {
+    	log("Starting Claims Subsystem......");
+    	
+		//Create Excel sheet for Claims report
+		fo = new FileOutputStream(System.getProperty("user.dir")+"\\ClaimsReport.xls");
+		wwb = Workbook.createWorkbook(fo);
+		ws = wwb.createSheet("rpt1", 0);
+		//Initialize the report
+		Date date = new Date();
+		l = new Label (0,0, env+" Claims Regression Test Execution Report - "+date.toString());
+		ws.addCell(l);
+		row++;
+		row++;
+		col = new String[8];
+		col[0]="TC";
+		col[1]="CLAIM TYPE";
+		col[2]="ICN";
+		col[3]="STATUS";
+		col[4]="PAID AMT";
+		col[5]="DTL";
+		col[6]="EOB";
+		col[7]="DESC";
+		for (int i=0;i<8;i++) {
+			l = new Label (i,row, col[i]);
+			ws.addCell(l);
+		}
+    }
+	
+	@BeforeTest
+	public void startup() throws Exception {
+		className = this.getClass().getName();
+
+	}	
+	
+	@BeforeMethod
+	public static void LoginCheck() throws Exception {
+		advSubmitClaims.resetValues();
+		Common.resetPortal();
+		testCheckDBLoginSuccessful();	
+    	advSubmitClaims.initiateClaim();
+	}
+	
+	@AfterTest
+	public void teardown() throws Exception {
+		wwb.write();
+		wwb.close();
+	}
+	
+    @Test
+    public void test31143edit() throws Exception{
+    	TestNGCustom.TCNo="31143edit";
+    	log("//TC 31143edit");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31143'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = Integer.toString(Integer.parseInt(colValues.get(3))+1);   //Add 1 to billed amount for amount mismatch edit
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String f = colValues.get(8); 
+	    String t = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(f)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+
+	    advSubmitClaims.C(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, f,t);
+    	
+    	//Validate the amount mismatch edit
+    	int noOfErrors = driver.findElements(By.xpath(advSubmitClaims.trgt)).size();
+		String Error = "";
+		WebElement element;
+		for (int i=0;i<noOfErrors;i++) {
+			element = driver.findElements(By.xpath(advSubmitClaims.trgt)).get(i);
+			Error = Error+element.getText();		
+		}
+		if (noOfErrors!=1)
+			Assert.assertTrue(false, "More than 1 edit present. Edits are: "+Error);
+		else 
+			Assert.assertTrue(Error.equals("Total Charge does not equal the sum of all detail charges. Please correct and submit."), Error); 
+   
+		log("Successfully got edit: "+Error);
+    }
+    
+    @Test
+    public void test31143() throws Exception{
+    	TestNGCustom.TCNo="31143";
+    	log("//TC 31143");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31143'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String f = colValues.get(8); 
+	    String t = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(f)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.C(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, f,t);
+    	String clmNo = advSubmitClaims.clmICN("inst");
+       	log("ICN: "+clmNo);
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+    	
+    }
+    
+    @Test
+    public void test31142() throws Exception{
+    	TestNGCustom.TCNo="31142";
+    	log("//TC 31142");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31142'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String f = colValues.get(8); 
+	    String t = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(f)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.B(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, f,t);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+       	
+       	//Verify Edit
+       	chkEdit("prof", "1", "2535", "OTHER PAYER HAS UNBUNDLED PAYMENTS");
+       	chkEdit("prof", "2", "2535", "OTHER PAYER HAS UNBUNDLED PAYMENTS");
+
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+    }
+    
+    @Test
+    public void test27388() throws Exception{
+    	TestNGCustom.TCNo="27388";
+    	log("//TC 27388");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '27388'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String f = colValues.get(8); 
+	    String t = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(f)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.B(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, f,t);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check if paid amount = PR amount for secondary payer on claim
+       	//get PR amount for secondary payer on claim
+		sqlStatement = "select * from r_proc_cob_line_dtl where TC='"+TestNGCustom.TCNo+"' and dtl='1' and cobline='1' and gc='PR - Patient Responsibility'";
+		colNames.add("DTLAMT"); 
+		colValues=Common.executeQuery1(sqlStatement, colNames );
+		String PRamt = "$";
+		if (colValues.get(0).contains(".")) //if PR amt is fraction value, return PR amount, else add .00
+			PRamt=PRamt+colValues.get(0);
+		else
+			PRamt=PRamt+colValues.get(0)+".00";
+		String clmPDamt = driver.findElement(By.xpath("//*[contains(@id,'paidAmountText')]")).getText();
+       	Assert.assertTrue(clmPDamt.equals(PRamt), "ICN "+clmNo+" paid amount("+clmPDamt+") is not equal to PR amount for secondary payer on claim("+PRamt+")");	
+       	
+       	log("Successfully validated that ICN "+clmNo+" paid amount("+clmPDamt+") is equal to PR amount for secondary payer on claim("+PRamt+")");
+       	
+    }
+
+    @Test
+    public void test27389() throws Exception{
+    	TestNGCustom.TCNo="27389";
+    	log("//TC 27389");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '27389'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String f = colValues.get(8); 
+	    String t = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(f)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.B(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, f,t);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+       	
+       	//Verify Edit
+       	chkEdit("prof", "00", "2518", "OTHER PAYER HAS BUNDLED DETAILS");
+
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+    }
+    
+    @Test
+    public void test27390() throws Exception{
+    	TestNGCustom.TCNo="27390";
+    	log("//TC 27390");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '27390'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String f = colValues.get(8); 
+	    String t = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(f)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+	    //This claims needs insurance type value in CoB, so this extra step
+	    advSubmitClaims.insType[0]="MB - Medicare Part B";
+	    
+    	advSubmitClaims.B(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, f,t);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check if paid amount = PR amount for secondary payer on claim
+       	//get PR amount for secondary payer on claim
+		sqlStatement = "select * from r_proc_cob_line_dtl where TC='"+TestNGCustom.TCNo+"' and dtl='2' and cobline='1' and gc='PR - Patient Responsibility'";
+		colNames.add("DTLAMT"); 
+		colValues=Common.executeQuery1(sqlStatement, colNames );
+		String PRamt = "$";
+		if (colValues.get(0).contains(".")) //if PR amt is fraction value, return PR amount, else add .00
+			PRamt=PRamt+colValues.get(0);
+		else
+			PRamt=PRamt+colValues.get(0)+".00";
+		String clmPDamt = driver.findElement(By.xpath("//*[contains(@id,'paidAmountText')]")).getText();
+       	Assert.assertTrue(clmPDamt.equals(PRamt), "ICN "+clmNo+" paid amount("+clmPDamt+") is not equal to PR amount for secondary payer on claim("+PRamt+")");	
+       	
+       	log("Successfully validated that ICN "+clmNo+" paid amount("+clmPDamt+") is equal to PR amount for secondary payer on claim("+PRamt+")");
+       	
+    }
+    
+    @Test
+    public void test27391() throws Exception{
+    	TestNGCustom.TCNo="27391";
+    	log("//TC 27391");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '27391'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String f = colValues.get(8); 
+	    String t = colValues.get(9); 
+	    
+	    //Fetch member first for this TC because we need to add TPL to member because the med support ind is not Y for most of the records (only 5 last checked)
+	    sqlStatement = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.ID_MEDICAID from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid, T_Re_Other_Id C, " +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end>  '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(f)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs where rs.sak_recip=base.sak_recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(f)))+"') " +
+				"and Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' and base.Sak_Recip=C.Sak_Recip And C.Cde_Agency = 'MHO'  And C.End_Date = 22991231 "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+	    
+	    System.out.println(sqlStatement);
+	    colNames.add("ID_MEDICAID");
+	    colValues=Common.executeQuery(sqlStatement, colNames);
+	    String mem=colValues.get(0);
+	    
+	    //Get carrier id from COB table
+	    sqlStatement="select carrier from r_cob where tc = '"+TestNGCustom.TCNo+"'";
+	    colNames.add("CARRIER");
+	    colValues = Common.executeQuery1(sqlStatement, colNames);
+	    String carr=colValues.get(0);
+
+	    //Add TPL to this member using soap
+	    sqlStatement="Select  A.Id_Medicaid, A.Num_Ssn, A.Nam_First, A.Nam_Last, A.Dte_Birth, C.Agency_Id From T_Re_Base A, T_Re_Other_Id C Where A.Sak_Recip=C.Sak_Recip and a.id_medicaid = '"+mem+"'";
+    	colNames.add("ID_MEDICAID");
+    	colNames.add("NUM_SSN");
+    	colNames.add("NAM_FIRST");
+    	colNames.add("NAM_LAST");
+    	colNames.add("DTE_BIRTH");
+    	colNames.add("AGENCY_ID");
+
+    	colValues = Common.executeQuery(sqlStatement, colNames);
+    	String member = colValues.get(0);
+    	String ssn = colValues.get(1);
+    	String fi = colValues.get(2);
+    	String l = colValues.get(3);
+    	String dob = colValues.get(4);
+    	String agID = colValues.get(5);
+    	
+    	log("Member: "+ member);
+
+    	String bgDt = Common.convertSysdatecustom(Integer.parseInt(f)-1).substring(6, 10)+"-"+Common.convertSysdatecustom(Integer.parseInt(f)-1).substring(0, 2)+"-"+Common.convertSysdatecustom(Integer.parseInt(f)-1).substring(3, 5);
+    	
+		String xml=("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<MA21TPLs\nxmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\nxsi:noNamespaceSchemaLocation=\"schema\\MultipleMA21tpl.xsd\">\n\n<MA21TPL>\n <memberid id_medicaid=\""+member+"\" "+
+				"id_other=\""+agID+"\" id_source=\"MHO\">\n<policyowner tpl_status=\"U\" cde_carrier=\""+carr+"\" polc_type_cd=\"H\" ma21_id=\""+Common.generateRandomTaxID()+"\" nam_last=\""+l+"\" nam_first=\""+fi+"\" nam_mid_init=\" \" gender=\"M\" dob=\""+dob.substring(0, 4)+"-"+dob.substring(4, 6)+"-"+dob.substring(6, 8)+"\" num_ssn=\""+ssn+"\" group_no=\" \" family_indv_cd=\"I\" family_indv_cd_desc=\"INDIVIDUAL\" polc_number_reported=\""+Common.generateRandomTaxID()+"\" tpl_confirmed_polc_no=\""+Common.generateRandomTaxID()+Common.generateRandomTaxID().substring(0, 4)+"\" polc_source_type_ind=\"E\" polc_verified_ind=\"S\" polc_begin_dte=\""+bgDt+"\" polc_end_dte=\"2299-12-31\" phip_begin_dte=\""+bgDt+"\" phip_end_dte=\"2299-12-31\" tpl_subsidy_pay_status=\"NP\" polc_dma_pays_begin_dte=\""+bgDt+"\" polc_dma_pays_end_dte=\"2299-12-31\"\n/>"+
+				"\n<absentparent ma21_id=\"00003175501\" nam_last=\"WESSON\" nam_first=\"ROBERT\" nam_mid_init=\"Z\" num_ssn=\"100031759\" dte_birth=\"1992-10-11\" cde_sex=\"M\" adr_strt1=\"28444TH ST.\" adr_strt2=\"APT 31759\" adr_city=\"LOWELL\" adr_state=\"MA\" adr_zip=\"317591001\" nam_country=\"MEXICO\" num_phone=\"7815553291\" med_support_order_ind=\"Y\" cde_good_cause=\"INCEST\"/>"+
+				"\n</memberid>\n</MA21TPL>\n</MA21TPLs>");    	//filename is same as otherid for uniqueness
+		
+    	String dir="";
+    	if (env.equals("MO"))
+    		dir="MA21";
+    	else
+    		dir="MA21UAT";
+
+    	String fileName=tempDirPath+agID+Common.generateRandomName().substring(0,3)+".xml";
+    	String fileNameZ="Z:\\"+dir+"\\"+agID+Common.generateRandomName().substring(0,3)+".xml";
+    	
+    	// writing xml string to xml file
+    	PrintWriter out = new PrintWriter(fileNameZ);
+    	out.println(xml);
+    	out.close();
+    	
+    	//Create copy at local temp folder
+    	out = new PrintWriter(fileName);
+    	out.println(xml);
+    	out.close();
+    	
+    	String tplCMD;
+    	if (env.equals("MO"))
+    		tplCMD = "runtestTPL "+fileNameZ;
+    	else
+    		tplCMD = "runtestTPL_TR "+fileNameZ;
+    	System.out.println (tplCMD);
+    	log("\r\n"+tplCMD);
+    	
+    	try {
+    	    // Execute command
+    	    String command[] = new String[3];
+    	    command[0] = "cmd";
+    	    command[1] = "/c";
+    	    command[2] = "Z: && cd "+dir+" && "+tplCMD;
+    	    Process child = Runtime.getRuntime().exec(command);
+    	    
+    	    BufferedReader input = new BufferedReader(new InputStreamReader(child.getInputStream()));
+
+            String line=null;
+
+            while((line=input.readLine()) != null) {
+                System.out.println(line);
+                log("\r\n"+line);
+            }
+
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(child.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(child.getErrorStream()));
+            String Error;
+
+            while ((Error = stdError.readLine()) != null) {
+            System.out.println(Error);
+            }
+            while ((Error = stdInput.readLine()) != null) {
+            System.out.println(Error);
+            }
+            
+            log("\r\nError: "+Error );
+            
+            int exitVal = child.waitFor();
+            System.out.println("Exited with error code "+exitVal);
+
+    	    
+    	} catch (IOException e) {
+    	}
+	    
+    	//Flip the medical support indicator to yes
+		Common.resetBase();
+	 	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_TPL")).click();
+		TPL.searchTPLMem(member);
+	 	driver.findElement(By.id("MMISForm:MMISBodyContent:TplNavigatorPanel:TPLNavigator:ITM_n1")).click();
+		new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:TplBaseInformationPanel:TplResourceDataPanel_MedicalSupportIndicator"))).selectByVisibleText("Yes");
+	 	driver.findElement(By.id("MMISForm:MMISBodyContent:TplBaseInformationPanel:TplResourceDataPanel_MedicalSupportBeginDate")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)-1));
+	 	driver.findElement(By.id("MMISForm:MMISBodyContent:TplBaseInformationPanel:TplResourceDataPanel_MedicalSupportEndDate")).sendKeys("12312299");
+	 	//Save ALL - cant use function because TPL verification letter confirmation is also present
+		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Save All']")).click();
+		String message=driver.findElement(By.xpath("//table[@id='MMISForm:MMISContentTable']/tbody/tr/td/table[2]/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr[5]/td[2]")).getText();
+		Assert.assertTrue(message.equals("Save Successful."), "Save NOT successful Error Message: "+message+"...");
+		
+		//Log back in portal and perform BeforeMethod check
+		LoginCheck();
+		String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base where base.id_medicaid = '"+mem+"'";
+    	
+    	advSubmitClaims.B(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, f,t);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+       	
+       	//Verify Edit
+       	chkEdit("prof", "1", "2510", "MEMBER MEDICAL SUPPORT BYPASS - DTL");
+       	
+       	//Check if claim returned is claim type M
+	    sqlStatement="select cde_clm_type from t_hist_directory where num_icn_fl = '"+clmNo+"'";
+	    colNames.add("CDE_CLM_TYPE");
+	    colValues = Common.executeQuery(sqlStatement, colNames);
+	    String clmType=colValues.get(0);
+	    Assert.assertTrue(clmType.equals("M"), "The claim type is not M, it is "+clmType);
+	    
+	    log("Successfully validated that claim type is M");
+       	
+    }
+    
+    @Test
+    public void test27393() throws Exception{
+    	TestNGCustom.TCNo="27393";
+    	log("//TC 27393");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '27393'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+       	
+       	//Verify Edit
+       	chkEdit("prof", "1", "853", "FINAL DEADLINE EXCEEDED - DETAIL");
+       	
+       	//Check that claim is denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (!(clmStatus.equals("Denied")))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is not DENIED. It is "+clmStatus);
+       	log("The claim is denied");
+       	
+    }
+    
+    @Test
+    public void test27398() throws Exception{
+    	TestNGCustom.TCNo="27398";
+    	log("//TC 27398");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '27398'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.I(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("inst");
+       	log("ICN: "+clmNo);
+       	
+       	//Verify Edit
+       	chkEdit("inst", "00", "855", "FINAL DEADLINE EXCEEDED - HEADER");
+       	
+       	//Check that claim is denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (!(clmStatus.equals("Denied")))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is not Denied. It is "+clmStatus);
+       	log("The claim is denied");
+       	
+    }
+    
+    @Test
+    public void test27438() throws Exception{
+    	TestNGCustom.TCNo="27438";
+    	log("//TC 27438");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '27438'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.O(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("inst");
+       	log("ICN: "+clmNo);
+       	
+       	//Verify Edit
+       	chkEdit("inst", "1", "853", "FINAL DEADLINE EXCEEDED - DETAIL");
+
+       	//Check that claim is denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (!(clmStatus.equals("Denied")))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is not Denied. It is "+clmStatus);
+       	log("The claim is denied");
+       	
+    }
+    
+    @Test
+    public void test26912() throws Exception{
+    	TestNGCustom.TCNo="26912";
+    	log("//TC 26912");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '26912'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+	    
+	    //This claims needs NDC info, so this extra step
+	    String ndc = advSubmitClaims.ndc[1]=Common.generateRandomTaxID();
+	    String ndcUnits = advSubmitClaims.ndcUnits[1]="1";
+	    String ndcUofM = advSubmitClaims.ndcUofM[1]="Unit";
+	    String rxQ = advSubmitClaims.rxQ[1]="";
+	    String rxNo = advSubmitClaims.rxNo[1]="";
+	    String rxDt = advSubmitClaims.rxDt[1]=Common.convertSysdatecustom(Integer.parseInt(fdos));
+    	
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+       	
+       	//Check NDC info on base app
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Detail
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
+       	//Click on detail 1
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_detailNumber")).click();
+       	//Verify no NDC info is present on detail 1
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ReferenceQualifCode")).getAttribute("value").equals(""), "Rx number found. It should be absent for detail 1");
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ClaimDrugNDC")).getAttribute("value").equals(""), "NDC number found. It should be absent for detail 1");
+       	driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+       	Assert.assertTrue(driver.findElements(By.xpath("//select[@id='MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_QualifyingCode']/option[@selected='selected']")).size()==0, "Rx Qualifier number found. Its should be absent for detail 1");
+       	Assert.assertTrue(driver.findElements(By.xpath("//select[@id='MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_UomCode']/option[@selected='selected']")).size()==0, "NDC Units of Measurement found. Its should be absent for detail 1");
+       	driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_Quantity")).getAttribute("value").equals(""), "NDC units found. Its should be absent for detail 1");
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_DisplayPrescriptionDate")).getAttribute("value").equals(""), "NDC Rx Date found. Its should be absent for detail 1");
+       	log("No NDC information found on Base App for detail 1");
+       	
+       	//Click on detail 2
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_detailNumber")).click();
+       	//Verify NDC info is present on detail 2
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ReferenceQualifCode")).getAttribute("value").equals(rxNo), "Rx number found. Its should be absent for detail 2 because it was not entered");
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ClaimDrugNDC")).getAttribute("value").equals(ndc), "NDC number not found for detail 2.");
+       	driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+       	Assert.assertTrue(driver.findElements(By.xpath("//select[@id='MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_QualifyingCode']/option[@selected='selected']")).size()==0, "Rx Qualifier number found. Its should be absent for detail 2 because it was not entered");
+       	Assert.assertTrue(driver.findElement(By.xpath("//select[@id='MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_UomCode']/option[@selected='selected']")).getText().contains(ndcUofM), "NDC Units of Measurement not found for detail 2.");
+       	driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_Quantity")).getAttribute("value").contains(ndcUnits), "NDC units not found for detail 2.");
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_DisplayPrescriptionDate")).getAttribute("value").equals(rxDt), "NDC Rx Date not found for detail 2.");
+       	log("Successfully found NDC information on Base App for detail 2");
+    }
+    
+    @Test
+    public void test26913() throws Exception{
+    	TestNGCustom.TCNo="26913";
+    	log("//TC 26913");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '26913'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+	    
+	    //This claims needs NDC info, so this extra step
+	    String ndc1 = advSubmitClaims.ndc[0]=Common.generateRandomTaxID();
+	    String ndcUnits1 = advSubmitClaims.ndcUnits[0]="1";
+	    String ndcUofM1 = advSubmitClaims.ndcUofM[0]="Unit";
+	    String rxQ1 = advSubmitClaims.rxQ[0]="VY - Link Sequence Number";
+	    String rxNo1 = advSubmitClaims.rxNo[0]="215";
+	    String rxDt1 = advSubmitClaims.rxDt[0]=Common.convertSysdatecustom(Integer.parseInt(fdos));
+	    
+	    String ndc2 = advSubmitClaims.ndc[1]=Common.generateRandomTaxID();
+	    String ndcUnits2 = advSubmitClaims.ndcUnits[1]="1";
+	    String ndcUofM2 = advSubmitClaims.ndcUofM[1]="Unit";
+	    String rxQ2 = advSubmitClaims.rxQ[1]="VY - Link Sequence Number";
+	    String rxNo2 = advSubmitClaims.rxNo[1]="216";
+	    String rxDt2 = advSubmitClaims.rxDt[1]=Common.convertSysdatecustom(Integer.parseInt(fdos));
+    	
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+       	
+       	//Check NDC info on base app
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Detail
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
+       	//Click on detail 1
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_detailNumber")).click();
+       	//Verify NDC info is present for dtl 1
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ReferenceQualifCode")).getAttribute("value").equals(rxNo1), "Rx number not found for detail 1.");
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ClaimDrugNDC")).getAttribute("value").equals(ndc1), "NDC number not found for detail 1.");
+       	driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+       	Assert.assertTrue(driver.findElement(By.xpath("//select[@id='MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_QualifyingCode']/option[@selected='selected']")).getText().equals(rxQ1.substring(0, 2)), "Rx Qualifier number not found for detail 1.");
+       	Assert.assertTrue(driver.findElement(By.xpath("//select[@id='MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_UomCode']/option[@selected='selected']")).getText().contains(ndcUofM1), "NDC Units of Measurement not found for detail 1.");
+       	driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_Quantity")).getAttribute("value").contains(ndcUnits1), "NDC units not found for detail 1.");
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_DisplayPrescriptionDate")).getAttribute("value").equals(rxDt1), "NDC Rx Date not found for detail 1.");
+       	log("Successfully found NDC information on Base App for detail 1");
+       	
+       	//Click on detail 2
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_detailNumber")).click();
+       	//Verify NDC info is present for dtl 2
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ReferenceQualifCode")).getAttribute("value").equals(rxNo2), "Rx number not found for detail 2.");
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ClaimDrugNDC")).getAttribute("value").equals(ndc2), "NDC number not found for detail 2.");
+       	driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+       	Assert.assertTrue(driver.findElement(By.xpath("//select[@id='MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_QualifyingCode']/option[@selected='selected']")).getText().equals(rxQ2.substring(0, 2)), "Rx Qualifier number not found for detail 2.");
+       	Assert.assertTrue(driver.findElement(By.xpath("//select[@id='MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_UomCode']/option[@selected='selected']")).getText().contains(ndcUofM2), "NDC Units of Measurement not found for detail 2.");
+       	driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_Quantity")).getAttribute("value").contains(ndcUnits2), "NDC units not found for detail 2.");
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_DisplayPrescriptionDate")).getAttribute("value").equals(rxDt2), "NDC Rx Date not found for detail 2.");
+       	log("Successfully found NDC information on Base App for detail 2");
+    }
+    
+    @Test
+    public void test26915() throws Exception{
+    	TestNGCustom.TCNo="26915";
+    	log("//TC 26915");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '26915'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+	    
+	    //This claims needs Delay reason code on Extended services tab, so this extra step
+	    advSubmitClaims.delayRsn = "1 - Proof of Eligibility Unknown or Unavailable";
+    	
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+       	
+       	//Verify Edit
+       	chkEdit("prof", "00", "818", "SPECIAL HANDLING 90 DAY WAIVER");
+
+       	//Verify Edit
+       	chkEdit("prof", "1", "850", "BILLING DEADLINE EXCEEDED - DETAIL");
+    }
+    
+    @Test
+    public void test26916() throws Exception{
+    	TestNGCustom.TCNo="26916";
+    	log("//TC 26916");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '26916'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+	    
+	    //This claims needs Delay reason code on Extended services tab, so this extra step
+	    advSubmitClaims.delayRsn = "9 - Original Claim Rejected or Denied Due to a Reason Unrelated to the Billing Limitation Rules";
+    	
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+
+       	//Verify Edit
+       	chkEdit("prof", "1", "853", "FINAL DEADLINE EXCEEDED - DETAIL");
+    }
+    
+    @Test
+    public void test27403() throws Exception{
+    	TestNGCustom.TCNo="27403";
+    	log("//TC 27403");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '27403'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end > '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and  exists (select sak_recip from T_RE_MEDICARE_A hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " + //Notice table name updated to T_RE_MEDICARE_A because we want this member to be in medicare part A
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+	    
+	    //This tc needs to set these values as well
+	    advSubmitClaims.adm=-90; //Admission date +/- days from fdos
+	    advSubmitClaims.admType="3 - ELECTIVE"; //Admission type
+	    advSubmitClaims.admSource="4 - Transfer from a hospital"; //Admission source
+	    advSubmitClaims.patStatus="30 - STILL PATIENT"; //Patient Status
+    	
+    	advSubmitClaims.I(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("inst");
+       	log("ICN: "+clmNo);
+       	
+       	//Verify Edit
+       	chkEdit("inst", "00", "2528", "LTC - POTENTIAL MEDICARE IN FIRST 100 DAYS");
+       	
+    }
+    
+    @Test
+    public void test27404() throws Exception{
+    	TestNGCustom.TCNo="27404";
+    	log("//TC 27404");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '27404'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end > '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and  exists (select sak_recip from T_RE_MEDICARE_C hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " + //Notice table name updated to T_RE_MEDICARE_C because we want this member to be in medicare part C
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+	    
+	    //This tc needs to set these values as well
+	    advSubmitClaims.adm=-90; //Admission date +/- days from fdos
+    	
+    	advSubmitClaims.I(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("inst");
+       	log("ICN: "+clmNo);
+       	
+       	//Verify Edit
+       	chkEdit("inst", "00", "2556", "LTC-POTENTIAL MEDICARE C IN FIRST 100 DAYS");
+       	
+    }
+    
+    @Test
+    public void test27405() throws Exception{
+    	TestNGCustom.TCNo="27405";
+    	log("//TC 27405");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '27405'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end > '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and exists ( select sak_recip from t_tpl_resource rs, t_coverage_xref x Where rs.Sak_Recip=Base.Sak_Recip and rs.sak_tpl_resource=x.sak_tpl_resource and x.dte_end<>x.dte_effective and x.dte_end > '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists (select sak_recip from T_RE_HIB hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+	    
+	    //This tc needs to set these values as well
+	    advSubmitClaims.adm=-90; //Admission date +/- days from fdos
+    	
+    	advSubmitClaims.I(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("inst");
+       	log("ICN: "+clmNo);
+       	
+       	//Verify Edit
+       	chkEdit("inst", "00", "2557", "LTC-POTENTIAL PRIVATE INSURANCE IN FIRST 100 DAYS");
+       	
+    }
+    
+    @Test
+    public void test31181() throws Exception{
+    	TestNGCustom.TCNo="31181";
+    	log("//TC 31181 - Edit 5927-NCCI Test Case");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31181'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+
+       	//Verify Edit
+       	chkEdit("prof", "1", "5927", "NCCI ANOTHER SERVICE PREV PAID SAME CLAIM");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	       	
+       	//Check Edit is set to Deny
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim10")).click();
+       	int errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	boolean bfound = false;
+       	for (int i=0;i<errSize;i++) {
+       		if (driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_numDtl")).getText().equals("1")) {
+           		if (driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_errorCode")).getText().equals("5927")) {
+           			Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied"), "Edit 5927 on detail 1 is not Denied on Base App");
+           			bfound=true;
+           			break;
+           		}
+       		}
+       	}
+       	
+       	if (!bfound)
+       		Assert.assertTrue(false, "Did not find Edit 5927 on detail 1 on Base App");
+       	else
+       		log("Successfully validated that Edit 5927 on detail 1 is Denied on Base App");
+       	
+       	//Check detail 2 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 2 is DENIED");
+       	log("Detail 2 is not Denied. It is "+clmStatus);
+
+       	
+       	//Check detail 1 is not Paid
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("PAID")), "Detail 1 is PAID");
+       	log("Detail 1 is not Paid. It is "+clmStatus);       	
+       	
+       	
+       	//Check Related History on base app
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim15")).click();
+		Assert.assertTrue(driver.findElements(By.xpath("//span[contains(@id, 'RelatedHistoryBean_ColValue_relatedDetail_detailNumber')]")).size()==1, "More than 1 detail present on Related History panel");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:RelatedHistoryBeanPanel:RelatedHistorySearchResults_0:RelatedHistoryBean_ColValue_relatedICN")).getText().equals(clmNo), "Did not find ICN on Related History");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:RelatedHistoryBeanPanel:RelatedHistorySearchResults_0:RelatedHistoryBean_ColValue_relatedDetail_detailNumber")).getText().equals("2"), "Detail no. is not 2 on Related history panel");
+		log("Successfully validated that there is only one row in Related History panel, and ICN is present for detail 2");
+
+    }
+    
+    @Test
+    public void test31183() throws Exception{
+    	TestNGCustom.TCNo="31183";
+    	log("//TC 31183 - Edit 5927-NCCI Test Case");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31183'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+
+       	//Verify Edit
+       	chkEdit("prof", "2", "5927", "NCCI ANOTHER SERVICE PREV PAID SAME CLAIM");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	       	
+       	//Check Edit is set to Deny
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim10")).click();
+       	int errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	boolean bfound = false;
+       	for (int i=0;i<errSize;i++) {
+       		if (driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_numDtl")).getText().equals("2")) {
+           		if (driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_errorCode")).getText().equals("5927")) {
+           			Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied"), "Edit 5927 on detail 2 is not Denied on Base App");
+           			bfound=true;
+           			break;
+           		}
+       		}
+       	}
+       	
+       	if (!bfound)
+       		Assert.assertTrue(false, "Did not find Edit 5927 on detail 2 on Base App");
+       	else
+       		log("Successfully validated that Edit 5927 on detail 2 is Denied on Base App");
+       	
+       	//Check detail 1 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
+       	log("Detail 1 is not Denied. It is "+clmStatus);
+
+       	
+       	//Check detail 2 is not Paid
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("PAID")), "Detail 2 is PAID");
+       	log("Detail 2 is not Paid. It is "+clmStatus);       	
+       	
+       	
+       	//Check Related History on base app
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim15")).click();
+		Assert.assertTrue(driver.findElements(By.xpath("//span[contains(@id, 'RelatedHistoryBean_ColValue_relatedDetail_detailNumber')]")).size()==1, "More than 1 detail present on Related History panel");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:RelatedHistoryBeanPanel:RelatedHistorySearchResults_0:RelatedHistoryBean_ColValue_relatedICN")).getText().equals(clmNo), "Did not find ICN on Related History");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:RelatedHistoryBeanPanel:RelatedHistorySearchResults_0:RelatedHistoryBean_ColValue_relatedDetail_detailNumber")).getText().equals("1"), "Detail no. is not 1 on Related history panel");
+		log("Successfully validated that there is only one row in Related History panel, and ICN is present for detail 1");
+
+    }
+    
+    @Test
+    public void test31185() throws Exception{
+    	TestNGCustom.TCNo="31185";
+    	log("//TC 31185 - Edit 5927-NCCI Test Case");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31185'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+
+       	//Verify Edit
+       	chkEdit("prof", "2", "5927", "NCCI ANOTHER SERVICE PREV PAID SAME CLAIM");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check Edit is set to Deny
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim10")).click();
+       	int errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	boolean bfound = false;
+       	for (int i=0;i<errSize;i++) {
+       		if (driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_numDtl")).getText().equals("2")) {
+           		if (driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_errorCode")).getText().equals("5927")) {
+           			Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied"), "Edit 5927 on detail 2 is not Denied on Base App");
+           			bfound=true;
+           			break;
+           		}
+       		}
+       	}
+       	
+       	if (!bfound)
+       		Assert.assertTrue(false, "Did not find Edit 5927 on detail 2 on Base App");
+       	else
+       		log("Successfully validated that Edit 5927 on detail 2 is Denied on Base App");
+       	
+       	//Check detail 1 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
+       	log("Detail 1 is not Denied. It is "+clmStatus);
+
+       	
+       	//Check detail 2 is not Paid
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("PAID")), "Detail 2 is PAID");
+       	log("Detail 2 is not Paid. It is "+clmStatus);       
+       	
+       	//Check Related History on base app
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim15")).click();
+		Assert.assertTrue(driver.findElements(By.xpath("//span[contains(@id, 'RelatedHistoryBean_ColValue_relatedDetail_detailNumber')]")).size()==1, "More than 1 detail present on Related History panel");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:RelatedHistoryBeanPanel:RelatedHistorySearchResults_0:RelatedHistoryBean_ColValue_relatedICN")).getText().equals(clmNo), "Did not find ICN on Related History");
+		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:RelatedHistoryBeanPanel:RelatedHistorySearchResults_0:RelatedHistoryBean_ColValue_relatedDetail_detailNumber")).getText().equals("1"), "Detail no. is not 1 on Related history panel");
+		log("Successfully validated that there is only one row in Related History panel, and ICN is present for detail 1");
+		
+    }
+    
+    @Test
+    public void test31197() throws Exception{
+    	TestNGCustom.TCNo="31197";
+    	log("//TC 31197 - NCCI with Modifier 59 Test Case");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31197'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+       	
+       	//Verify edit is not present
+       	NOTchkEdit("prof","5927");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check none of the edits are denied on base app
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim10")).click();
+       	int errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	for (int i=0;i<errSize;i++) {
+   			Assert.assertTrue(!(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied")), "One or more edits was set to Denied");
+       	}
+
+       	log("Successfully validated that none of the edits are denied on base app");
+       	
+       	//Check detail 1 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
+       	log("Detail 1 is not Denied. It is "+clmStatus);
+
+       	
+       	//Check detail 2 is not Denied
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 2 is DENIED");
+       	log("Detail 2 is not Denied. It is "+clmStatus);    
+       	
+       	//Verify detail 2 has modifier 59
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_procedureModifierCode1")).getText().equals("59"), "Modifier 59 is not present on detail 2");
+       	log("Modifier 59 is present on detail 2");
+       	
+
+    }
+    
+    @Test
+    public void test31199() throws Exception{
+    	TestNGCustom.TCNo="31199";
+    	log("//TC 31199 - NCCI with Modifier 59 Test Case");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31199a'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.O(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("inst");
+       	log("First ICN: "+clmNo);
+       	
+       	//Verify edit is not present
+       	NOTchkEdit("inst","5928");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check none of the edits are denied on base app
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim11")).click();
+       	int errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	for (int i=0;i<errSize;i++) {
+   			Assert.assertTrue(!(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied")), "One or more edits was set to Denied");
+       	}
+
+       	log("Successfully validated that none of the edits are denied on base app");
+       	
+       	//Check detail 1 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimDetailPanel:UB92DetailCustomDataTable_0:UB92DetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
+       	log("Detail 1 is not Denied. It is "+clmStatus);
+       	
+       	//Store member ID for 2nd claim
+       	String mem31199a = driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimHeaderPanel:UB92ClmDataPanel_MedicaidID")).getAttribute("value");
+       	
+       	//Log back into portal and submit 2nd claim
+       	LoginCheck();
+       	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31199b'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    TC = colValues.get(0); 
+	    CT = colValues.get(1);  
+	    PROV_BILLING = colValues.get(2); 
+	    AMT_BILLED = colValues.get(3);   
+	    TOB = colValues.get(4); 
+	    NPI_ATTEND = colValues.get(5);   
+	    REFERRAL = colValues.get(6); 
+	    PAS = colValues.get(7); 
+	    fdos = colValues.get(8); 
+	    tdos = colValues.get(9); 
+	    
+	    sql = "select * from t_re_base where id_medicaid = "+mem31199a;
+    	
+    	advSubmitClaims.O(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	clmNo = advSubmitClaims.clmICN("inst");
+       	log("Second ICN: "+clmNo);
+       	
+       	//Verify edit is not present
+       	NOTchkEdit("inst","5928");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check none of the edits are denied on base app
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim11")).click();
+       	errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	for (int i=0;i<errSize;i++) {
+   			Assert.assertTrue(!(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied")), "One or more edits was set to Denied");
+       	}
+
+       	log("Successfully validated that none of the edits are denied on base app");
+       	
+       	//Check detail 1 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimDetailPanel:UB92DetailCustomDataTable_0:UB92DetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
+       	log("Detail 1 is not Denied. It is "+clmStatus);
+       	
+       	//Verify detail 1 has modifier 59
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimDetailPanel:UB92DetailCustomDataTable_0:UB92DetailBean_ColValue_procedureModifierCode1")).getText().equals("59"), "Modifier 59 is not present on detail 1");
+       	log("Modifier 59 is present on detail 1");
+
+    }
+
+    
+    @Test
+    public void test31187() throws Exception{
+    	TestNGCustom.TCNo="31187";
+    	log("//TC 31187 - Edit 5928-NCCI Test Case");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31187a'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.O(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("inst");
+       	log("First ICN: "+clmNo);
+       	
+       	//Verify edit is not present
+       	NOTchkEdit("inst","5928");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check none of the edits are denied on base app
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim11")).click();
+       	int errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	for (int i=0;i<errSize;i++) {
+   			Assert.assertTrue(!(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied")), "One or more edits was set to Denied");
+       	}
+
+       	log("Successfully validated that none of the edits are denied on base app");
+       	
+       	//Check detail 1 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimDetailPanel:UB92DetailCustomDataTable_0:UB92DetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
+       	log("Detail 1 is not Denied. It is "+clmStatus);
+       	
+       	//Store member ID for 2nd claim
+       	String mem31187a = driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimHeaderPanel:UB92ClmDataPanel_MedicaidID")).getAttribute("value");
+       	
+       	//Log back into portal and submit 2nd claim
+       	LoginCheck();
+       	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31187b'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    TC = colValues.get(0); 
+	    CT = colValues.get(1);  
+	    PROV_BILLING = colValues.get(2); 
+	    AMT_BILLED = colValues.get(3);   
+	    TOB = colValues.get(4); 
+	    NPI_ATTEND = colValues.get(5);   
+	    REFERRAL = colValues.get(6); 
+	    PAS = colValues.get(7); 
+	    fdos = colValues.get(8); 
+	    tdos = colValues.get(9); 
+	    
+	    sql = "select * from t_re_base where id_medicaid = "+mem31187a;
+    	
+    	advSubmitClaims.O(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	clmNo = advSubmitClaims.clmICN("inst");
+       	log("Second ICN: "+clmNo);
+       	
+       	//Verify edit is present
+       	chkEdit("inst", "1", "5928", "NCCI ANOTHER SERVICE PREV PAID OTHER CLAIM");
+       	
+       	//Check that claim is denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (!(clmStatus.equals("Denied")))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is not Denied. It is "+clmStatus);
+       	log("The claim is denied");
+       	
+       	//Check Edit is set to Deny
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim11")).click();
+       	errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	boolean bfound = false;
+       	for (int i=0;i<errSize;i++) {
+       		if (driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_numDtl")).getText().equals("1")) {
+       			if (driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_errorCode")).getText().equals("5928")) {
+           			Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied"), "Edit 5928 on detail 1 is not Denied on Base App");
+           			bfound=true;
+           			break;
+           		}
+       		}
+       	}
+       	
+       	if (!bfound)
+       		Assert.assertTrue(false, "Did not find Edit 5928 on detail 1 on Base App");
+       	else
+       		log("Successfully validated that Edit 5928 on detail 1 is Denied on Base App");
+       	
+       	//Check detail 1 is Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimDetailPanel:UB92DetailCustomDataTable_0:UB92DetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(clmStatus.equals("DENIED"), "Detail 1 is not Denied. It is "+clmStatus);
+       	log("Detail 1 is Denied.");
+
+    }
+    
+    
+    @Test
+    public void test31189() throws Exception{
+    	TestNGCustom.TCNo="31189";
+    	log("//TC 31189 - Edit 5929-NCCI Test Case");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31189a'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.O(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("inst");
+       	log("First ICN: "+clmNo);
+       	
+       	//Verify edit is not present
+       	NOTchkEdit("inst","5929");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check none of the edits are denied on base app
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim11")).click();
+       	int errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	for (int i=0;i<errSize;i++) {
+   			Assert.assertTrue(!(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied")), "One or more edits was set to Denied");
+       	}
+
+       	log("Successfully validated that none of the edits are denied on base app");
+       	
+       	//Check detail 1 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimDetailPanel:UB92DetailCustomDataTable_0:UB92DetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
+       	log("Detail 1 is not Denied. It is "+clmStatus);
+       	
+       	//Store member ID for 2nd claim
+       	String mem31189a = driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimHeaderPanel:UB92ClmDataPanel_MedicaidID")).getAttribute("value");
+       	
+       	//Log back into portal and submit 2nd claim
+       	LoginCheck();
+       	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31189b'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    TC = colValues.get(0); 
+	    CT = colValues.get(1);  
+	    PROV_BILLING = colValues.get(2); 
+	    AMT_BILLED = colValues.get(3);   
+	    TOB = colValues.get(4); 
+	    NPI_ATTEND = colValues.get(5);   
+	    REFERRAL = colValues.get(6); 
+	    PAS = colValues.get(7); 
+	    fdos = colValues.get(8); 
+	    tdos = colValues.get(9); 
+	    
+	    sql = "select * from t_re_base where id_medicaid = "+mem31189a;
+    	
+    	advSubmitClaims.O(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	clmNo = advSubmitClaims.clmICN("inst");
+       	log("Second ICN: "+clmNo);
+       	
+       	//Verify edit is present
+       	chkEdit("inst", "1", "5929", "NCCI CONFLICT WITH OTHER SERVICE PREV PAID");
+       	
+       	//Check that claim is denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (!(clmStatus.equals("Denied")))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is not Denied. It is "+clmStatus);
+       	log("The claim is denied");
+       	
+       	//Check Edit is set to Deny
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim11")).click();
+       	errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	boolean bfound = false;
+       	for (int i=0;i<errSize;i++) {
+       		if (driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_numDtl")).getText().equals("1")) {
+       			if (driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_errorCode")).getText().equals("5929")) {
+           			Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied"), "Edit 5928 on detail 1 is not Denied on Base App");
+           			bfound=true;
+           			break;
+           		}
+       		}
+       	}
+       	
+       	if (!bfound)
+       		Assert.assertTrue(false, "Did not find Edit 5929 on detail 1 on Base App");
+       	else
+       		log("Successfully validated that Edit 5929 on detail 1 is Denied on Base App");
+       	
+       	//Check detail 1 is Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimDetailPanel:UB92DetailCustomDataTable_0:UB92DetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(clmStatus.equals("DENIED"), "Detail 1 is not Denied. It is "+clmStatus);
+       	log("Detail 1 is Denied.");
+
+    }
+    
+    @Test
+    public void test31193() throws Exception{
+    	TestNGCustom.TCNo="31193";
+    	log("//TC 31193 - NCCI with Modifier 59 Test Case");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31193'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+       	
+       	//Verify edit is not present
+       	NOTchkEdit("prof","5927");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check none of the edits are denied on base app
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim10")).click();
+       	int errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	for (int i=0;i<errSize;i++) {
+   			Assert.assertTrue(!(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied")), "One or more edits was set to Denied");
+       	}
+
+       	log("Successfully validated that none of the edits are denied on base app");
+       	
+       	//Check detail 1 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
+       	log("Detail 1 is not Denied. It is "+clmStatus);
+
+       	
+       	//Check detail 2 is not Denied
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 2 is DENIED");
+       	log("Detail 2 is not Denied. It is "+clmStatus);    
+       	
+       	//Verify detail 2 has modifier 59
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_procedureModifierCode1")).getText().equals("59"), "Modifier 59 is not present on detail 2");
+       	log("Modifier 59 is present on detail 2");
+       	
+
+    }
+    
+    @Test
+    public void test31195() throws Exception{
+    	TestNGCustom.TCNo="31195";
+    	log("//TC 31195 - NCCI with Modifier 59 Test Case");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31195'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("ICN: "+clmNo);
+       	
+       	//Verify edit is not present
+       	NOTchkEdit("prof","5927");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check none of the edits are denied on base app
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim10")).click();
+       	int errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	for (int i=0;i<errSize;i++) {
+   			Assert.assertTrue(!(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied")), "One or more edits was set to Denied");
+       	}
+
+       	log("Successfully validated that none of the edits are denied on base app");
+       	
+       	//Check detail 1 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
+       	log("Detail 1 is not Denied. It is "+clmStatus);
+
+       	
+       	//Check detail 2 is not Denied
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 2 is DENIED");
+       	log("Detail 2 is not Denied. It is "+clmStatus);    
+       	
+       	//Verify detail 1 has modifier 59
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_procedureModifierCode1")).getText().equals("59"), "Modifier 59 is not present on detail 1");
+       	log("Modifier 59 is present on detail 1");
+       	
+
+    }
+    
+    @Test
+    public void test31201() throws Exception{
+    	TestNGCustom.TCNo="31201";
+    	log("//TC 31201 - NCCI with Modifier 59 Test Case");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31201a'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.O(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("inst");
+       	log("First ICN: "+clmNo);
+       	
+       	//Verify edit is not present
+       	NOTchkEdit("inst","5929");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check none of the edits are denied on base app
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim11")).click();
+       	int errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	for (int i=0;i<errSize;i++) {
+   			Assert.assertTrue(!(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied")), "One or more edits was set to Denied");
+       	}
+
+       	log("Successfully validated that none of the edits are denied on base app");
+       	
+       	//Check detail 1 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimDetailPanel:UB92DetailCustomDataTable_0:UB92DetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
+       	log("Detail 1 is not Denied. It is "+clmStatus);
+       	
+       	//Store member ID for 2nd claim
+       	String mem31201a = driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimHeaderPanel:UB92ClmDataPanel_MedicaidID")).getAttribute("value");
+       	
+       	//Log back into portal and submit 2nd claim
+       	LoginCheck();
+       	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31201b'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    TC = colValues.get(0); 
+	    CT = colValues.get(1);  
+	    PROV_BILLING = colValues.get(2); 
+	    AMT_BILLED = colValues.get(3);   
+	    TOB = colValues.get(4); 
+	    NPI_ATTEND = colValues.get(5);   
+	    REFERRAL = colValues.get(6); 
+	    PAS = colValues.get(7); 
+	    fdos = colValues.get(8); 
+	    tdos = colValues.get(9); 
+	    
+	    sql = "select * from t_re_base where id_medicaid = "+mem31201a;
+    	
+    	advSubmitClaims.O(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	clmNo = advSubmitClaims.clmICN("inst");
+       	log("Second ICN: "+clmNo);
+       	
+       	//Verify edit is not present
+       	NOTchkEdit("inst","5929");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check none of the edits are denied on base app
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim11")).click();
+       	errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	for (int i=0;i<errSize;i++) {
+   			Assert.assertTrue(!(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied")), "One or more edits was set to Denied");
+       	}
+
+       	log("Successfully validated that none of the edits are denied on base app");
+       	
+       	//Check detail 1 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimDetailPanel:UB92DetailCustomDataTable_0:UB92DetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
+       	log("Detail 1 is not Denied. It is "+clmStatus);
+       	
+       	//Verify detail 1 has modifier 59
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimDetailPanel:UB92DetailCustomDataTable_0:UB92DetailBean_ColValue_procedureModifierCode1")).getText().equals("59"), "Modifier 59 is not present on detail 1");
+       	log("Modifier 59 is present on detail 1");
+    }
+    
+    @Test
+    public void test31203() throws Exception{
+    	TestNGCustom.TCNo="31203";
+    	log("//TC 31203 - NCCI with Modifier 59 Test Case");
+    	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31203a'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    String TC = colValues.get(0); 
+	    String CT = colValues.get(1);  
+	    String PROV_BILLING = colValues.get(2); 
+	    String AMT_BILLED = colValues.get(3);   
+	    String TOB = colValues.get(4); 
+	    String NPI_ATTEND = colValues.get(5);   
+	    String REFERRAL = colValues.get(6); 
+	    String PAS = colValues.get(7); 
+	    String fdos = colValues.get(8); 
+	    String tdos = colValues.get(9); 
+	    
+	    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+				"t_cde_aid aid,t_re_aid_elig elig where " +
+				"elig.sak_recip=base.sak_recip " +
+				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+				"and pgm. CDE_PGM_HEALTH='STD' " +
+				"and elig.DTE_END='22991231' " + 
+				"and elig.cde_status1<>'H' " +
+				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+				"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+				"and base.ind_active='Y' "+ 
+				"and base.sak_recip > dbms_random.value * 6300000 " +
+				"and rownum<2 ";
+    	
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	String clmNo = advSubmitClaims.clmICN("prof");
+       	log("First ICN: "+clmNo);
+       	
+       	//Verify edit is not present
+       	NOTchkEdit("prof","5927");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check none of the edits are denied on base app
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim10")).click();
+       	int errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	for (int i=0;i<errSize;i++) {
+   			Assert.assertTrue(!(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied")), "One or more edits was set to Denied");
+       	}
+
+       	log("Successfully validated that none of the edits are denied on base app");
+       	
+       	//Check detail 1 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
+       	log("Detail 1 is not Denied. It is "+clmStatus);
+       	
+       	//Store member ID for 2nd claim
+       	String mem31203a = driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimHeaderPanel:PhysicianClmDataPanel_MedicaidID")).getAttribute("value");
+       	
+       	//Log back into portal and submit 2nd claim
+       	LoginCheck();
+       	
+	    //Get Claims Data
+		sqlStatement="select * from R_CLAIMS_BILLING where TC = '31203b'";
+		colNames.add("TC"); 
+		colNames.add("CT");  
+		colNames.add("PROV_BILLING"); 
+		colNames.add("AMT_BILLED");   
+		colNames.add("TOB"); 
+		colNames.add("NPI_ATTEND");   
+		colNames.add("REFERRAL"); 
+		colNames.add("PAS"); 
+		colNames.add("FDOS"); 
+		colNames.add("TDOS"); 
+	    colValues=Common.executeQuery1(sqlStatement, colNames);
+	    
+	    TC = colValues.get(0); 
+	    CT = colValues.get(1);  
+	    PROV_BILLING = colValues.get(2); 
+	    AMT_BILLED = colValues.get(3);   
+	    TOB = colValues.get(4); 
+	    NPI_ATTEND = colValues.get(5);   
+	    REFERRAL = colValues.get(6); 
+	    PAS = colValues.get(7); 
+	    fdos = colValues.get(8); 
+	    tdos = colValues.get(9); 
+	    
+	    sql = "select * from t_re_base where id_medicaid = "+mem31203a;
+    	
+    	advSubmitClaims.M(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+    	clmNo = advSubmitClaims.clmICN("prof");
+       	log("Second ICN: "+clmNo);
+       	
+       	//Verify edit is not present
+       	NOTchkEdit("prof","5927");
+       	
+       	//Check that claim is not denied
+       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+       	if (clmStatus.equals("Denied"))
+       		Assert.assertTrue(false, "ICN "+clmNo+" is DENIED");
+       	log("The claim is not denied. It is "+clmStatus);
+       	
+       	//Check none of the edits are denied on base app
+       	Common.resetBase();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+       	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(clmNo);
+       	Common.search();
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+
+       	//Claim Error
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim10")).click();
+       	errSize = driver.findElements(By.xpath("//span[contains(@id, 'ClaimErrorHdrBean_ColValue_numDtl')]")).size();
+       	for (int i=0;i<errSize;i++) {
+   			Assert.assertTrue(!(driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimErrorHdrPanel:ClaimErrorHdr_Errorlist_"+i+":ClaimErrorHdrBean_ColValue_dispositionStatus")).getText().equals("D - Denied")), "One or more edits was set to Denied");
+       	}
+
+       	log("Successfully validated that none of the edits are denied on base app");
+       	
+       	//Check detail 1 is not Denied
+       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
+       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
+       	log("Detail 1 is not Denied. It is "+clmStatus);
+       	
+       	//Verify detail 1 has modifier 59
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_procedureModifierCode1")).getText().equals("59"), "Modifier 59 is not present on detail 1");
+       	log("Modifier 59 is present on detail 1");
+    }
+    
+	public static void fillReport(String ct, String clmType) throws Exception {		
+		
+		System.out.println(className);
+		if(!(className.equals("newMMIS_Subsystems.claims"))) //exit if this function is not called by the claims.java class
+			return;
+		
+		String icn, status, amt;
+		
+		row++;
+		
+		//Enter TC no.
+		l = new Label (0,row, TestNGCustom.TCNo);
+		ws.addCell(l);
+		
+		//Get Claim type
+		l = new Label (1,row, clmType);
+		ws.addCell(l);
+		
+	    //Get ICN
+		icn=driver.findElement(By.xpath("//*[contains(@id,'icnText')]")).getText();
+		l = new Label (2,row, icn);
+		ws.addCell(l);
+		
+		//Get Status
+		status=driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+		l = new Label (3,row, status);
+		ws.addCell(l);
+		
+		//Get Paid amount
+		amt=driver.findElement(By.xpath("//*[contains(@id,'paidAmountText')]")).getText();
+		l = new Label (4,row, amt);
+		ws.addCell(l);
+		
+		row++;
+		
+		//Get Edits
+		int i=0;
+		int j=0;
+		int a=1;
+		int b=2;
+
+		for (;a<b; a++){
+			for (;i<=j; i++){
+				driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+				if ((driver.findElements(By.xpath("//*[contains(@id,'"+i+":eobDetail')]")).size())>0) {
+					dtl[0]=driver.findElement(By.xpath("//*[contains(@id,'"+i+":eobDetail')]")).getText();
+					dtl[1]=driver.findElement(By.xpath("//*[contains(@id,'"+i+":eobCode')]")).getText();
+					dtl[2]=driver.findElement(By.xpath("//*[contains(@id,'"+i+":eobDesc')]")).getText();
+					for (int z=0;z<3;z++) {
+						l = new Label (z+5,row, dtl[z]);
+						ws.addCell(l);
+					}
+					row++;
+					j=j+1;
+				}
+			}
+			if ((driver.findElements(By.id(ct+"ClaimSubmissionSubView:submissionStatus:EOBList:paginatoridx"+b)).size())>0) {
+				driver.findElement(By.id(ct+"ClaimSubmissionSubView:submissionStatus:EOBList:paginatoridx"+b)).click();
+				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+				b=b+1;
+				i=i-1;
+			}
+		}
+		
+		row++;
+		
+		//Bring page back on page 1, if not on page 1
+		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+		if ((driver.findElements(By.id(ct+"ClaimSubmissionSubView:submissionStatus:EOBList:paginatoridx1")).size())>0) 
+			driver.findElement(By.id(ct+"ClaimSubmissionSubView:submissionStatus:EOBList:paginatoridx1")).click();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+	}
+	
+	public static void chkEdit(String ct, String dtl, String edt, String desc) throws Exception {
+		
+		boolean foundit = false;
+		int i=0;
+		int j=0;
+		int a=1;
+		int b=2;
+
+		for (;a<b; a++){
+			for (;i<=j; i++){
+				driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+				if ((driver.findElements(By.xpath("//*[contains(@id,'"+i+":eobDetail')]")).size())>0) {
+					if (dtl.equals(driver.findElement(By.xpath("//*[contains(@id,'"+i+":eobDetail')]")).getText()) && edt.equals(driver.findElement(By.xpath("//*[contains(@id,'"+i+":eobCode')]")).getText()) && desc.equals(driver.findElement(By.xpath("//*[contains(@id,'"+i+":eobDesc')]")).getText())) 
+						foundit=true;
+					else
+						j=j+1;
+				}
+			}
+			if ((!foundit) && ((driver.findElements(By.id(ct+"ClaimSubmissionSubView:submissionStatus:EOBList:paginatoridx"+b)).size())>0)) {
+				driver.findElement(By.id(ct+"ClaimSubmissionSubView:submissionStatus:EOBList:paginatoridx"+b)).click();
+				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+				b=b+1;
+				i=i-1;
+			}
+		}
+		
+		//Bring page back on page 1, if not on page 1
+		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+		if ((driver.findElements(By.id(ct+"ClaimSubmissionSubView:submissionStatus:EOBList:paginatoridx1")).size())>0) 
+			driver.findElement(By.id(ct+"ClaimSubmissionSubView:submissionStatus:EOBList:paginatoridx1")).click();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		
+		if (!foundit)
+       		Assert.assertTrue(false, "Could not find edit "+edt+" "+desc+" at detail "+dtl);
+		else
+			log ("Successfully received edit "+edt+" "+desc+" at detail "+dtl);
+		
+	}
+	
+	public static void NOTchkEdit(String ct, String edt) throws Exception {
+		
+		boolean foundit = false;
+		int i=0;
+		int j=0;
+		int a=1;
+		int b=2;
+
+		for (;a<b; a++){
+			for (;i<=j; i++){
+				driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+				if ((driver.findElements(By.xpath("//*[contains(@id,'"+i+":eobDetail')]")).size())>0) {
+					if (edt.equals(driver.findElement(By.xpath("//*[contains(@id,'"+i+":eobCode')]")).getText())) 
+						foundit=true;
+					else
+						j=j+1;
+				}
+			}
+			if ((!foundit) && ((driver.findElements(By.id(ct+"ClaimSubmissionSubView:submissionStatus:EOBList:paginatoridx"+b)).size())>0)) {
+				driver.findElement(By.id(ct+"ClaimSubmissionSubView:submissionStatus:EOBList:paginatoridx"+b)).click();
+				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+				b=b+1;
+				i=i-1;
+			}
+		}
+		
+		//Bring page back on page 1, if not on page 1
+		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+		if ((driver.findElements(By.id(ct+"ClaimSubmissionSubView:submissionStatus:EOBList:paginatoridx1")).size())>0) 
+			driver.findElement(By.id(ct+"ClaimSubmissionSubView:submissionStatus:EOBList:paginatoridx1")).click();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		
+		if (foundit)
+       		Assert.assertTrue(false, "Found edit "+edt);
+		else
+			log ("Successfully validated that did not get edit "+edt);
+		
+	}
+
+}

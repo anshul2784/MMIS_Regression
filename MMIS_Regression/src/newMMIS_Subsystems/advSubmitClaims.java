@@ -1,0 +1,2365 @@
+package newMMIS_Subsystems;
+
+	import java.io.FileOutputStream;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.SkipException;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+
+	
+	@Listeners({ newMMIS_Subsystems.TestNGCustom.class })
+	public class advSubmitClaims extends Login{
+		public static String sex;
+		public static ArrayList<String[]> dataList = new ArrayList<String[]>();
+		public static ArrayList<String[]> dataList1 = new ArrayList<String[]>(); //dataList1 is called when you alreay have dataList instance still in process
+		public static ArrayList<String[]> dataList2 = new ArrayList<String[]>(); //dataList2 is called when you alreay have dataList1 instance still in process
+		public static ArrayList<String[]> dataList_cob = new ArrayList<String[]>(); //dataList2 is called when you alreay have dataList1 instance still in process
+
+		public static FileOutputStream fo;
+		public static WritableWorkbook wwb;
+		public static WritableSheet ws;
+		public static Label l;
+		public static String[] col;
+		public static String[] dtl = new String[3];
+		public static int row=0;
+		public static List<WebElement> list;
+		public static String ReferenceDt = "09/30/2015"; //This is the ICD 9 to 10 cut off date in UAT
+		public static boolean addToReport = false; //This is to not add the ICN to excel sheet in case the calling class in not claims.java
+        public static String renderingProv="",rendProv_proc=""; //Rendering provider Id in Billing&Services tab & Procedure tab added by Priya 06/26/2020
+        public static String renderingProvTaxonomy="";
+        public static boolean[] familyPlanningInd = new boolean[] {false,false,false,false,false,false,false,false,false,false}; 
+		
+		public static String mid;
+		
+		public static boolean externalCauseOfInjury=false;
+		public static ArrayList<String> injuryDiagCodes = new ArrayList<String>();
+		public static ArrayList<String> injuryAdmissiones = new ArrayList<String>();
+		
+		public static boolean ICDprocedureCode=false;
+		public static ArrayList<String> ICDprocedureCodes = new ArrayList<String>();
+		public static ArrayList<String> ICDdates = new ArrayList<String>();
+		public static boolean occurenceCodeDetail=false;
+		
+		public static ArrayList<String> occurenceCode = new ArrayList<String>();
+		public static ArrayList<String> occurenceType = new ArrayList<String>();
+		public static ArrayList<String> occurencefromDate = new ArrayList<String>();
+		public static ArrayList<String> occurencetoDate = new ArrayList<String>();
+		
+		public static boolean otherDiagnose=false;
+		public static ArrayList<String> otherDiagnosesCode = new ArrayList<String>();
+		public static ArrayList<String> otherDiagnosesAdmission = new ArrayList<String>();
+		
+		public static boolean procQualifierBool=false;
+		
+		public static boolean enterOperatingPhysLastName=false;
+		public static String operPhysLastName="TESTING";
+		public static String operPhysFirstName="OPER";
+		public static String operPhysNPI="1922020882";
+		
+		public static boolean enterAttendingPhysLastName=false;
+		public static String attenPhysLastName="TESTING";
+		public static String attenPhysFirstName="OPER";
+		public static String attenPhysNPI="1922020882";
+		
+		public static String physLastName="TESTING";
+		public static String physFirstName="OPER";
+		public static String physNPI="1922020882";
+		
+		public static boolean serviceFacilityProvider=false;
+		
+		public static boolean condition=false;
+		public static ArrayList<String> conditionDescription = new ArrayList<String>();
+		
+		public static boolean patientReason=false;
+		public static ArrayList<String> patientReasonDiagCode = new ArrayList<String>();
+
+		
+		//values
+		public static String pos="11 - OFFICE";
+		public static String[] insType = new String[] {"","","","","","","","","","" };  //Insurance type on CoB panel
+		public static String delayRsn=""; //Delay reason code on extended services
+		public static int adm=0; //Admission date +/- days from fdos
+		public static String admType="1 - EMERGENCY"; //Admission type
+		public static String admSource="1 - NON-HEALTH CARE FACILITY POINT OF ORIGIN"; //Admission source
+		public static String patStatus="01 - DISCHARGED TO HOME OR SELF CARE (ROUTINE DISCHARGE)"; //Patient Status
+		public static String[] orderingProv = new String[] {"","","","","","","","","",""}; //Ordering Provider ID/NPI
+		public static String[] renderingProvList = new String[] {"","","","","","","","","",""}; //Rendering Provider ID/NPI
+		public static boolean enterTaxonomy=false;
+		public static String taxonomy="282N00000X";
+		public static boolean patientResonForVisitDiagnosesBool=false;
+		public static String procQualifier="HC - HCPCS Codes"; //Proc Qualifier
+
+		
+		 //NDC
+		public static String[] ndc = new String[] {"","","","","","","","","","" };
+		public static String[] ndcUnits = new String[] {"","","","","","","","","","" };
+		public static String[] ndcUofM = new String[] {"","","","","","","","","","" };
+		public static String[] rxQ = new String[] {"","","","","","","","","","" };
+		public static String[] rxNo = new String[] {"","","","","","","","","","" };
+		public static String[] rxDt = new String[] {"","","","","","","","","","" };
+		
+		
+//		public static String memberSql = "select base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+//				"t_cde_aid aid,t_re_aid_elig elig where " +
+//				"elig.sak_recip=base.sak_recip " +
+//				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+//				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+//				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+//				"and pgm. CDE_PGM_HEALTH='STD' " +
+//				"and elig.DTE_END='22991231' " + 
+//				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+//				"and not exists ( select sak_recip from t_tpl_resource rs where rs.sak_recip=base.sak_recip and rs.dte_end> 20130401) " +
+//				"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> 20130401) " +
+//				"and base.ind_active='Y' "+ 
+//				"and base.sak_recip > dbms_random.value * 6300000 " +
+//				"and rownum<2";
+//		
+//		//SQL for CT A B C (member has medicare)
+//		public static String memberSql1 = "select base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+//				"t_cde_aid aid,t_re_aid_elig elig where " +
+//				"elig.sak_recip=base.sak_recip " +
+//				"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+//				"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+//				"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+//				"and pgm. CDE_PGM_HEALTH='STD' " +
+//				"and elig.DTE_END='22991231' " + 
+//				"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+//				"and not exists ( select sak_recip from t_tpl_resource rs where rs.sak_recip=base.sak_recip and rs.dte_end> 20130401) " +
+//				"and exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> 20130401) " +
+//				"and base.ind_active='Y' "+ 
+//				"and base.sak_recip > dbms_random.value * 6300000 " +
+//				"and rownum<2";
+				
+		public static String trgt = "//form[contains(@id,'Tab')]/div/table[2]/tbody/tr";
+		
+		public static void initiateClaim(){
+			driver.findElement(By.linkText("Home Services")).click();
+			driver.findElement(By.linkText("Manage Claims and Payments")).click();
+			driver.findElement(By.linkText("Enter Single Claim")).click();
+		}
+		
+		//Billing and Services tab data
+		public static void billnSvc(String ct, String provider, String sql, String referral) throws Exception {
+			//Select Billing provider
+			list=new Select(driver.findElement(By.xpath("//select[contains(@id,'billingProviderID')]"))).getOptions();
+			for (WebElement i:list) 
+				if ((i.getText()).contains(provider)) {
+					i.click();
+					break;
+				}
+			//Get member details
+			colNames.add("ID_MEDICAID"); //0
+			colNames.add("NAM_LAST"); //1
+			colNames.add("NAM_FIRST"); //2
+			colNames.add("ADR_STREET_1"); //3
+			colNames.add("ADR_CITY"); //4
+			colNames.add("ADR_ZIP_CODE"); //5
+			colNames.add("DTE_BIRTH"); //6
+			colNames.add("CDE_SEX"); //7
+			System.out.println("Executing SQL");
+			System.out.println(sql);
+			colValues=Common.executeQuery(sql, colNames );
+			System.out.println("Finish");
+
+			//Enter member details
+			//Enter member details
+			driver.findElement(By.xpath("//input[contains(@id,'memberID')]")).sendKeys(colValues.get(0));
+			driver.findElement(By.xpath("//input[contains(@id,'patientAccountNumber')]")).sendKeys(colValues.get(0));
+			driver.findElement(By.xpath("//input[contains(@id,'lastName')]")).sendKeys(colValues.get(1));
+			driver.findElement(By.xpath("//input[contains(@id,'firstName')]")).sendKeys(colValues.get(2));
+			driver.findElement(By.xpath("//input[contains(@id,'birthDate')]")).sendKeys(Common.convertDate(colValues.get(6)));
+		    if (colValues.get(7).equals("M"))
+		    	sex="M - Male";
+		    else
+		    	sex="F - Female";
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'gender')]"))).selectByVisibleText(sex);
+			driver.findElement(By.xpath("//input[contains(@id,'memberAdrLine1')]")).sendKeys(colValues.get(3));
+			driver.findElement(By.xpath("//input[contains(@id,'memberCity')]")).sendKeys(colValues.get(4));
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'memberState')]"))).selectByVisibleText("MA - Massachusetts");
+			driver.findElement(By.xpath("//input[contains(@id,'memberZip')]")).sendKeys(colValues.get(5));
+			
+			//Taxonomy optional
+		    if (enterTaxonomy)
+		    	driver.findElement(By.xpath("//input[contains(@id,'billingProviderTaxonomy')]")).sendKeys(taxonomy);
+		    
+		    //Fill other claim info
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'releaseOfInfo')]"))).selectByVisibleText("Y - Yes, Provider has a Signed Statement Permitting Release of Medical Billing Data Related to a Claim");
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'assignmentOfBenefits')]"))).selectByVisibleText("Yes");
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'providerAcceptsAssignment')]"))).selectByVisibleText("A - Assigned");
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'claimFilingIndicator')]"))).selectByVisibleText("MC - MEDICAID");
+		    
+		    
+		    //Fill referral info if present
+		    if (!(referral.equals("")))
+				driver.findElement(By.xpath("//input[contains(@id,'referralNumber')]")).sendKeys(referral);
+		}
+		
+		public static void M(String testCase, String CT, String provider, String Amount, String TOB, String NPI, String referral, String pas, String memberSql, String fd, String td)	 throws Exception {
+			driver.findElement(By.xpath("//*[contains(@id,'professionalClaimLink')]")).click();
+			int fdos = Integer.parseInt(fd);
+			int tdos = Integer.parseInt(td);
+			
+			//BILLING AND SERVICE
+			billnSvc("professional",provider,memberSql, referral);
+			
+			new Select(driver.findElement(By.xpath("//select[contains(@id,'placeOfService')]"))).selectByVisibleText(pos);
+			new Select(driver.findElement(By.xpath("//select[contains(@id,'signatureOnFile')]"))).selectByVisibleText("Yes");
+			
+		    // Fill Referring physician info if present - We will use NPI here from I/P parameters, because Prof claims do not have attending physician, so that will be the refereeing physician NPI for prof claims
+		    if (!(NPI.equals("0"))) {
+				driver.findElement(By.xpath("//*[contains(@id,'provider2lookup')]")).click();
+				driver.findElement(By.xpath("//input[contains(@id,'npi')]")).sendKeys(NPI);
+				driver.findElement(By.xpath("//*[contains(@id,'search_Button')]")).click();
+				driver.findElement(By.xpath("//*[contains(@id,'displayName')]")).click();
+		    }
+			
+		    //Diag codes - Check if ICD9 version and select the ICD 9 radio button then
+		    if (icdVersion9(Common.convertSysdatecustom(fdos)))
+				driver.findElement(By.xpath("//*[contains(@name,'icdVersion') and @value='9']")).click();
+
+			//Enter diag codes
+			sqlStatement = "select * from r_diag where TC='"+testCase+"'";
+			for (int i=1;i<=12; i++)
+				colNames.add("diag"+i); //0
+			colValues=Common.executeQuery1(sqlStatement, colNames );
+			String diagTarget="diagnosisCode";
+			for (int i=0;i<12; i++) {
+				if (!(colValues.get(i).equals(" "))) 
+				    driver.findElement(By.xpath("//input[contains(@id,'"+diagTarget+(i+1)+"')]")).sendKeys(colValues.get(i));
+				if (!(colValues.get(i).equals(""))) 
+				    log("Diag"+(i+1)+": "+colValues.get(i));
+			}
+
+			
+		    //Fill PA info if present
+		    if (!(pas.equals(""))) 
+				driver.findElement(By.xpath("//input[contains(@id,'priorAuthNumber')]")).sendKeys(pas);
+		    
+		    //driver.findElement(By.xpath("//input[@name = 'professionalBillingTab:enterSingleClaim_1_id26:icdVersion' and @value='9']")).click(); //For EPSDT reg only, select ICD9 diag code
+		    driver.findElement(By.xpath("//input[contains(@id,'totalCharges')]")).sendKeys(Amount);
+		    
+		    //Extended Services
+		    driver.findElement(By.id("professionalBillingTab:_MENUITEM_ExtendedServices")).click();
+		    Common.getPageError(trgt);
+			new Select(driver.findElement(By.xpath("//select[contains(@id,'delayReasonCde')]"))).selectByVisibleText(delayRsn);
+		    
+		    //PROCEDURE
+		    driver.findElement(By.id("instExtendedTab:_MENUITEM_Procedures")).click();
+		    Common.getPageError(trgt);
+		    
+		    sqlStatement="select PROC,DIAG_XREF,CHARGES,UNITS,UNITS_MEAS,EMER,EPSDT,MOD1,MOD2,MOD3,MOD4,FDOS,TDOS,DTL from  R_PROC where TC='"+testCase+"' order by DTL";
+		    dataList = Common.getDBTestData(sqlStatement, 14, Common.connection1);
+		    
+		   for (int i=0; i<dataList.size();i++) {
+		    	String[] detail= dataList.get(i);
+		    	String proc=detail[0];
+		    	String diag_xref=detail[1];
+		    	String charges=detail[2];
+		    	String units=detail[3];
+		    	String units_meas=detail[4];
+		    	String emer=detail[5];
+		    	String EPSDT=detail[6];
+		    	String mod1 = detail[7];
+		    	String mod2 = detail[8];
+		    	String mod3 = detail[9];
+		    	String mod4 = detail[10];
+		    	String f = detail[11];
+		    	String t = detail[12];
+		    	String dtl = detail[13];
+		    	
+		    	if (dataList.size()>1)
+		    		log("Detail no. "+dtl);
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+			    driver.findElement(By.xpath("//input[contains(@id,'hcpcsProcedureCode')]")).sendKeys(proc);
+			    log("Proc: "+proc);
+			    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+			    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
+				new Select(driver.findElement(By.xpath("//select[contains(@id,'placeOfService')]"))).selectByVisibleText(pos);
+			    driver.findElement(By.xpath("//input[contains(@id,'diagnosisCrossReference1')]")).sendKeys(diag_xref);
+			    driver.findElement(By.xpath("//input[contains(@id,'charges')]")).sendKeys(charges);
+			    driver.findElement(By.xpath("//input[contains(@id,'units')]")).sendKeys(units);
+				//Family Planning Ind optional
+			    if (familyPlanningInd[i])
+					driver.findElement(By.xpath("//*[contains(@name,'familyPlanInd') and @value='true' and @type='radio']")).click();
+				new Select(driver.findElement(By.xpath("//select[contains(@id,'unitsOfMeasurment')]"))).selectByVisibleText(units_meas);
+			    if (!(emer.equals("")))
+					new Select(driver.findElement(By.xpath("//select[contains(@id,'emergency')]"))).selectByVisibleText("Yes");
+				new Select(driver.findElement(By.xpath("//select[contains(@id,'epsdt')]"))).selectByVisibleText(EPSDT);
+				//enter modifiers
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier1')]")).sendKeys(mod1);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier2')]")).sendKeys(mod2);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier3')]")).sendKeys(mod3);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier4')]")).sendKeys(mod4);
+			    
+			    if(!(orderingProv[i].equals(""))) {
+				    driver.findElement(By.xpath("//*[@alt='Ordering Provider Name Search']")).click();
+					driver.findElement(By.xpath("//input[contains(@id,'npi')]")).sendKeys(orderingProv[i]);
+					driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Search']")).click();
+					driver.findElement(By.xpath("//*[contains(@id,'0:displayName')]")).click();
+			    }
+			    
+			    //Enter NDC information
+			    driver.findElement(By.xpath("//input[contains(@id,'ndc')]")).sendKeys(ndc[i]);
+			    driver.findElement(By.xpath("//input[contains(@id,'ndcUnits')]")).sendKeys(ndcUnits[i]);
+				new Select(driver.findElement(By.xpath("//select[contains(@id,'ndcUnitsOfMeasurement')]"))).selectByVisibleText(ndcUofM[i]);
+				new Select(driver.findElement(By.xpath("//select[contains(@id,'ndcRxQualifier')]"))).selectByVisibleText(rxQ[i]);
+			    driver.findElement(By.xpath("//input[contains(@id,'ndcRxNumber')]")).sendKeys(rxNo[i]);
+			    driver.findElement(By.xpath("//input[contains(@id,'ndcRxDate')]")).sendKeys(rxDt[i]);
+
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+			    Common.getPageError(trgt);
+		    }
+		   
+		   //Confirmation Tab
+		    driver.findElement(By.id("proceduresTab:_MENUITEM_Confirmation")).click();
+		    Common.getPageError(trgt);
+		    
+		    //Submit
+		    submit();
+		    resetValues();
+		    Common.getPageError(trgt);
+		    
+			//Add to report - This will only execute if calling class is claims.java. See function starting for details.
+			claims.fillReport("prof", CT);
+
+		}
+		
+		
+		public static void O(String testCase, String CT, String provider, String Amount, String tob, String npi, String referral, String pas, String memberSql, String fd, String td)	 throws Exception {
+			driver.findElement(By.xpath("//*[contains(@id,'institutionalClaimLink')]")).click();
+			int fdos = Integer.parseInt(fd);
+			int tdos = Integer.parseInt(td);
+			
+			//BILLING AND SERVICE
+					
+			//Enter Type of Bill
+			list=new Select(driver.findElement(By.xpath("//select[contains(@id,'billingType')]"))).getOptions();
+			for (WebElement i:list) 
+				if ((i.getText()).contains(tob)) {
+					i.click();
+					break;
+				}
+			
+			billnSvc("inst",provider,memberSql,referral);
+		    
+		    // Fill Attending physician info
+		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysLastName')]")).sendKeys(Common.generateRandomName());
+		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysFirstName')]")).sendKeys(Common.generateRandomName());
+		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysicianNPI')]")).sendKeys(npi);
+		    
+		    //Fill PAS info if present
+		    if (!(pas.equals("")))
+			    driver.findElement(By.xpath("//input[contains(@id,'paOrPasNumber')]")).sendKeys(pas);
+		    
+		    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(fdos));
+		    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(tdos));
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'patientStatus')]"))).selectByVisibleText(patStatus);
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admitSource')]"))).selectByVisibleText(admSource);
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admissionType')]"))).selectByVisibleText(admType);
+		    driver.findElement(By.xpath("//input[contains(@id,'admissionDate')]")).sendKeys(Common.convertSysdatecustom(fdos+adm));
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admissionHour')]"))).selectByVisibleText("00");
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'dischargeTime')]"))).selectByVisibleText("23");
+
+
+		    driver.findElement(By.xpath("//input[contains(@id,'totalCharges')]")).sendKeys(Amount);
+		    
+		    //EXTENDED SERVICES
+		    driver.findElement(By.id("instBillingTab:_MENUITEM_ExtendedServices")).click();
+		    Common.getPageError(trgt);
+		    
+		    //Diag codes - Check if ICD9 version and select the ICD 9 radio button then
+		    if (icdVersion9(Common.convertSysdatecustom(fdos)))
+				driver.findElement(By.xpath("//*[contains(@name,'icdVersion') and @value='9']")).click();
+		    
+		    //Add Diagnosis
+		    //Get Principal Diag code
+		    sqlStatement = "select diag,ind from  R_DIAG_INST where diag_type = 'Principal' and TC='"+testCase+"'";
+		    colNames.add("DIAG");
+		    colNames.add("IND");
+		    colValues = Common.executeQuery1(sqlStatement, colNames);
+		    String PrinDiag = colValues.get(0);
+		    String indicator = colValues.get(1);
+
+		    //Get Admitting Diag code
+		    sqlStatement = "select diag from  R_DIAG_INST where diag_type = 'Admitting' and TC='"+testCase+"'";
+		    colNames.add("DIAG");
+		    colValues = Common.executeQuery1(sqlStatement, colNames);
+		    String AdmitDiag = colValues.get(0);
+		    
+		    //Enter them on portal
+		    driver.findElement(By.xpath("//input[contains(@id,'principalDiag')]")).sendKeys(PrinDiag);
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'principalPoa')]"))).selectByVisibleText(indicator);
+		    driver.findElement(By.xpath("//input[contains(@id,'admittingDiag')]")).sendKeys(AdmitDiag);
+		    
+//		    //Add Diagnosis
+//		    sqlStatement="select * from  R_DIAG_INST where TC='"+testCase+"'";
+//		    dataList = Common.getDBTestData(sqlStatement, 4, Common.connection1);
+//		    for (int i=0; i<dataList.size();i++) {
+//		    	String[] diagRow= dataList.get(i);
+//		    	String diag=diagRow[1];
+//		    	String type=diagRow[2];
+//		    	String ind=diagRow[3];
+//		    	
+//			    driver.findElement(By.id("instExtendedTab:diagnosisDataTable:new_Button")).click();
+//			    driver.findElement(By.xpath("//input[contains(@id,'diagnosisCode')]")).sendKeys(diag);
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'type')]"))).selectByVisibleText(type);
+//				if (!(ind.equals(" ")))
+//				    new Select(driver.findElement(By.xpath("//select[contains(@id,'poaCode')]"))).selectByVisibleText(ind);
+//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//			    Common.getPageError(trgt);
+//		    }
+		    
+		    //Add Covered Days/Values if present
+		    sqlStatement="select * from  R_VALUES where TC='"+testCase+"'";
+		    dataList = Common.getDBTestData(sqlStatement, 3, Common.connection1);
+		    if (dataList != null) {
+			    for (int i=0; i<dataList.size();i++) {
+			    	String[] valRow= dataList.get(i);
+			    	String code=valRow[1];
+			    	String val=valRow[2];
+			    	
+				    driver.findElement(By.id("instExtendedTab:valueDataTable:new_Button")).click();
+				    new Select(driver.findElement(By.xpath("//select[contains(@id,'valueCode')]"))).selectByVisibleText(code);
+				    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(val);
+					driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+				    Common.getPageError(trgt);
+			    }
+		    }
+		    
+		    //PROCEDURE
+		    driver.findElement(By.id("instExtendedTab:_MENUITEM_Procedures")).click();
+		    Common.getPageError(trgt);
+		    
+		    sqlStatement="select PROC,CHARGES,UNITS,UNITS_MEAS,REV,MOD1,MOD2,MOD3,MOD4,FDOS,TDOS,DTL from  R_PROC where TC='"+testCase+"'";
+		    dataList = Common.getDBTestData(sqlStatement, 12, Common.connection1);
+		    
+		   for (int i=0; i<dataList.size();i++) {
+		    	String[] detail= dataList.get(i);
+		    	String proc=detail[0];
+		    	String charges=detail[1];
+		    	String units=detail[2];
+		    	String units_meas=detail[3];
+		    	String rev=detail[4];
+		    	String mod1 = detail[5];
+		    	String mod2 = detail[6];
+		    	String mod3 = detail[7];
+		    	String mod4 = detail[8];
+		    	String f = detail[9];
+		    	String t = detail[10];
+		    	String dtl = detail[11];
+		    	
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+			    driver.findElement(By.xpath("//input[contains(@id,'revenueCode')]")).sendKeys(rev);
+			    driver.findElement(By.xpath("//input[contains(@id,'hcpcsProcedureCode')]")).sendKeys(proc);
+			    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+			    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
+			    driver.findElement(By.xpath("//input[contains(@id,'units')]")).sendKeys(units);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'unitsOfMeasurment')]"))).selectByVisibleText(units_meas);
+			    driver.findElement(By.xpath("//input[contains(@id,'charges')]")).sendKeys(charges);
+			    
+			    //add modifiers
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier1')]")).sendKeys(mod1);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier2')]")).sendKeys(mod2);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier3')]")).sendKeys(mod3);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier4')]")).sendKeys(mod4);
+			    
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+			    Common.getPageError(trgt);
+		    }
+		   
+		    //Confirmation Tab
+		    driver.findElement(By.id("proceduresTab:_MENUITEM_Confirmation")).click();
+		    Common.getPageError(trgt);
+		    
+		    //Submit
+		    submit();
+		    resetValues();
+		    Common.getPageError(trgt);
+		    
+			//Add to report
+			claims.fillReport("inst", CT);
+			
+		}
+		
+		
+		public static void I(String testCase, String CT, String provider, String Amount, String tob, String npi, String referral, String pas, String memberSql, String fd, String td)	 throws Exception {
+			driver.findElement(By.xpath("//*[contains(@id,'institutionalClaimLink')]")).click();
+			int fdos = Integer.parseInt(fd);
+			int tdos = Integer.parseInt(td);
+			
+			//BILLING AND SERVICE
+					
+			//Enter Type of Bill
+			list=new Select(driver.findElement(By.xpath("//select[contains(@id,'billingType')]"))).getOptions();
+			for (WebElement i:list) 
+				if ((i.getText()).contains(tob)) {
+					i.click();
+					break;
+				}
+			
+			billnSvc("inst",provider,memberSql, referral);
+		    
+		    // Fill Attending physician info
+		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysLastName')]")).sendKeys(Common.generateRandomName());
+		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysFirstName')]")).sendKeys(Common.generateRandomName());
+		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysicianNPI')]")).sendKeys(npi);
+		    
+		    //Fill PAS info if present
+		    if (!(pas.equals(" ")))
+			    driver.findElement(By.xpath("//input[contains(@id,'paOrPasNumber')]")).sendKeys(pas);
+		    
+		    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(fdos));
+		    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(tdos));
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'patientStatus')]"))).selectByVisibleText(patStatus);
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admitSource')]"))).selectByVisibleText(admSource);
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admissionType')]"))).selectByVisibleText(admType);
+		    driver.findElement(By.xpath("//input[contains(@id,'admissionDate')]")).sendKeys(Common.convertSysdatecustom(fdos+adm));
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admissionHour')]"))).selectByVisibleText("00");
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'dischargeTime')]"))).selectByVisibleText("23");
+
+		    driver.findElement(By.xpath("//input[contains(@id,'totalCharges')]")).sendKeys(Amount);
+
+		    //EXTENDED SERVICES
+		    driver.findElement(By.id("instBillingTab:_MENUITEM_ExtendedServices")).click();
+		    Common.getPageError(trgt);
+		    
+		    //Diag codes - Check if ICD9 version and select the ICD 9 radio button then
+		    if (icdVersion9(Common.convertSysdatecustom(fdos)))
+				driver.findElement(By.xpath("//*[contains(@name,'icdVersion') and @value='9']")).click();
+		    
+		    //Add Diagnosis
+		    //Get Principal Diag code
+		    sqlStatement = "select diag,ind from  R_DIAG_INST where diag_type = 'Principal' and TC='"+testCase+"'";
+		    colNames.add("DIAG");
+		    colNames.add("IND");
+		    colValues = Common.executeQuery1(sqlStatement, colNames);
+		    String PrinDiag = colValues.get(0);
+		    String indicator = colValues.get(1);
+		    
+		    //Get Admitting Diag code
+		    sqlStatement = "select diag from  R_DIAG_INST where diag_type = 'Admitting' and TC='"+testCase+"'";
+		    colNames.add("DIAG");
+		    colValues = Common.executeQuery1(sqlStatement, colNames);
+		    String AdmitDiag = colValues.get(0);
+		    
+		    //Enter them on portal
+		    driver.findElement(By.xpath("//input[contains(@id,'principalDiag')]")).sendKeys(PrinDiag);
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'principalPoa')]"))).selectByVisibleText(indicator);
+		    driver.findElement(By.xpath("//input[contains(@id,'admittingDiag')]")).sendKeys(AdmitDiag);
+		    
+ 		    //Updated by Vk on 04/29/2020
+		    //Add Diagnosis
+		    sqlStatement="select * from  R_DIAG_INST where diag_type ='Other' and TC='"+testCase+"'";
+			dataList = Common.getDBTestData(sqlStatement, 4, Common.connection1);
+			if(dataList != null) {
+			for (int i=0; i<dataList.size();i++) {
+				String[] diagRow= dataList.get(i);
+				String diag=diagRow[1];
+			  //String type=diagRow[2];
+				String ind=diagRow[3];
+				driver.findElement(By.xpath("//input[@id='instExtendedTab:diagnosisOtherDataTable:new_Button']")).click();
+				driver.findElement(By.xpath("//input[@id='instExtendedTab:j_id_id85pc3:diagnosisCode']")).sendKeys(diag);
+			  //new Select(driver.findElement(By.xpath("//select[contains(@id,'type')]"))).selectByVisibleText(type);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'poaCode')]"))).selectByVisibleText(ind); 
+
+				driver.findElement(By.xpath("//input[@id='instExtendedTab:j_id_id85pc3:add_Button']")).click();
+			    Common.getPageError(trgt);
+			}
+			}
+		    
+//		    //Add Diagnosis
+//		    sqlStatement="select * from  R_DIAG_INST where TC='"+testCase+"'";
+//		    dataList = Common.getDBTestData(sqlStatement, 4, Common.connection1);
+//		    for (int i=0; i<dataList.size();i++) {
+//		    	String[] diagRow= dataList.get(i);
+//		    	String diag=diagRow[1];
+//		    	String type=diagRow[2];
+//		    	String ind=diagRow[3];
+//		    	
+//			    driver.findElement(By.id("instExtendedTab:diagnosisDataTable:new_Button")).click();
+//			    driver.findElement(By.xpath("//input[contains(@id,'diagnosisCode')]")).sendKeys(diag);
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'type')]"))).selectByVisibleText(type);
+//				if (!(ind.equals(" ")))
+//				    new Select(driver.findElement(By.xpath("//select[contains(@id,'poaCode')]"))).selectByVisibleText(ind);
+//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//			    Common.getPageError(trgt);
+//		    }
+		    
+		    //Add Covered Days/Values
+		    sqlStatement="select * from  R_VALUES where TC='"+testCase+"'";
+		    dataList = Common.getDBTestData(sqlStatement, 3, Common.connection1);
+		    for (int i=0; i<dataList.size();i++) {
+		    	String[] valRow= dataList.get(i);
+		    	String code=valRow[1];
+		    	String val=valRow[2];
+		    	
+			    driver.findElement(By.id("instExtendedTab:valueDataTable:new_Button")).click();
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'valueCode')]"))).selectByVisibleText(code);
+			    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(val);
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+			    Common.getPageError(trgt);
+		    }
+		    
+			  //Added by VK(04/21/2020): Add List of ICD Procedure Codes under Extended Services tab, from the table r_diag_inst where diag_type= 'ICD'
+			   //Add ICD Procedure Codes - This is in the extended services tab. This is using r_diag_inst table to enter ICD procedure codes
+			     sqlStatement="select DIAG, IND from  R_DIAG_INST where DIAG_TYPE = 'ICD' and TC='"+testCase+"'";
+			     dataList = Common.getDBTestData(sqlStatement, 2, Common.connection1);
+				   
+			     if(dataList != null) {
+				   for (int i=0; i<dataList.size();i++) {
+				    	String[] detail= dataList.get(i);
+				    	String icdproc=detail[0];
+				    	String f = detail[1];
+				    	
+				    	driver.findElement(By.xpath("//input[@id='instExtendedTab:icdProcedureList:new_Button']")).click();
+				    	driver.findElement(By.xpath("//input[@id='instExtendedTab:j_id_id136pc3:icdProcedureCode']")).sendKeys(icdproc);
+				    	driver.findElement(By.xpath("//input[@id='instExtendedTab:j_id_id136pc3:icdProcedureDate']")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+				    	driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+				   }
+			     }
+			     
+					//Add occurrence codes on claim - created table R_OCCURRENCE - By Rajesh V. on 5/8/2020
+				    //Add occurrence code, type, fdos and tdos (if present)
+				    sqlStatement = "select cde_occurrence, type_occurrence, fdos, nvl(tdos,' ') from r_occurrence where tc = '"+testCase+"'";
+				    dataList = Common.getDBTestData(sqlStatement, 4, Common.connection1);
+				    
+				    if(dataList != null) {
+				    	for (int i = 0; i<dataList.size();i++) {
+				    		String[] detail = dataList.get(i);
+				    		String cde_occurrence = detail[0];
+				    		String typ_occurrence = detail[1];
+				    		String f = detail[2];
+				    		String t = detail[3];
+				    	
+				    		driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item' and @name = 'instExtendedTab:occuranceDataTable:new_Button']")).click();
+				    		new Select(driver.findElement(By.xpath("//select[contains(@id,'occuranceCode')]"))).selectByValue(cde_occurrence);
+				    		new Select(driver.findElement(By.xpath("//select[contains(@id,'occuranceType')]"))).selectByValue(typ_occurrence);
+				    		driver.findElement(By.xpath("//input[contains(@id,'instExtendedTab:j_id_id32pc3:from')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+				    		if(!t.equals("")) 
+				    			driver.findElement(By.xpath("//input[contains(@id,'instExtendedTab:j_id_id32pc3:to')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));		    		
+				    		driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+				    		Common.getPageError(trgt);
+				    	}
+				    }
+		    
+		    //PROCEDURE
+		    driver.findElement(By.id("instExtendedTab:_MENUITEM_Procedures")).click();
+		    Common.getPageError(trgt);
+		    
+		    sqlStatement="select PROC,CHARGES,UNITS,UNITS_MEAS,REV,MOD1,MOD2,MOD3,MOD4,FDOS,TDOS,DTL from  R_PROC where TC='"+testCase+"'";
+		    dataList = Common.getDBTestData(sqlStatement, 12, Common.connection1);
+		    
+		   for (int i=0; i<dataList.size();i++) {
+		    	String[] detail= dataList.get(i);
+		    	String proc=detail[0];
+		    	String charges=detail[1];
+		    	String units=detail[2];
+		    	String units_meas=detail[3];
+		    	String rev=detail[4];
+		    	String mod1 = detail[5];
+		    	String mod2 = detail[6];
+		    	String mod3 = detail[7];
+		    	String mod4 = detail[8];
+		    	String f = detail[9];
+		    	String t = detail[10];
+		    	String dtl = detail[11];
+		    	
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+			    driver.findElement(By.xpath("//input[contains(@id,'revenueCode')]")).sendKeys(rev);
+			    driver.findElement(By.xpath("//input[contains(@id,'hcpcsProcedureCode')]")).sendKeys(proc);
+			    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+			    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
+			    driver.findElement(By.xpath("//input[contains(@id,'units')]")).sendKeys(units);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'unitsOfMeasurment')]"))).selectByVisibleText(units_meas);
+			    driver.findElement(By.xpath("//input[contains(@id,'charges')]")).sendKeys(charges);
+			    
+			    //add modifiers
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier1')]")).sendKeys(mod1);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier2')]")).sendKeys(mod2);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier3')]")).sendKeys(mod3);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier4')]")).sendKeys(mod4);
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+			    Common.getPageError(trgt);
+		    }
+		   
+		   //Confirmation Tab
+		    driver.findElement(By.id("proceduresTab:_MENUITEM_Confirmation")).click();
+		    Common.getPageError(trgt);
+		    
+		    //Submit
+		    submit();
+		    resetValues();
+		    Common.getPageError(trgt);
+		    
+			//Add to report
+			claims.fillReport("inst", CT);
+
+		}
+		
+		public static void C(String testCase, String CT, String provider, String Amount, String tob, String npi, String referral, String pas, String memberSql, String fd, String td)	 throws Exception {
+			
+			String memberID, lastName, firstName, adrLine1, city, zip;
+			driver.findElement(By.xpath("//*[contains(@id,'institutionalClaimLink')]")).click();		
+			int fdos = Integer.parseInt(fd);
+			int tdos = Integer.parseInt(td);
+			
+			//BILLING AND SERVICE
+					
+			//Enter Type of Bill
+			list=new Select(driver.findElement(By.xpath("//select[contains(@id,'billingType')]"))).getOptions();
+			for (WebElement i:list) 
+				if ((i.getText()).contains(tob)) {
+					i.click();
+					break;
+				}
+			
+			billnSvc("inst",provider,memberSql, referral);
+		    
+		    // Fill Attending physician info
+		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysLastName')]")).sendKeys(Common.generateRandomName());
+		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysFirstName')]")).sendKeys(Common.generateRandomName());
+		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysicianNPI')]")).sendKeys(npi);
+		    
+		    //Fill PAS info if present
+		    if (!(pas.equals("")))
+			    driver.findElement(By.xpath("//input[contains(@id,'paOrPasNumber')]")).sendKeys(pas);
+		    
+		    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(fdos));
+		    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(tdos));
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'patientStatus')]"))).selectByVisibleText("01 - DISCHARGED TO HOME OR SELF CARE (ROUTINE DISCHARGE)");
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admitSource')]"))).selectByVisibleText("1 - NON-HEALTH CARE FACILITY POINT OF ORIGIN");
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admissionType')]"))).selectByVisibleText("1 - EMERGENCY");
+		    driver.findElement(By.xpath("//input[contains(@id,'admissionDate')]")).sendKeys(Common.convertSysdatecustom(fdos));
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admissionHour')]"))).selectByVisibleText("00");
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'dischargeTime')]"))).selectByVisibleText("23");
+
+		    driver.findElement(By.xpath("//input[contains(@id,'totalCharges')]")).sendKeys(Amount);	    
+		    
+		    //Get member details for CoB panel
+		    memberID=driver.findElement(By.xpath("//input[contains(@id,'memberID')]")).getAttribute("value");
+		    lastName=driver.findElement(By.xpath("//input[contains(@id,'lastName')]")).getAttribute("value");
+		    firstName=driver.findElement(By.xpath("//input[contains(@id,'firstName')]")).getAttribute("value");
+		    adrLine1=driver.findElement(By.xpath("//input[contains(@id,'memberAdrLine1')]")).getAttribute("value");
+		    city =driver.findElement(By.xpath("//input[contains(@id,'memberCity')]")).getAttribute("value");
+		    zip=driver.findElement(By.xpath("//input[contains(@id,'memberZip')]")).getAttribute("value");
+		    
+		    //EXTENDED SERVICES
+		    driver.findElement(By.id("instBillingTab:_MENUITEM_ExtendedServices")).click();
+		    Common.getPageError(trgt);
+		    	    
+		    //Check if ICD9 version and select the ICD 9 radio button then
+		    if (icdVersion9(Common.convertSysdatecustom(fdos)))
+		    	driver.findElement(By.xpath("//input[contains(@name, 'icdVersion') and @value='9']")).click();
+		    
+		    //Add Diagnosis
+		    //Get Principal Diag code
+		    sqlStatement = "select diag,ind from  R_DIAG_INST where diag_type = 'Principal' and TC='"+testCase+"'";
+		    colNames.add("DIAG");
+		    colNames.add("IND");
+		    colValues = Common.executeQuery1(sqlStatement, colNames);
+		    String PrinDiag = colValues.get(0);
+		    String indicator = colValues.get(1);
+		    
+		    //Get Admitting Diag code
+		    sqlStatement = "select diag from  R_DIAG_INST where diag_type = 'Admitting' and TC='"+testCase+"'";
+		    colNames.add("DIAG");
+		    colValues = Common.executeQuery1(sqlStatement, colNames);
+		    String AdmitDiag = colValues.get(0);
+		    
+		    //Enter them on portal
+		    driver.findElement(By.xpath("//input[contains(@id,'principalDiag')]")).sendKeys(PrinDiag);
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'principalPoa')]"))).selectByVisibleText(indicator);
+		    driver.findElement(By.xpath("//input[contains(@id,'admittingDiag')]")).sendKeys(AdmitDiag);
+		    
+//		    //Add Diagnosis
+//		    sqlStatement="select * from  R_DIAG_INST where TC='"+testCase+"'";
+//		    dataList = Common.getDBTestData(sqlStatement, 4, Common.connection1);
+//		    for (int i=0; i<dataList.size();i++) {
+//		    	String[] diagRow= dataList.get(i);
+//		    	String diag=diagRow[1];
+//		    	String type=diagRow[2];
+//		    	String ind=diagRow[3];
+//		    	
+//			    driver.findElement(By.id("instExtendedTab:diagnosisDataTable:new_Button")).click();
+//			    driver.findElement(By.xpath("//input[contains(@id,'diagnosisCode')]")).sendKeys(diag);
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'type')]"))).selectByVisibleText(type);
+//				if (!(ind.equals(" ")))
+//				    new Select(driver.findElement(By.xpath("//select[contains(@id,'poaCode')]"))).selectByVisibleText(ind);
+//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//			    Common.getPageError(trgt);
+//		    }
+		    
+//		    //CoB
+//		    driver.findElement(By.id("instExtendedTab:_MENUITEM_COB")).click();
+//		    Common.getPageError(trgt);
+//
+//		    //Add CoB Info
+//		    sqlStatement="select * from  R_COB where TC='"+testCase+"'";
+//		    dataList = Common.getDBTestData(sqlStatement, 7, Common.connection1);
+//		    for (int i=0; i<dataList.size();i++) {
+//		    	String[] cobRow= dataList.get(i);
+//		    	String carrier=cobRow[1];
+//		    	String resp=cobRow[2];
+//		    	String ppaid=cobRow[3];
+//		    	String nonCovAmt=cobRow[4];
+//		    	String patLiab=cobRow[5];
+//		    	String clmInd=cobRow[6];
+//		    	//Get Carrier name from carrier ID
+//			    sqlStatement = "select nam_bus from t_tpl_carrier where cde_carrier = '"+carrier+"'";
+//			    colNames.add("NAM_BUS");
+//			    colValues = Common.executeQuery(sqlStatement, colNames);
+//			    //This is to accomodate field length on panel
+//			    int lenOfCarrName = colValues.get(0).length();
+//			    if (lenOfCarrName>8)
+//			    	lenOfCarrName = 8;
+//		    	String carrier_name=colValues.get(0).substring(0, lenOfCarrName); 
+//		    	
+//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+//			    driver.findElement(By.xpath("//input[contains(@id,'carrierCode')]")).sendKeys(carrier);
+//			    driver.findElement(By.xpath("//input[contains(@id,'carrierName')]")).sendKeys(carrier_name);
+//			    driver.findElement(By.xpath("//input[contains(@id,'payerClaimNumber')]")).sendKeys(memberID);
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'payerResponsibilty')]"))).selectByVisibleText(resp);
+//			    driver.findElement(By.xpath("//input[contains(@id,'payerPaidAmount')]")).sendKeys(ppaid);
+//			    driver.findElement(By.xpath("//input[contains(@id,'totalNonCovdAmount')]")).sendKeys(nonCovAmt);
+//			    driver.findElement(By.xpath("//input[contains(@id,'remPatLiab')]")).sendKeys(patLiab);
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'claimFilingIndicator')]"))).selectByVisibleText(clmInd);
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'releaseOfInfo')]"))).selectByVisibleText("Y - Yes, Provider has a Signed Statement Permitting Release of Medical Billing Data Related to a Claim");
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'assignmentOfBenefits')]"))).selectByVisibleText("Yes");
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'relationshipToSubscriber')]"))).selectByVisibleText("18 - SELF");
+//			    driver.findElement(By.xpath("//input[contains(@id,'subscriberLastName')]")).sendKeys(lastName);
+//			    driver.findElement(By.xpath("//input[contains(@id,'subscriberFirstName')]")).sendKeys(firstName);
+//			    driver.findElement(By.xpath("//input[contains(@id,'subscriberAddr1')]")).sendKeys(adrLine1);
+//			    driver.findElement(By.xpath("//input[contains(@id,'subscriberCity')]")).sendKeys(city);
+//			    driver.findElement(By.xpath("//input[contains(@id,'subscriberZip')]")).sendKeys(zip);
+//			    
+//			    //Enter medicare ID
+//			    sqlStatement = "select id_medicare from t_re_hib where sak_recip =(select sak_recip from t_re_base where id_medicaid = '"+memberID+"')";
+//			    colNames.add("ID_MEDICARE");
+//			    colValues = Common.executeQuery(sqlStatement, colNames);
+//			    driver.findElement(By.xpath("//input[contains(@id,'subscriberId')]")).sendKeys(colValues.get(0));
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'subscriberState')]"))).selectByVisibleText("MA - Massachusetts");
+//			    driver.findElement(By.xpath("//input[contains(@id,'groupName')]")).sendKeys(carrier);
+//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//			    Common.getPageError(trgt);
+//		    }
+		    
+		    //CoB
+		    driver.findElement(By.id("instExtendedTab:_MENUITEM_COB")).click();
+		    Common.getPageError(trgt);
+
+//		    //Add CoB Info
+//			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+//		    driver.findElement(By.xpath("//input[contains(@id,'carrierCode')]")).sendKeys("0084000");
+//		    driver.findElement(By.xpath("//input[contains(@id,'carrierName')]")).sendKeys("MEDICARE");
+//		    driver.findElement(By.xpath("//input[contains(@id,'remittanceDateOptional')]")).sendKeys(Common.convertSysdate());
+//		    driver.findElement(By.xpath("//input[contains(@id,'payerClaimNumber')]")).sendKeys(memberID);
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'payerResponsibilty')]"))).selectByVisibleText("P - Primary");
+//		    driver.findElement(By.xpath("//input[contains(@id,'payerPaidAmount')]")).sendKeys("4505.17");
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'claimFilingIndicator')]"))).selectByVisibleText("MA - MEDICARE PART A");
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'releaseOfInfo')]"))).selectByVisibleText("Y - Yes, Provider has a Signed Statement Permitting Release of Medical Billing Data Related to a Claim");
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'assignmentOfBenefits')]"))).selectByVisibleText("Yes");
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'relationshipToSubscriber')]"))).selectByVisibleText("18 - SELF");
+//		    driver.findElement(By.xpath("//input[contains(@id,'subscriberLastName')]")).sendKeys(lastName);
+//		    driver.findElement(By.xpath("//input[contains(@id,'subscriberFirstName')]")).sendKeys(firstName);
+//		    driver.findElement(By.xpath("//input[contains(@id,'subscriberAddr1')]")).sendKeys(adrLine1);
+//		    driver.findElement(By.xpath("//input[contains(@id,'subscriberCity')]")).sendKeys(city);
+//		    driver.findElement(By.xpath("//input[contains(@id,'subscriberZip')]")).sendKeys(zip);
+//		    
+//		    //Enter medicare ID
+//		    sqlStatement = "select id_medicare from t_re_hib where sak_recip =(select sak_recip from t_re_base where id_medicaid = '"+memberID+"')";
+//		    colNames.add("ID_MEDICARE");
+//		    colValues = Common.executeQuery(sqlStatement, colNames);
+//		    driver.findElement(By.xpath("//input[contains(@id,'subscriberId')]")).sendKeys(colValues.get(0));
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'subscriberState')]"))).selectByVisibleText("MA - Massachusetts");
+//		    driver.findElement(By.xpath("//input[contains(@id,'groupName')]")).sendKeys("0084000");
+//		    driver.findElement(By.xpath("//input[contains(@id,'coveredDaysOrVisits')]")).sendKeys("1");
+//		    driver.findElement(By.xpath("//input[contains(@id,'drgAmt')]")).sendKeys("5689.61");
+//		    driver.findElement(By.xpath("//input[contains(@id,'remarkCde1')]")).sendKeys("MA01");
+//		    driver.findElement(By.xpath("//input[contains(@id,'disproportionateShareAmt')]")).sendKeys("817.36");
+//		    driver.findElement(By.xpath("//input[contains(@id,'ppsCapitalAmt')]")).sendKeys("383.69");
+//		    driver.findElement(By.xpath("//input[contains(@id,'ppsCapitalFspDrgAmt')]")).sendKeys("261.05");
+//		    driver.findElement(By.xpath("//input[contains(@id,'ppsCapitalDshDrgAmt')]")).sendKeys("23.76");
+//		    driver.findElement(By.xpath("//input[contains(@id,'ppsCapitalImeAmt')]")).sendKeys("99.88");
+//		    driver.findElement(By.xpath("//input[contains(@id,'ppsOperatingFederalDrgAmt')]")).sendKeys("3307.83");
+//		    driver.findElement(By.xpath("//input[contains(@id,'indirectTeachingAmt')]")).sendKeys("1211.57");
+//		    
+//		    //Add CoB Reasons Detail
+//		    driver.findElement(By.id("cobTab:CobReasonList:new_Button")).click();
+//		    Common.getPageError(trgt);
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'groupCode')]"))).selectByVisibleText("CO - Contractual Obligations");
+//		    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys("298.83");
+//		    driver.findElement(By.xpath("//input[contains(@id,'unitsOfService')]")).sendKeys("0");
+//		    driver.findElement(By.xpath("//input[contains(@id,'reason')]")).sendKeys("45");
+//			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//		    driver.findElement(By.id("cobTab:CobReasonList:new_Button")).click();
+//		    Common.getPageError(trgt);
+//		    
+//		    driver.findElement(By.id("cobTab:CobReasonList:new_Button")).click();
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'groupCode')]"))).selectByVisibleText("PR - Patient Responsibility");
+//		    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys("1184");
+//		    driver.findElement(By.xpath("//input[contains(@id,'unitsOfService')]")).sendKeys("0");
+//		    driver.findElement(By.xpath("//input[contains(@id,'reason')]")).sendKeys("1");
+//			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//		    Common.getPageError(trgt);
+//		    
+//			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//		    Common.getPageError(trgt);
+		    
+		  //Add CoB Info
+//		    sqlStatement="select * from  R_COB where TC='"+testCase+"'";
+		    sqlStatement="select TC,CARRIER,RESP,PPAID,NONCOVAMT,PATLIAB,CLMIND,DTL,nvl(cast(remitdt as varchar2(10)), ' ') as remitdt from  R_COB where TC='"+testCase+"'";
+		    dataList = Common.getDBTestData(sqlStatement, 9, Common.connection1);
+		    for (int a=0; a<dataList.size();a++) {
+		    	String[] cobRow= dataList.get(a);
+		    	String carrier_cob=cobRow[1];
+		    	String resp=cobRow[2];
+		    	String ppaid=cobRow[3];
+		    	String nonCovAmt=cobRow[4];
+		    	String patLiab=cobRow[5];
+		    	String clmInd=cobRow[6];
+		    	String dtl_cob = cobRow[7];
+		    	String remitDt = cobRow[8];
+
+		    	//Get Carrier name from carrier ID
+			    sqlStatement = "select nam_bus from t_tpl_carrier where cde_carrier = '"+carrier_cob+"'";
+			    colNames.add("NAM_BUS");
+			    colValues = Common.executeQuery(sqlStatement, colNames);
+			    //This is to accomodate field length on panel
+			    int lenOfCarrName = colValues.get(0).length();
+			    if (lenOfCarrName>8)
+			    	lenOfCarrName = 8;
+		    	String carrier_name=colValues.get(0).substring(0, lenOfCarrName); 
+		    	
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+			    driver.findElement(By.xpath("//input[contains(@id,'carrierCode')]")).sendKeys(carrier_cob);
+			    driver.findElement(By.xpath("//input[contains(@id,'carrierName')]")).sendKeys(carrier_name);
+//			    if (!(doNotEnterRemitDt))
+//			    	driver.findElement(By.xpath("//input[contains(@id,'remittanceDateOptional')]")).sendKeys(Common.convertSysdate());
+			    if(!(remitDt.equals("")))
+			    	driver.findElement(By.xpath("//input[contains(@id,'remittanceDateOptional')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(remitDt)));
+
+			    driver.findElement(By.xpath("//input[contains(@id,'payerClaimNumber')]")).sendKeys(memberID);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'payerResponsibilty')]"))).selectByVisibleText(resp);
+			    driver.findElement(By.xpath("//input[contains(@id,'payerPaidAmount')]")).sendKeys(ppaid);
+			    driver.findElement(By.xpath("//input[contains(@id,'totalNonCovdAmount')]")).sendKeys(nonCovAmt);
+			    driver.findElement(By.xpath("//input[contains(@id,'remPatLiab')]")).sendKeys(patLiab);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'claimFilingIndicator')]"))).selectByVisibleText(clmInd);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'releaseOfInfo')]"))).selectByVisibleText("Y - Yes, Provider has a Signed Statement Permitting Release of Medical Billing Data Related to a Claim");
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'assignmentOfBenefits')]"))).selectByVisibleText("Yes");
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'relationshipToSubscriber')]"))).selectByVisibleText("18 - SELF");
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberLastName')]")).sendKeys(lastName);
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberFirstName')]")).sendKeys(firstName);
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberAddr1')]")).sendKeys(adrLine1);
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberCity')]")).sendKeys(city);
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberZip')]")).sendKeys(zip);
+			    
+			    //Enter medicare ID
+			    sqlStatement = "select id_medicare from t_re_hib where sak_recip =(select sak_recip from t_re_base where id_medicaid = '"+memberID+"')";
+			    colNames.add("ID_MEDICARE");
+			    colValues = Common.executeQuery(sqlStatement, colNames);
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberId')]")).sendKeys(colValues.get(0));
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'subscriberState')]"))).selectByVisibleText("MA - Massachusetts");
+			    driver.findElement(By.xpath("//input[contains(@id,'groupName')]")).sendKeys(carrier_cob);
+			    
+				//Add COB level Reasons detail
+			    sqlStatement="select * from  r_cob_line where TC='"+testCase+"' and dtl = '"+dtl_cob+"'";
+			    dataList_cob = Common.getDBTestData(sqlStatement, 6, Common.connection1);
+			    if (dataList_cob != null) {
+				    for (int l=0; l<dataList_cob.size();l++) {
+				    	String[] detail_cob= dataList_cob.get(l);
+				    	String gc_cob=detail_cob[2];
+				    	String dtlAmt_cob=detail_cob[3];
+				    	String un_cob=detail_cob[4];
+				    	String rsnCode_cob=detail_cob[5];
+				    	
+					    driver.findElement(By.id("cobTab:CobReasonList:new_Button")).click();
+					    Common.getPageError(trgt);
+					    new Select(driver.findElement(By.xpath("//select[contains(@id,'groupCode')]"))).selectByVisibleText(gc_cob);
+					    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(dtlAmt_cob);
+					    driver.findElement(By.xpath("//input[contains(@id,'unitsOfService')]")).sendKeys(un_cob);
+					    driver.findElement(By.xpath("//input[contains(@id,'id') and contains(@id,'reason')]")).sendKeys(rsnCode_cob); //This is because the 'reason' keyword is also present in the 'New Item' button above as well
+						driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+					    Common.getPageError(trgt);
+				    }
+			    }
+			    
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+			    Common.getPageError(trgt);
+		    }
+
+
+		    //PROCEDURE
+		    driver.findElement(By.id("cobTab:_MENUITEM_Procedures")).click();
+		    Common.getPageError(trgt);
+		    
+		    sqlStatement="select PROC,CHARGES,UNITS,UNITS_MEAS,REV,MOD1,MOD2,MOD3,MOD4,FDOS,TDOS,DTL from  R_PROC where TC='"+testCase+"'";
+		    dataList = Common.getDBTestData(sqlStatement, 12, Common.connection1);
+		    
+		   for (int i=0; i<dataList.size();i++) {
+		    	String[] detail= dataList.get(i);
+		    	String proc=detail[0];
+		    	String charges=detail[1];
+		    	String units=detail[2];
+		    	String units_meas=detail[3];
+		    	String rev=detail[4];
+		    	String mod1 = detail[5];
+		    	String mod2 = detail[6];
+		    	String mod3 = detail[7];
+		    	String mod4 = detail[8];
+		    	String f = detail[9];
+		    	String t = detail[10];
+		    	String dtl = detail[11];
+		    	
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+			    driver.findElement(By.xpath("//input[contains(@id,'revenueCode')]")).sendKeys(rev);
+			    driver.findElement(By.xpath("//input[contains(@id,'hcpcsProcedureCode')]")).sendKeys(proc);
+			    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+			    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
+			    driver.findElement(By.xpath("//input[contains(@id,'units')]")).sendKeys(units);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'unitsOfMeasurment')]"))).selectByVisibleText(units_meas);
+			    driver.findElement(By.xpath("//input[contains(@id,'charges')]")).sendKeys(charges);
+			    
+			    //add modifiers
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier1')]")).sendKeys(mod1);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier2')]")).sendKeys(mod2);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier3')]")).sendKeys(mod3);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier4')]")).sendKeys(mod4);
+				
+				//Add Proc COB Line Details
+			    sqlStatement="select * from  r_proc_cob_line where TC='"+testCase+"' and dtl = '"+dtl+"'";
+			    dataList1 = Common.getDBTestData(sqlStatement, 15, Common.connection1);
+			    if (dataList1 != null) {
+				    for (int j=0; j<dataList1.size();j++) {
+				    	String[] detail1= dataList1.get(j);
+				    	String cobLine=detail1[2];
+				    	String carrier=detail1[3];
+				    	String bndlLine=detail1[4];
+				    	String remitDT=detail1[5];
+				    	String amt=detail1[6];
+				    	String unitsOfSvc = detail1[7];
+				    	String revCd = detail1[8];
+				    	String remPatLiab = detail1[9];
+				    	String cobProc = detail1[10];
+				    	String cobMod1 = detail1[11];
+				    	String cobMod2 = detail1[12];
+				    	String cobMod3 = detail1[13];
+				    	String cobMod4 = detail1[14];
+				    	
+						driver.findElement(By.id("proceduresTab:data:new_Button")).click();
+					    Common.getPageError(trgt);
+					    new Select(driver.findElement(By.xpath("//select[contains(@id,'carrierCode')]"))).selectByVisibleText(carrier);
+					    driver.findElement(By.xpath("//input[contains(@id,'bundledIntoLineNumber')]")).sendKeys(bndlLine);
+					    if (!(remitDT.equals("")))
+						    driver.findElement(By.xpath("//input[contains(@id,'remittanceDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(remitDT)));
+					    driver.findElement(By.xpath("//input[contains(@id,'paidAmount')]")).sendKeys(amt);
+					    driver.findElement(By.xpath("//input[contains(@id,'paidUnitsOfService')]")).clear();
+					    driver.findElement(By.xpath("//input[contains(@id,'paidUnitsOfService')]")).sendKeys(unitsOfSvc);
+					    Common.multiElements("//input[contains(@id,'revenueCode')]").clear();
+					    Common.multiElements("//input[contains(@id,'revenueCode')]").sendKeys(revCd);
+					    driver.findElement(By.xpath("//input[contains(@id,'remPatLiab')]")).sendKeys(remPatLiab);
+					    driver.findElement(By.xpath("//input[contains(@id,'procedureCode')]")).clear();
+					    driver.findElement(By.xpath("//input[contains(@id,'procedureCode')]")).sendKeys(cobProc);
+					    Common.multiElementSelect=2;
+					    Common.multiElements("//input[contains(@id,'modifier1')]").sendKeys(cobMod1);
+					    Common.multiElementSelect=2;
+					    Common.multiElements("//input[contains(@id,'modifier2')]").sendKeys(cobMod2);
+					    Common.multiElementSelect=2;
+					    Common.multiElements("//input[contains(@id,'modifier3')]").sendKeys(cobMod3);
+					    Common.multiElementSelect=2;
+					    Common.multiElements("//input[contains(@id,'modifier4')]").sendKeys(cobMod4);
+					    
+					    //Add COB Reasons Detail
+					    sqlStatement="select * from  r_proc_cob_line_dtl where TC='"+testCase+"' and dtl = '"+dtl+"' and cobline = '"+cobLine+"'";
+					    dataList2 = Common.getDBTestData(sqlStatement, 7, Common.connection1);
+					    if (dataList2 != null) {
+						    for (int k=0; k<dataList2.size();k++) {
+						    	String[] detail2= dataList2.get(k);
+						    	String gc=detail2[3];
+						    	String dtlAmt=detail2[4];
+						    	String un=detail2[5];
+						    	String rsnCode=detail2[6];
+						    	
+								driver.findElement(By.id("proceduresTab:reasons_data:new_Button")).click();
+							    Common.getPageError(trgt);
+							    new Select(driver.findElement(By.xpath("//select[contains(@id,'groupCode')]"))).selectByVisibleText(gc);
+							    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(dtlAmt);
+							    driver.findElement(By.xpath("//input[contains(@id,'unitsOfService')]")).sendKeys(un);
+							    driver.findElement(By.xpath("//input[contains(@id,'id') and contains(@id,'reason')]")).sendKeys(rsnCode); //This is because the 'reason' keyword is also present in the 'New Item' button above as well
+								driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+							    Common.getPageError(trgt);
+						    }
+					    }
+					    //Click Add button for cob line
+						driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+					    Common.getPageError(trgt);
+				    }
+			    }
+			    //Click Add button for main procedure line
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+			    Common.getPageError(trgt);
+
+		    }
+		   
+		   //Confirmation Tab
+		    driver.findElement(By.id("proceduresTab:_MENUITEM_Confirmation")).click();
+		    Common.getPageError(trgt);
+		    		    
+		    //Submit
+		    submit();
+		    resetValues();
+			if(TestNGCustom.TCNo.equals("31143edit")) //This is to validate any error when you click Submit 
+				return;
+			
+			Common.getPageError(trgt);
+		    
+			//Add to report
+			claims.fillReport("inst", CT);
+		    
+		}
+		
+		
+//		public static void A(String testCase, String CT, String provider, String Amount, String tob, String npi, String referral, String pas, String memberSql, String fd, String td)	 throws Exception {
+//			
+//			String memberID, lastName, firstName, adrLine1, city, zip;
+//			driver.findElement(By.xpath("//*[contains(@id,'institutionalClaimLink')]")).click();		
+//			int fdos = Integer.parseInt(fd);
+//			int tdos = Integer.parseInt(td);
+//			
+//			//BILLING AND SERVICE
+//					
+//			//Enter Type of Bill
+//			list=new Select(driver.findElement(By.xpath("//select[contains(@id,'billingType')]"))).getOptions();
+//			for (WebElement i:list) 
+//				if ((i.getText()).contains(tob)) {
+//					i.click();
+//					break;
+//				}
+//			
+//			billnSvc("inst",provider,memberSql, referral);
+//		    
+//		    // Fill Attending physician info
+//		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysLastName')]")).sendKeys(Common.generateRandomName());
+//		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysFirstName')]")).sendKeys(Common.generateRandomName());
+//		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysicianNPI')]")).sendKeys(npi);
+//		    
+//		    //Fill PAS info if present
+//		    if (!(pas.equals("")))
+//			    driver.findElement(By.xpath("//input[contains(@id,'paOrPasNumber')]")).sendKeys(pas);
+//		    
+//		    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(fdos));
+//		    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(tdos));
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'patientStatus')]"))).selectByVisibleText(patStatus);
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admitSource')]"))).selectByVisibleText(admSource);
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admissionType')]"))).selectByVisibleText(admType);
+//		    driver.findElement(By.xpath("//input[contains(@id,'admissionDate')]")).sendKeys(Common.convertSysdatecustom(fdos+adm));
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admissionHour')]"))).selectByVisibleText("00");
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'dischargeTime')]"))).selectByVisibleText("23");
+//		    
+//		    driver.findElement(By.xpath("//input[contains(@id,'totalCharges')]")).sendKeys(Amount);	    
+//		    
+//		    //Get member details for CoB panel
+//		    memberID=driver.findElement(By.xpath("//input[contains(@id,'memberID')]")).getAttribute("value");
+//		    lastName=driver.findElement(By.xpath("//input[contains(@id,'lastName')]")).getAttribute("value");
+//		    firstName=driver.findElement(By.xpath("//input[contains(@id,'firstName')]")).getAttribute("value");
+//		    adrLine1=driver.findElement(By.xpath("//input[contains(@id,'memberAdrLine1')]")).getAttribute("value");
+//		    city =driver.findElement(By.xpath("//input[contains(@id,'memberCity')]")).getAttribute("value");
+//		    zip=driver.findElement(By.xpath("//input[contains(@id,'memberZip')]")).getAttribute("value");
+//		    
+//		    //EXTENDED SERVICES
+//		    driver.findElement(By.id("instBillingTab:_MENUITEM_ExtendedServices")).click();
+//		    Common.getPageError(trgt);
+//		    
+//		    //Add Diagnosis
+//		    //Get Principal Diag code
+//		    sqlStatement = "select diag,ind from  R_DIAG_INST where diag_type = 'Principal' and TC='"+testCase+"'";
+//		    colNames.add("DIAG");
+//		    colNames.add("IND");
+//		    colValues = Common.executeQuery1(sqlStatement, colNames);
+//		    String PrinDiag = colValues.get(0);
+//		    String indicator = colValues.get(1);
+//		    
+//		    //Get Admitting Diag code
+//		    sqlStatement = "select diag from  R_DIAG_INST where diag_type = 'Admitting' and TC='"+testCase+"'";
+//		    colNames.add("DIAG");
+//		    colValues = Common.executeQuery1(sqlStatement, colNames);
+//		    String AdmitDiag = colValues.get(0);
+//		    
+//		    //Enter them on portal
+//		    driver.findElement(By.xpath("//input[contains(@id,'principalDiag')]")).sendKeys(PrinDiag);
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'principalPoa')]"))).selectByVisibleText(indicator);
+//		    driver.findElement(By.xpath("//input[contains(@id,'admittingDiag')]")).sendKeys(AdmitDiag);
+//		    	    
+////		    //Add Diagnosis
+////		    sqlStatement="select * from  R_DIAG_INST where TC='"+testCase+"'";
+////		    dataList = Common.getDBTestData(sqlStatement, 4, Common.connection1);
+////		    for (int i=0; i<dataList.size();i++) {
+////		    	String[] diagRow= dataList.get(i);
+////		    	String diag=diagRow[1];
+////		    	String type=diagRow[2];
+////		    	String ind=diagRow[3];
+////		    	
+////			    driver.findElement(By.id("instExtendedTab:diagnosisDataTable:new_Button")).click();
+////			    driver.findElement(By.xpath("//input[contains(@id,'diagnosisCode')]")).sendKeys(diag);
+////			    new Select(driver.findElement(By.xpath("//select[contains(@id,'type')]"))).selectByVisibleText(type);
+////				if (!(ind.equals(" ")))
+////				    new Select(driver.findElement(By.xpath("//select[contains(@id,'poaCode')]"))).selectByVisibleText(ind);
+////				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+////			    Common.getPageError(trgt);
+////		    }
+//		    
+//		    //Add Values
+//		    
+//		    //Add Covered Days/Values
+//		    sqlStatement="select * from  R_VALUES where TC='"+testCase+"'";
+//		    dataList = Common.getDBTestData(sqlStatement, 3, Common.connection1);
+//		    for (int i=0; i<dataList.size();i++) {
+//		    	String[] valRow= dataList.get(i);
+//		    	String code=valRow[1];
+//		    	String val=valRow[2];
+//		    	
+//			    driver.findElement(By.id("instExtendedTab:valueDataTable:new_Button")).click();
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'valueCode')]"))).selectByVisibleText(code);
+//			    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(val);
+//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//			    Common.getPageError(trgt);
+//		    }
+//		    
+//		    //CoB
+//		    driver.findElement(By.id("instExtendedTab:_MENUITEM_COB")).click();
+//		    Common.getPageError(trgt);
+//
+////		    //Add CoB Info
+////			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+////		    driver.findElement(By.xpath("//input[contains(@id,'carrierCode')]")).sendKeys("0084000");
+////		    driver.findElement(By.xpath("//input[contains(@id,'carrierName')]")).sendKeys("MEDICARE");
+////		    driver.findElement(By.xpath("//input[contains(@id,'remittanceDateOptional')]")).sendKeys(Common.convertSysdate());
+////		    driver.findElement(By.xpath("//input[contains(@id,'payerClaimNumber')]")).sendKeys(memberID);
+////		    new Select(driver.findElement(By.xpath("//select[contains(@id,'payerResponsibilty')]"))).selectByVisibleText("P - Primary");
+////		    driver.findElement(By.xpath("//input[contains(@id,'payerPaidAmount')]")).sendKeys("4505.17");
+////		    new Select(driver.findElement(By.xpath("//select[contains(@id,'claimFilingIndicator')]"))).selectByVisibleText("MA - MEDICARE PART A");
+////		    new Select(driver.findElement(By.xpath("//select[contains(@id,'releaseOfInfo')]"))).selectByVisibleText("Y - Yes, Provider has a Signed Statement Permitting Release of Medical Billing Data Related to a Claim");
+////		    new Select(driver.findElement(By.xpath("//select[contains(@id,'assignmentOfBenefits')]"))).selectByVisibleText("Yes");
+////		    new Select(driver.findElement(By.xpath("//select[contains(@id,'relationshipToSubscriber')]"))).selectByVisibleText("18 - SELF");
+////		    driver.findElement(By.xpath("//input[contains(@id,'subscriberLastName')]")).sendKeys(lastName);
+////		    driver.findElement(By.xpath("//input[contains(@id,'subscriberFirstName')]")).sendKeys(firstName);
+////		    driver.findElement(By.xpath("//input[contains(@id,'subscriberAddr1')]")).sendKeys(adrLine1);
+////		    driver.findElement(By.xpath("//input[contains(@id,'subscriberCity')]")).sendKeys(city);
+////		    driver.findElement(By.xpath("//input[contains(@id,'subscriberZip')]")).sendKeys(zip);
+////		    
+////		    //Enter medicare ID
+////		    sqlStatement = "select id_medicare from t_re_hib where sak_recip =(select sak_recip from t_re_base where id_medicaid = '"+memberID+"')";
+////		    colNames.add("ID_MEDICARE");
+////		    colValues = Common.executeQuery(sqlStatement, colNames);
+////		    driver.findElement(By.xpath("//input[contains(@id,'subscriberId')]")).sendKeys(colValues.get(0));
+////		    new Select(driver.findElement(By.xpath("//select[contains(@id,'subscriberState')]"))).selectByVisibleText("MA - Massachusetts");
+////		    driver.findElement(By.xpath("//input[contains(@id,'groupName')]")).sendKeys("0084000");
+////		    driver.findElement(By.xpath("//input[contains(@id,'coveredDaysOrVisits')]")).sendKeys("1");
+////		    driver.findElement(By.xpath("//input[contains(@id,'drgAmt')]")).sendKeys("5689.61");
+////		    driver.findElement(By.xpath("//input[contains(@id,'remarkCde1')]")).sendKeys("MA01");
+////		    driver.findElement(By.xpath("//input[contains(@id,'disproportionateShareAmt')]")).sendKeys("817.36");
+////		    driver.findElement(By.xpath("//input[contains(@id,'ppsCapitalAmt')]")).sendKeys("383.69");
+////		    driver.findElement(By.xpath("//input[contains(@id,'ppsCapitalFspDrgAmt')]")).sendKeys("261.05");
+////		    driver.findElement(By.xpath("//input[contains(@id,'ppsCapitalDshDrgAmt')]")).sendKeys("23.76");
+////		    driver.findElement(By.xpath("//input[contains(@id,'ppsCapitalImeAmt')]")).sendKeys("99.88");
+////		    driver.findElement(By.xpath("//input[contains(@id,'ppsOperatingFederalDrgAmt')]")).sendKeys("3307.83");
+////		    driver.findElement(By.xpath("//input[contains(@id,'indirectTeachingAmt')]")).sendKeys("1211.57");
+////		    
+////		    //Add CoB Reasons Detail
+////		    driver.findElement(By.id("cobTab:CobReasonList:new_Button")).click();
+////		    Common.getPageError(trgt);
+////		    new Select(driver.findElement(By.xpath("//select[contains(@id,'groupCode')]"))).selectByVisibleText("CO - Contractual Obligations");
+////		    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys("298.83");
+////		    driver.findElement(By.xpath("//input[contains(@id,'unitsOfService')]")).sendKeys("0");
+////		    driver.findElement(By.xpath("//input[contains(@id,'reason')]")).sendKeys("45");
+////			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+////		    driver.findElement(By.id("cobTab:CobReasonList:new_Button")).click();
+////		    Common.getPageError(trgt);
+////		    
+////		    driver.findElement(By.id("cobTab:CobReasonList:new_Button")).click();
+////		    new Select(driver.findElement(By.xpath("//select[contains(@id,'groupCode')]"))).selectByVisibleText("PR - Patient Responsibility");
+////		    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys("1184");
+////		    driver.findElement(By.xpath("//input[contains(@id,'unitsOfService')]")).sendKeys("0");
+////		    driver.findElement(By.xpath("//input[contains(@id,'reason')]")).sendKeys("1");
+////			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+////		    Common.getPageError(trgt);
+////		    
+////			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+////		    Common.getPageError(trgt);
+//		    
+//		  //Add CoB Info
+//		    sqlStatement="select * from  R_COB where TC='"+testCase+"'";
+//		    dataList = Common.getDBTestData(sqlStatement, 7, Common.connection1);
+//		    for (int i=0; i<dataList.size();i++) {
+//		    	String[] cobRow= dataList.get(i);
+//		    	String carrier=cobRow[1];
+//		    	String resp=cobRow[2];
+//		    	String ppaid=cobRow[3];
+//		    	String nonCovAmt=cobRow[4];
+//		    	String patLiab=cobRow[5];
+//		    	String clmInd=cobRow[6];
+//		    	//Get Carrier name from carrier ID
+//			    sqlStatement = "select nam_bus from t_tpl_carrier where cde_carrier = '"+carrier+"'";
+//			    colNames.add("NAM_BUS");
+//			    colValues = Common.executeQuery(sqlStatement, colNames);
+//			    //This is to accomodate field length on panel
+//			    int lenOfCarrName = colValues.get(0).length();
+//			    if (lenOfCarrName>8)
+//			    	lenOfCarrName = 8;
+//		    	String carrier_name=colValues.get(0).substring(0, lenOfCarrName); 
+//		    	
+//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+//			    driver.findElement(By.xpath("//input[contains(@id,'carrierCode')]")).sendKeys(carrier);
+//			    driver.findElement(By.xpath("//input[contains(@id,'carrierName')]")).sendKeys(carrier_name);
+//			    driver.findElement(By.xpath("//input[contains(@id,'payerClaimNumber')]")).sendKeys(memberID);
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'payerResponsibilty')]"))).selectByVisibleText(resp);
+//			    driver.findElement(By.xpath("//input[contains(@id,'payerPaidAmount')]")).sendKeys(ppaid);
+//			    driver.findElement(By.xpath("//input[contains(@id,'totalNonCovdAmount')]")).sendKeys(nonCovAmt);
+//			    driver.findElement(By.xpath("//input[contains(@id,'remPatLiab')]")).sendKeys(patLiab);
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'claimFilingIndicator')]"))).selectByVisibleText(clmInd);
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'releaseOfInfo')]"))).selectByVisibleText("Y - Yes, Provider has a Signed Statement Permitting Release of Medical Billing Data Related to a Claim");
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'assignmentOfBenefits')]"))).selectByVisibleText("Yes");
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'relationshipToSubscriber')]"))).selectByVisibleText("18 - SELF");
+//			    driver.findElement(By.xpath("//input[contains(@id,'subscriberLastName')]")).sendKeys(lastName);
+//			    driver.findElement(By.xpath("//input[contains(@id,'subscriberFirstName')]")).sendKeys(firstName);
+//			    driver.findElement(By.xpath("//input[contains(@id,'subscriberAddr1')]")).sendKeys(adrLine1);
+//			    driver.findElement(By.xpath("//input[contains(@id,'subscriberCity')]")).sendKeys(city);
+//			    driver.findElement(By.xpath("//input[contains(@id,'subscriberZip')]")).sendKeys(zip);
+//			    
+//			    //Enter medicare ID
+//			    sqlStatement = "select id_medicare from t_re_hib where sak_recip =(select sak_recip from t_re_base where id_medicaid = '"+memberID+"')";
+//			    colNames.add("ID_MEDICARE");
+//			    colValues = Common.executeQuery(sqlStatement, colNames);
+//			    driver.findElement(By.xpath("//input[contains(@id,'subscriberId')]")).sendKeys(colValues.get(0));
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'subscriberState')]"))).selectByVisibleText("MA - Massachusetts");
+//			    driver.findElement(By.xpath("//input[contains(@id,'groupName')]")).sendKeys(carrier);
+//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//			    Common.getPageError(trgt);
+//		    }
+//
+////		    //PROCEDURE
+////		    driver.findElement(By.id("cobTab:_MENUITEM_Procedures")).click();
+////		    Common.getPageError(trgt);
+////		    
+////		    sqlStatement="select PROC,CHARGES,UNITS,UNITS_MEAS,REV,MOD1,MOD2,MOD3,MOD4 from  R_PROC where TC='"+testCase+"'";
+////		    dataList = Common.getDBTestData(sqlStatement, 9, Common.connection1);
+////		    
+////		    for (int i=0; i<dataList.size();i++) {
+////		    	String[] detail= dataList.get(i);
+////		    	String proc=detail[0];
+////		    	String charges=detail[1];
+////		    	String units=detail[2];
+////		    	String units_meas=detail[3];
+////		    	String rev=detail[4];
+////		    	String mod1 = detail[5];
+////		    	String mod2 = detail[6];
+////		    	String mod3 = detail[7];
+////		    	String mod4 = detail[8];
+////		    	
+////				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+////			    driver.findElement(By.xpath("//input[contains(@id,'revenueCode')]")).sendKeys(rev);
+////			    driver.findElement(By.xpath("//input[contains(@id,'hcpcsProcedureCode')]")).sendKeys(proc);
+////			    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(-1));
+////			    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdate());
+////			    driver.findElement(By.xpath("//input[contains(@id,'units')]")).sendKeys(units);
+////			    new Select(driver.findElement(By.xpath("//select[contains(@id,'unitsOfMeasurment')]"))).selectByVisibleText(units_meas);
+////			    driver.findElement(By.xpath("//input[contains(@id,'charges')]")).sendKeys(charges);
+////			    
+////			    //add modifiers
+////			    driver.findElement(By.xpath("//input[contains(@id,'modifier1')]")).sendKeys(mod1);
+////			    driver.findElement(By.xpath("//input[contains(@id,'modifier2')]")).sendKeys(mod2);
+////			    driver.findElement(By.xpath("//input[contains(@id,'modifier3')]")).sendKeys(mod3);
+////			    driver.findElement(By.xpath("//input[contains(@id,'modifier4')]")).sendKeys(mod4);
+////				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+////			    Common.getPageError(trgt);
+////		    }
+//		    
+//		    //PROCEDURE
+//		    driver.findElement(By.id("cobTab:_MENUITEM_Procedures")).click();
+//		    Common.getPageError(trgt);
+//		    
+//		    sqlStatement="select PROC,CHARGES,UNITS,UNITS_MEAS,REV,MOD1,MOD2,MOD3,MOD4,FDOS,TDOS,DTL from  R_PROC where TC='"+testCase+"'";
+//		    dataList = Common.getDBTestData(sqlStatement, 12, Common.connection1);
+//		    
+//		   for (int i=0; i<dataList.size();i++) {
+//		    	String[] detail= dataList.get(i);
+//		    	String proc=detail[0];
+//		    	String charges=detail[1];
+//		    	String units=detail[2];
+//		    	String units_meas=detail[3];
+//		    	String rev=detail[4];
+//		    	String mod1 = detail[5];
+//		    	String mod2 = detail[6];
+//		    	String mod3 = detail[7];
+//		    	String mod4 = detail[8];
+//		    	String f = detail[9];
+//		    	String t = detail[10];
+//		    	String dtl = detail[11];
+//		    	
+//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+//			    driver.findElement(By.xpath("//input[contains(@id,'revenueCode')]")).sendKeys(rev);
+//			    driver.findElement(By.xpath("//input[contains(@id,'hcpcsProcedureCode')]")).sendKeys(proc);
+//			    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+//			    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
+//			    driver.findElement(By.xpath("//input[contains(@id,'units')]")).sendKeys(units);
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'unitsOfMeasurment')]"))).selectByVisibleText(units_meas);
+//			    driver.findElement(By.xpath("//input[contains(@id,'charges')]")).sendKeys(charges);
+//			    
+//			    //add modifiers
+//			    driver.findElement(By.xpath("//input[contains(@id,'modifier1')]")).sendKeys(mod1);
+//			    driver.findElement(By.xpath("//input[contains(@id,'modifier2')]")).sendKeys(mod2);
+//			    driver.findElement(By.xpath("//input[contains(@id,'modifier3')]")).sendKeys(mod3);
+//			    driver.findElement(By.xpath("//input[contains(@id,'modifier4')]")).sendKeys(mod4);
+//				
+//				//Add Proc COB Line Details
+//			    sqlStatement="select * from  r_proc_cob_line where TC='"+testCase+"' and dtl = '"+dtl+"'";
+//			    dataList1 = Common.getDBTestData(sqlStatement, 15, Common.connection1);
+//			    if (dataList1 != null) {
+//				    for (int j=0; j<dataList1.size();j++) {
+//				    	String[] detail1= dataList1.get(j);
+//				    	String cobLine=detail1[2];
+//				    	String carrier=detail1[3];
+//				    	String bndlLine=detail1[4];
+//				    	String remitDT=detail1[5];
+//				    	String amt=detail1[6];
+//				    	String unitsOfSvc = detail1[7];
+//				    	String revCd = detail1[8];
+//				    	String remPatLiab = detail1[9];
+//				    	String cobProc = detail1[10];
+//				    	String cobMod1 = detail1[11];
+//				    	String cobMod2 = detail1[12];
+//				    	String cobMod3 = detail1[13];
+//				    	String cobMod4 = detail1[14];
+//				    	
+//						driver.findElement(By.id("proceduresTab:data:new_Button")).click();
+//					    Common.getPageError(trgt);
+//					    new Select(driver.findElement(By.xpath("//select[contains(@id,'carrierCode')]"))).selectByVisibleText(carrier);
+//					    driver.findElement(By.xpath("//input[contains(@id,'bundledIntoLineNumber')]")).sendKeys(bndlLine);
+//					    if (!(remitDT.equals("")))
+//						    driver.findElement(By.xpath("//input[contains(@id,'remittanceDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(remitDT)));
+//					    driver.findElement(By.xpath("//input[contains(@id,'paidAmount')]")).sendKeys(amt);
+//					    driver.findElement(By.xpath("//input[contains(@id,'paidUnitsOfService')]")).clear();
+//					    driver.findElement(By.xpath("//input[contains(@id,'paidUnitsOfService')]")).sendKeys(unitsOfSvc);
+//					    Common.multiElements("//input[contains(@id,'revenueCode')]").clear();
+//					    Common.multiElements("//input[contains(@id,'revenueCode')]").sendKeys(revCd);
+//					    driver.findElement(By.xpath("//input[contains(@id,'remPatLiab')]")).sendKeys(remPatLiab);
+//					    driver.findElement(By.xpath("//input[contains(@id,'procedureCode')]")).clear();
+//					    driver.findElement(By.xpath("//input[contains(@id,'procedureCode')]")).sendKeys(cobProc);
+//					    Common.multiElementSelect=2;
+//					    Common.multiElements("//input[contains(@id,'modifier1')]").sendKeys(cobMod1);
+//					    Common.multiElementSelect=2;
+//					    Common.multiElements("//input[contains(@id,'modifier2')]").sendKeys(cobMod2);
+//					    Common.multiElementSelect=2;
+//					    Common.multiElements("//input[contains(@id,'modifier3')]").sendKeys(cobMod3);
+//					    Common.multiElementSelect=2;
+//					    Common.multiElements("//input[contains(@id,'modifier4')]").sendKeys(cobMod4);
+//					    
+//					    //Add COB Reasons Detail
+//					    sqlStatement="select * from  r_proc_cob_line_dtl where TC='"+testCase+"' and dtl = '"+dtl+"' and cobline = '"+cobLine+"'";
+//					    dataList2 = Common.getDBTestData(sqlStatement, 7, Common.connection1);
+//					    if (dataList2 != null) {
+//						    for (int k=0; k<dataList2.size();k++) {
+//						    	String[] detail2= dataList2.get(k);
+//						    	String gc=detail2[3];
+//						    	String dtlAmt=detail2[4];
+//						    	String un=detail2[5];
+//						    	String rsnCode=detail2[6];
+//						    	
+//								driver.findElement(By.id("proceduresTab:reasons_data:new_Button")).click();
+//							    Common.getPageError(trgt);
+//							    new Select(driver.findElement(By.xpath("//select[contains(@id,'groupCode')]"))).selectByVisibleText(gc);
+//							    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(dtlAmt);
+//							    driver.findElement(By.xpath("//input[contains(@id,'unitsOfService')]")).sendKeys(un);
+//							    driver.findElement(By.xpath("//input[contains(@id,'id') and contains(@id,'reason')]")).sendKeys(rsnCode); //This is because the 'reason' keyword is also present in the 'New Item' button above as well
+//								driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//							    Common.getPageError(trgt);
+//						    }
+//					    }
+//					    //Click Add button for cob line
+//						driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//					    Common.getPageError(trgt);
+//				    }
+//			    }
+//			    //Click Add button for main procedure line
+//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//			    Common.getPageError(trgt);
+//
+//		    }
+//		   
+//		   //Confirmation Tab
+//		    driver.findElement(By.id("proceduresTab:_MENUITEM_Confirmation")).click();
+//		    Common.getPageError(trgt);
+//		    
+//		    //Submit
+//			driver.findElement(By.xpath("//input[@class='buttonCommand' and @alt='Submit']")).click();
+//		    resetValues();
+//		    Common.getPageError(trgt);
+//		    
+//			//Add to report
+//			claims.fillReport("inst", CT);
+//		    
+//		}
+		
+		public static void A(String testCase, String CT, String provider, String Amount, String tob, String npi, String referral, String pas, String memberSql, String fd, String td)	 throws Exception {
+			
+			String memberID, lastName, firstName, adrLine1, city, zip;
+			driver.findElement(By.xpath("//*[contains(@id,'institutionalClaimLink')]")).click();		
+			int fdos = Integer.parseInt(fd);
+			int tdos = Integer.parseInt(td);
+			
+			//BILLING AND SERVICE
+					
+			//Enter Type of Bill
+			list=new Select(driver.findElement(By.xpath("//select[contains(@id,'billingType')]"))).getOptions();
+			for (WebElement i:list) 
+				if ((i.getText()).contains(tob)) {
+					i.click();
+					break;
+				}
+			
+			billnSvc("inst",provider,memberSql, referral);
+		    
+		    // Fill Attending physician info
+		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysLastName')]")).sendKeys(Common.generateRandomName());
+		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysFirstName')]")).sendKeys(Common.generateRandomName());
+		    driver.findElement(By.xpath("//input[contains(@id,'attendingPhysicianNPI')]")).sendKeys(npi);
+		    
+		    //Fill PAS info if present
+		    if (!(pas.equals("")))
+			    driver.findElement(By.xpath("//input[contains(@id,'paOrPasNumber')]")).sendKeys(pas);
+		    
+		    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(fdos));
+		    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(tdos));
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'patientStatus')]"))).selectByVisibleText(patStatus);
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admitSource')]"))).selectByVisibleText(admSource);
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admissionType')]"))).selectByVisibleText(admType);
+		    driver.findElement(By.xpath("//input[contains(@id,'admissionDate')]")).sendKeys(Common.convertSysdatecustom(fdos+adm));
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'admissionHour')]"))).selectByVisibleText("00");
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'dischargeTime')]"))).selectByVisibleText("23");
+		    
+		    driver.findElement(By.xpath("//input[contains(@id,'totalCharges')]")).sendKeys(Amount);	    
+		    
+		    //Get member details for CoB panel
+		    memberID=driver.findElement(By.xpath("//input[contains(@id,'memberID')]")).getAttribute("value");
+		    lastName=driver.findElement(By.xpath("//input[contains(@id,'lastName')]")).getAttribute("value");
+		    firstName=driver.findElement(By.xpath("//input[contains(@id,'firstName')]")).getAttribute("value");
+		    adrLine1=driver.findElement(By.xpath("//input[contains(@id,'memberAdrLine1')]")).getAttribute("value");
+		    city =driver.findElement(By.xpath("//input[contains(@id,'memberCity')]")).getAttribute("value");
+		    zip=driver.findElement(By.xpath("//input[contains(@id,'memberZip')]")).getAttribute("value");
+		    
+		    //EXTENDED SERVICES
+		    driver.findElement(By.id("instBillingTab:_MENUITEM_ExtendedServices")).click();
+		    Common.getPageError(trgt);
+		    
+		    //Add Diagnosis
+		    //Get Principal Diag code
+		    sqlStatement = "select diag,ind from  R_DIAG_INST where diag_type = 'Principal' and TC='"+testCase+"'";
+		    colNames.add("DIAG");
+		    colNames.add("IND");
+		    colValues = Common.executeQuery1(sqlStatement, colNames);
+		    String PrinDiag = colValues.get(0);
+		    String indicator = colValues.get(1);
+		    
+		    //Get Admitting Diag code
+		    sqlStatement = "select diag from  R_DIAG_INST where diag_type = 'Admitting' and TC='"+testCase+"'";
+		    colNames.add("DIAG");
+		    colValues = Common.executeQuery1(sqlStatement, colNames);
+		    String AdmitDiag = colValues.get(0);
+		    
+		    //Enter them on portal
+		    driver.findElement(By.xpath("//input[contains(@id,'principalDiag')]")).sendKeys(PrinDiag);
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'principalPoa')]"))).selectByVisibleText(indicator);
+		    driver.findElement(By.xpath("//input[contains(@id,'admittingDiag')]")).sendKeys(AdmitDiag);
+		    	    
+//		    //Add Diagnosis
+//		    sqlStatement="select * from  R_DIAG_INST where TC='"+testCase+"'";
+//		    dataList = Common.getDBTestData(sqlStatement, 4, Common.connection1);
+//		    for (int i=0; i<dataList.size();i++) {
+//		    	String[] diagRow= dataList.get(i);
+//		    	String diag=diagRow[1];
+//		    	String type=diagRow[2];
+//		    	String ind=diagRow[3];
+//		    	
+//			    driver.findElement(By.id("instExtendedTab:diagnosisDataTable:new_Button")).click();
+//			    driver.findElement(By.xpath("//input[contains(@id,'diagnosisCode')]")).sendKeys(diag);
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'type')]"))).selectByVisibleText(type);
+//				if (!(ind.equals(" ")))
+//				    new Select(driver.findElement(By.xpath("//select[contains(@id,'poaCode')]"))).selectByVisibleText(ind);
+//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//			    Common.getPageError(trgt);
+//		    }
+		    
+		    //Add Values
+		    
+		    //Add Covered Days/Values
+		    sqlStatement="select * from  R_VALUES where TC='"+testCase+"'";
+		    dataList = Common.getDBTestData(sqlStatement, 3, Common.connection1);
+		    for (int i=0; i<dataList.size();i++) {
+		    	String[] valRow= dataList.get(i);
+		    	String code=valRow[1];
+		    	String val=valRow[2];
+		    	
+			    driver.findElement(By.id("instExtendedTab:valueDataTable:new_Button")).click();
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'valueCode')]"))).selectByVisibleText(code);
+			    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(val);
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+			    Common.getPageError(trgt);
+		    }
+		    
+		    //CoB
+		    driver.findElement(By.id("instExtendedTab:_MENUITEM_COB")).click();
+		    Common.getPageError(trgt);
+
+//		    //Add CoB Info
+//			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+//		    driver.findElement(By.xpath("//input[contains(@id,'carrierCode')]")).sendKeys("0084000");
+//		    driver.findElement(By.xpath("//input[contains(@id,'carrierName')]")).sendKeys("MEDICARE");
+//		    driver.findElement(By.xpath("//input[contains(@id,'remittanceDateOptional')]")).sendKeys(Common.convertSysdate());
+//		    driver.findElement(By.xpath("//input[contains(@id,'payerClaimNumber')]")).sendKeys(memberID);
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'payerResponsibilty')]"))).selectByVisibleText("P - Primary");
+//		    driver.findElement(By.xpath("//input[contains(@id,'payerPaidAmount')]")).sendKeys("4505.17");
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'claimFilingIndicator')]"))).selectByVisibleText("MA - MEDICARE PART A");
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'releaseOfInfo')]"))).selectByVisibleText("Y - Yes, Provider has a Signed Statement Permitting Release of Medical Billing Data Related to a Claim");
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'assignmentOfBenefits')]"))).selectByVisibleText("Yes");
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'relationshipToSubscriber')]"))).selectByVisibleText("18 - SELF");
+//		    driver.findElement(By.xpath("//input[contains(@id,'subscriberLastName')]")).sendKeys(lastName);
+//		    driver.findElement(By.xpath("//input[contains(@id,'subscriberFirstName')]")).sendKeys(firstName);
+//		    driver.findElement(By.xpath("//input[contains(@id,'subscriberAddr1')]")).sendKeys(adrLine1);
+//		    driver.findElement(By.xpath("//input[contains(@id,'subscriberCity')]")).sendKeys(city);
+//		    driver.findElement(By.xpath("//input[contains(@id,'subscriberZip')]")).sendKeys(zip);
+//		    
+//		    //Enter medicare ID
+//		    sqlStatement = "select id_medicare from t_re_hib where sak_recip =(select sak_recip from t_re_base where id_medicaid = '"+memberID+"')";
+//		    colNames.add("ID_MEDICARE");
+//		    colValues = Common.executeQuery(sqlStatement, colNames);
+//		    driver.findElement(By.xpath("//input[contains(@id,'subscriberId')]")).sendKeys(colValues.get(0));
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'subscriberState')]"))).selectByVisibleText("MA - Massachusetts");
+//		    driver.findElement(By.xpath("//input[contains(@id,'groupName')]")).sendKeys("0084000");
+//		    driver.findElement(By.xpath("//input[contains(@id,'coveredDaysOrVisits')]")).sendKeys("1");
+//		    driver.findElement(By.xpath("//input[contains(@id,'drgAmt')]")).sendKeys("5689.61");
+//		    driver.findElement(By.xpath("//input[contains(@id,'remarkCde1')]")).sendKeys("MA01");
+//		    driver.findElement(By.xpath("//input[contains(@id,'disproportionateShareAmt')]")).sendKeys("817.36");
+//		    driver.findElement(By.xpath("//input[contains(@id,'ppsCapitalAmt')]")).sendKeys("383.69");
+//		    driver.findElement(By.xpath("//input[contains(@id,'ppsCapitalFspDrgAmt')]")).sendKeys("261.05");
+//		    driver.findElement(By.xpath("//input[contains(@id,'ppsCapitalDshDrgAmt')]")).sendKeys("23.76");
+//		    driver.findElement(By.xpath("//input[contains(@id,'ppsCapitalImeAmt')]")).sendKeys("99.88");
+//		    driver.findElement(By.xpath("//input[contains(@id,'ppsOperatingFederalDrgAmt')]")).sendKeys("3307.83");
+//		    driver.findElement(By.xpath("//input[contains(@id,'indirectTeachingAmt')]")).sendKeys("1211.57");
+//		    
+//		    //Add CoB Reasons Detail
+//		    driver.findElement(By.id("cobTab:CobReasonList:new_Button")).click();
+//		    Common.getPageError(trgt);
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'groupCode')]"))).selectByVisibleText("CO - Contractual Obligations");
+//		    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys("298.83");
+//		    driver.findElement(By.xpath("//input[contains(@id,'unitsOfService')]")).sendKeys("0");
+//		    driver.findElement(By.xpath("//input[contains(@id,'reason')]")).sendKeys("45");
+//			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//		    driver.findElement(By.id("cobTab:CobReasonList:new_Button")).click();
+//		    Common.getPageError(trgt);
+//		    
+//		    driver.findElement(By.id("cobTab:CobReasonList:new_Button")).click();
+//		    new Select(driver.findElement(By.xpath("//select[contains(@id,'groupCode')]"))).selectByVisibleText("PR - Patient Responsibility");
+//		    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys("1184");
+//		    driver.findElement(By.xpath("//input[contains(@id,'unitsOfService')]")).sendKeys("0");
+//		    driver.findElement(By.xpath("//input[contains(@id,'reason')]")).sendKeys("1");
+//			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//		    Common.getPageError(trgt);
+//		    
+//			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//		    Common.getPageError(trgt);
+		    
+		  //Add CoB Info
+//		    sqlStatement="select * from  R_COB where TC='"+testCase+"'";
+		    sqlStatement="select TC,CARRIER,RESP,PPAID,NONCOVAMT,PATLIAB,CLMIND,DTL,nvl(cast(remitdt as varchar2(10)), ' ') as remitdt from  R_COB where TC='"+testCase+"'";
+		    dataList = Common.getDBTestData(sqlStatement, 9, Common.connection1);
+		    for (int a=0; a<dataList.size();a++) {
+		    	String[] cobRow= dataList.get(a);
+		    	String carrier_cob=cobRow[1];
+		    	String resp=cobRow[2];
+		    	String ppaid=cobRow[3];
+		    	String nonCovAmt=cobRow[4];
+		    	String patLiab=cobRow[5];
+		    	String clmInd=cobRow[6];
+		    	String dtl_cob = cobRow[7];
+		    	String remitDt = cobRow[8];
+
+		    	//Get Carrier name from carrier ID
+			    sqlStatement = "select nam_bus from t_tpl_carrier where cde_carrier = '"+carrier_cob+"'";
+			    colNames.add("NAM_BUS");
+			    colValues = Common.executeQuery(sqlStatement, colNames);
+			    //This is to accomodate field length on panel
+			    int lenOfCarrName = colValues.get(0).length();
+			    if (lenOfCarrName>8)
+			    	lenOfCarrName = 8;
+		    	String carrier_name=colValues.get(0).substring(0, lenOfCarrName); 
+		    	
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+			    driver.findElement(By.xpath("//input[contains(@id,'carrierCode')]")).sendKeys(carrier_cob);
+			    driver.findElement(By.xpath("//input[contains(@id,'carrierName')]")).sendKeys(carrier_name);
+//			    if (!(doNotEnterRemitDt))
+//			    	driver.findElement(By.xpath("//input[contains(@id,'remittanceDateOptional')]")).sendKeys(Common.convertSysdate());
+			    if(!(remitDt.equals("")))
+			    	driver.findElement(By.xpath("//input[contains(@id,'remittanceDateOptional')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(remitDt)));
+
+			    driver.findElement(By.xpath("//input[contains(@id,'payerClaimNumber')]")).sendKeys(memberID);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'payerResponsibilty')]"))).selectByVisibleText(resp);
+			    driver.findElement(By.xpath("//input[contains(@id,'payerPaidAmount')]")).sendKeys(ppaid);
+			    driver.findElement(By.xpath("//input[contains(@id,'totalNonCovdAmount')]")).sendKeys(nonCovAmt);
+			    driver.findElement(By.xpath("//input[contains(@id,'remPatLiab')]")).sendKeys(patLiab);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'claimFilingIndicator')]"))).selectByVisibleText(clmInd);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'releaseOfInfo')]"))).selectByVisibleText("Y - Yes, Provider has a Signed Statement Permitting Release of Medical Billing Data Related to a Claim");
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'assignmentOfBenefits')]"))).selectByVisibleText("Yes");
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'relationshipToSubscriber')]"))).selectByVisibleText("18 - SELF");
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberLastName')]")).sendKeys(lastName);
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberFirstName')]")).sendKeys(firstName);
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberAddr1')]")).sendKeys(adrLine1);
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberCity')]")).sendKeys(city);
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberZip')]")).sendKeys(zip);
+			    
+			    //Enter medicare ID
+			    sqlStatement = "select b.id_medicaid, nvl(h.id_medicare, ' ') as id_medicare from t_re_base b LEFT JOIN t_re_hib h on b.sak_recip = h.sak_recip where b.id_medicaid = "+memberID;
+			    colNames.add("ID_MEDICARE");
+			    colValues = Common.executeQuery(sqlStatement, colNames);
+			    String subscriberId=colValues.get(0);
+			    if(subscriberId.equals(""))
+			    	subscriberId=memberID;
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberId')]")).sendKeys(subscriberId);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'subscriberState')]"))).selectByVisibleText("MA - Massachusetts");
+			    driver.findElement(By.xpath("//input[contains(@id,'groupName')]")).sendKeys(carrier_cob);
+
+			    
+				//Add COB level Reasons detail
+			    sqlStatement="select * from  r_cob_line where TC='"+testCase+"' and dtl = '"+dtl_cob+"'";
+			    dataList_cob = Common.getDBTestData(sqlStatement, 6, Common.connection1);
+			    if (dataList_cob != null) {
+				    for (int l=0; l<dataList_cob.size();l++) {
+				    	String[] detail_cob= dataList_cob.get(l);
+				    	String gc_cob=detail_cob[2];
+				    	String dtlAmt_cob=detail_cob[3];
+				    	String un_cob=detail_cob[4];
+				    	String rsnCode_cob=detail_cob[5];
+				    	
+					    driver.findElement(By.id("cobTab:CobReasonList:new_Button")).click();
+					    Common.getPageError(trgt);
+					    new Select(driver.findElement(By.xpath("//select[contains(@id,'groupCode')]"))).selectByVisibleText(gc_cob);
+					    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(dtlAmt_cob);
+					    driver.findElement(By.xpath("//input[contains(@id,'unitsOfService')]")).sendKeys(un_cob);
+					    driver.findElement(By.xpath("//input[contains(@id,'id') and contains(@id,'reason')]")).sendKeys(rsnCode_cob); //This is because the 'reason' keyword is also present in the 'New Item' button above as well
+						driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+					    Common.getPageError(trgt);
+				    }
+			    }
+			    
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+			    Common.getPageError(trgt);
+		    }
+
+//		    //PROCEDURE
+//		    driver.findElement(By.id("cobTab:_MENUITEM_Procedures")).click();
+//		    Common.getPageError(trgt);
+//		    
+//		    sqlStatement="select PROC,CHARGES,UNITS,UNITS_MEAS,REV,MOD1,MOD2,MOD3,MOD4 from  R_PROC where TC='"+testCase+"'";
+//		    dataList = Common.getDBTestData(sqlStatement, 9, Common.connection1);
+//		    
+//		    for (int i=0; i<dataList.size();i++) {
+//		    	String[] detail= dataList.get(i);
+//		    	String proc=detail[0];
+//		    	String charges=detail[1];
+//		    	String units=detail[2];
+//		    	String units_meas=detail[3];
+//		    	String rev=detail[4];
+//		    	String mod1 = detail[5];
+//		    	String mod2 = detail[6];
+//		    	String mod3 = detail[7];
+//		    	String mod4 = detail[8];
+//		    	
+//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+//			    driver.findElement(By.xpath("//input[contains(@id,'revenueCode')]")).sendKeys(rev);
+//			    driver.findElement(By.xpath("//input[contains(@id,'hcpcsProcedureCode')]")).sendKeys(proc);
+//			    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(-1));
+//			    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdate());
+//			    driver.findElement(By.xpath("//input[contains(@id,'units')]")).sendKeys(units);
+//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'unitsOfMeasurment')]"))).selectByVisibleText(units_meas);
+//			    driver.findElement(By.xpath("//input[contains(@id,'charges')]")).sendKeys(charges);
+//			    
+//			    //add modifiers
+//			    driver.findElement(By.xpath("//input[contains(@id,'modifier1')]")).sendKeys(mod1);
+//			    driver.findElement(By.xpath("//input[contains(@id,'modifier2')]")).sendKeys(mod2);
+//			    driver.findElement(By.xpath("//input[contains(@id,'modifier3')]")).sendKeys(mod3);
+//			    driver.findElement(By.xpath("//input[contains(@id,'modifier4')]")).sendKeys(mod4);
+//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+//			    Common.getPageError(trgt);
+//		    }
+		    
+		    //PROCEDURE
+		    driver.findElement(By.id("cobTab:_MENUITEM_Procedures")).click();
+		    Common.getPageError(trgt);
+		    
+		    sqlStatement="select PROC,CHARGES,UNITS,UNITS_MEAS,REV,MOD1,MOD2,MOD3,MOD4,FDOS,TDOS,DTL from  R_PROC where TC='"+testCase+"'";
+		    dataList = Common.getDBTestData(sqlStatement, 12, Common.connection1);
+		    
+		   for (int i=0; i<dataList.size();i++) {
+		    	String[] detail= dataList.get(i);
+		    	String proc=detail[0];
+		    	String charges=detail[1];
+		    	String units=detail[2];
+		    	String units_meas=detail[3];
+		    	String rev=detail[4];
+		    	String mod1 = detail[5];
+		    	String mod2 = detail[6];
+		    	String mod3 = detail[7];
+		    	String mod4 = detail[8];
+		    	String f = detail[9];
+		    	String t = detail[10];
+		    	String dtl = detail[11];
+		    	
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+			    driver.findElement(By.xpath("//input[contains(@id,'revenueCode')]")).sendKeys(rev);
+			    driver.findElement(By.xpath("//input[contains(@id,'hcpcsProcedureCode')]")).sendKeys(proc);
+			    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+			    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
+			    driver.findElement(By.xpath("//input[contains(@id,'units')]")).sendKeys(units);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'unitsOfMeasurment')]"))).selectByVisibleText(units_meas);
+			    driver.findElement(By.xpath("//input[contains(@id,'charges')]")).sendKeys(charges);
+			    
+			    //add modifiers
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier1')]")).sendKeys(mod1);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier2')]")).sendKeys(mod2);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier3')]")).sendKeys(mod3);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier4')]")).sendKeys(mod4);
+				
+				//Add Proc COB Line Details
+			    sqlStatement="select * from  r_proc_cob_line where TC='"+testCase+"' and dtl = '"+dtl+"'";
+			    dataList1 = Common.getDBTestData(sqlStatement, 15, Common.connection1);
+			    if (dataList1 != null) {
+				    for (int j=0; j<dataList1.size();j++) {
+				    	String[] detail1= dataList1.get(j);
+				    	String cobLine=detail1[2];
+				    	String carrier=detail1[3];
+				    	String bndlLine=detail1[4];
+				    	String remitDT=detail1[5];
+				    	String amt=detail1[6];
+				    	String unitsOfSvc = detail1[7];
+				    	String revCd = detail1[8];
+				    	String remPatLiab = detail1[9];
+				    	String cobProc = detail1[10];
+				    	String cobMod1 = detail1[11];
+				    	String cobMod2 = detail1[12];
+				    	String cobMod3 = detail1[13];
+				    	String cobMod4 = detail1[14];
+				    	
+						driver.findElement(By.id("proceduresTab:data:new_Button")).click();
+					    Common.getPageError(trgt);
+					    new Select(driver.findElement(By.xpath("//select[contains(@id,'carrierCode')]"))).selectByVisibleText(carrier);
+					    driver.findElement(By.xpath("//input[contains(@id,'bundledIntoLineNumber')]")).sendKeys(bndlLine);
+					    if (!(remitDT.equals("")))
+						    driver.findElement(By.xpath("//input[contains(@id,'remittanceDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(remitDT)));
+					    driver.findElement(By.xpath("//input[contains(@id,'paidAmount')]")).sendKeys(amt);
+					    driver.findElement(By.xpath("//input[contains(@id,'paidUnitsOfService')]")).clear();
+					    driver.findElement(By.xpath("//input[contains(@id,'paidUnitsOfService')]")).sendKeys(unitsOfSvc);
+					    Common.multiElements("//input[contains(@id,'revenueCode')]").clear();
+					    Common.multiElements("//input[contains(@id,'revenueCode')]").sendKeys(revCd);
+					    driver.findElement(By.xpath("//input[contains(@id,'remPatLiab')]")).sendKeys(remPatLiab);
+					    driver.findElement(By.xpath("//input[contains(@id,'procedureCode')]")).clear();
+					    driver.findElement(By.xpath("//input[contains(@id,'procedureCode')]")).sendKeys(cobProc);
+					    Common.multiElementSelect=2;
+					    Common.multiElements("//input[contains(@id,'modifier1')]").sendKeys(cobMod1);
+					    Common.multiElementSelect=2;
+					    Common.multiElements("//input[contains(@id,'modifier2')]").sendKeys(cobMod2);
+					    Common.multiElementSelect=2;
+					    Common.multiElements("//input[contains(@id,'modifier3')]").sendKeys(cobMod3);
+					    Common.multiElementSelect=2;
+					    Common.multiElements("//input[contains(@id,'modifier4')]").sendKeys(cobMod4);
+					    
+					    //Add COB Reasons Detail
+					    sqlStatement="select * from  r_proc_cob_line_dtl where TC='"+testCase+"' and dtl = '"+dtl+"' and cobline = '"+cobLine+"'";
+					    dataList2 = Common.getDBTestData(sqlStatement, 7, Common.connection1);
+					    if (dataList2 != null) {
+						    for (int k=0; k<dataList2.size();k++) {
+						    	String[] detail2= dataList2.get(k);
+						    	String gc=detail2[3];
+						    	String dtlAmt=detail2[4];
+						    	String un=detail2[5];
+						    	String rsnCode=detail2[6];
+						    	
+								driver.findElement(By.id("proceduresTab:reasons_data:new_Button")).click();
+							    Common.getPageError(trgt);
+							    new Select(driver.findElement(By.xpath("//select[contains(@id,'groupCode')]"))).selectByVisibleText(gc);
+							    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(dtlAmt);
+							    driver.findElement(By.xpath("//input[contains(@id,'unitsOfService')]")).sendKeys(un);
+							    driver.findElement(By.xpath("//input[contains(@id,'id') and contains(@id,'reason')]")).sendKeys(rsnCode); //This is because the 'reason' keyword is also present in the 'New Item' button above as well
+								driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+							    Common.getPageError(trgt);
+						    }
+					    }
+					    //Click Add button for cob line
+						driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+					    Common.getPageError(trgt);
+				    }
+			    }
+			    //Click Add button for main procedure line
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+			    Common.getPageError(trgt);
+
+		    }
+		    
+		   //Confirmation Tab
+		    driver.findElement(By.id("proceduresTab:_MENUITEM_Confirmation")).click();
+		    Common.getPageError(trgt);
+		    
+		    //Submit
+			driver.findElement(By.xpath("//input[@class='buttonCommand' and @alt='Submit']")).click();
+		    resetValues();
+		    Common.getPageError(trgt);
+		    
+			//Add to report
+			claims.fillReport("inst", CT);
+		  
+		    
+		}
+		
+		public static void B(String testCase, String CT, String provider, String Amount, String TOB, String NPI, String referral, String pas, String memberSql, String fd, String td)	 throws Exception {
+			
+			String memberID, lastName, firstName, adrLine1, city, zip;
+			driver.findElement(By.xpath("//*[contains(@id,'professionalClaimLink')]")).click();
+			int fdos = Integer.parseInt(fd);
+			int tdos = Integer.parseInt(td);
+			
+			//BILLING AND SERVICE
+			
+			//Fetch member for claims
+			billnSvc("professional",provider,memberSql, referral);
+			
+			new Select(driver.findElement(By.xpath("//select[contains(@id,'placeOfService')]"))).selectByVisibleText("31 - SKILLED NURSING FACILITY");
+			new Select(driver.findElement(By.xpath("//select[contains(@id,'signatureOnFile')]"))).selectByVisibleText("Yes");
+			
+            //Fill Rendering provider info 
+			if(!(renderingProv.equals("")))
+	        {
+            driver.findElement(By.xpath("//*[contains(@id,'provider1lookup')]")).click();
+//			driver.findElement(By.xpath("//*[contains(@id,'npi')]")).sendKeys(renderingProv); //not working for chrome
+            driver.findElement(By.xpath("//*[@id='submitProviderSearch:j_id_id2pc3:providerLookupSearchSubView:j_id_id5pc3:npi']")).sendKeys(renderingProv);
+			driver.findElement(By.xpath("//*[contains(@id,'search_Button')]")).click();
+			driver.findElement(By.xpath("//*[contains(@id,'displayName')]")).click();
+	        }
+			
+		    // Fill Referring physician info if present - We will use NPI here from I/P parameters, because Prof claims do not have attending physician, so that will be the refereeing physician NPI for prof claims
+		    if (!(NPI.equals("0"))) {
+				driver.findElement(By.xpath("//*[contains(@id,'provider2lookup')]")).click();
+//				driver.findElement(By.xpath("//*[contains(@id,'npi')]")).sendKeys(NPI); //not working for chrome
+	            driver.findElement(By.xpath("//*[@id='submitProviderSearch:j_id_id2pc3:providerLookupSearchSubView:j_id_id5pc3:npi']")).sendKeys(NPI);
+				driver.findElement(By.xpath("//*[contains(@id,'search_Button')]")).click();
+				driver.findElement(By.xpath("//*[contains(@id,'displayName')]")).click();
+
+//			    driver.findElement(By.id("professionalBillingTab:enterSingleClaim_1_id4:provider2lookup")).click();
+//			    driver.findElement(By.id("submitProviderSearch:enterSingleClaim_1_id1:npi")).sendKeys(NPI);
+//			    driver.findElement(By.id("submitProviderSearch:enterSingleClaim_1_id1:search_Button")).click();
+//			    driver.findElement(By.id("submitProviderSearch:enterSingleClaim_1_id3:ProviderList_0:displayName")).click();
+		    }
+
+		    //Diag codes - Check if ICD9 version and select the ICD 9 radio button then
+		    if (icdVersion9(Common.convertSysdatecustom(fdos)))
+				driver.findElement(By.xpath("//*[contains(@name,'icdVersion') and @value='9']")).click();
+			
+			//Enter diag codes
+			sqlStatement = "select * from r_diag where TC='"+testCase+"'";
+			for (int i=1;i<=12; i++)
+				colNames.add("diag"+i); //0
+			colValues=Common.executeQuery1(sqlStatement, colNames );
+			String diagTarget="diagnosisCode";
+			for (int i=0;i<12; i++)
+				if (!(colValues.get(i).equals(" ")))
+				    driver.findElement(By.xpath("//input[contains(@id,'"+diagTarget+(i+1)+"')]")).sendKeys(colValues.get(i));
+			
+		    //Fill PA info if present
+		    if (!(pas.equals(""))) 
+				driver.findElement(By.xpath("//input[contains(@id,'priorAuthNumber')]")).sendKeys(pas);
+		    
+		    driver.findElement(By.xpath("//input[contains(@id,'totalCharges')]")).sendKeys(Amount);
+		    
+		    //Get member details for CoB panel
+		    memberID=driver.findElement(By.xpath("//input[contains(@id,'memberID')]")).getAttribute("value");
+		    lastName=driver.findElement(By.xpath("//input[contains(@id,'lastName')]")).getAttribute("value");
+		    firstName=driver.findElement(By.xpath("//input[contains(@id,'firstName')]")).getAttribute("value");
+		    adrLine1=driver.findElement(By.xpath("//input[contains(@id,'memberAdrLine1')]")).getAttribute("value");
+		    city =driver.findElement(By.xpath("//input[contains(@id,'memberCity')]")).getAttribute("value");
+		    zip=driver.findElement(By.xpath("//input[contains(@id,'memberZip')]")).getAttribute("value");
+		    
+		    //CoB
+		    driver.findElement(By.id("professionalBillingTab:_MENUITEM_COB")).click();
+		    Common.getPageError(trgt);
+		    
+		    //Add CoB Info
+		    sqlStatement="select TC,CARRIER,RESP,PPAID,NONCOVAMT,PATLIAB,CLMIND,DTL,nvl(cast(remitdt as varchar2(10)), ' ') from  R_COB where TC='"+testCase+"'";
+		    dataList = Common.getDBTestData(sqlStatement, 9, Common.connection1);
+		    for (int i=0; i<dataList.size();i++) {
+		    	String[] cobRow= dataList.get(i);
+		    	String carrier=cobRow[1];
+		    	String resp=cobRow[2];
+		    	String ppaid=cobRow[3];
+		    	String nonCovAmt=cobRow[4];
+		    	String patLiab=cobRow[5];
+		    	String clmInd=cobRow[6];
+		    	String dtl_cob = cobRow[7];
+		    	String remitDt = cobRow[8];
+		    	
+		    	//Get Carrier name from carrier ID
+			    sqlStatement = "select nam_bus from t_tpl_carrier where cde_carrier = '"+carrier+"'";
+			    colNames.add("NAM_BUS");
+			    colValues = Common.executeQuery(sqlStatement, colNames);
+			    //This is to accomodate field length on panel
+			    int lenOfCarrName = colValues.get(0).length();
+			    if (lenOfCarrName>8)
+			    	lenOfCarrName = 8;
+		    	String carrier_name=colValues.get(0).substring(0, lenOfCarrName); 
+		    	
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+			    driver.findElement(By.xpath("//input[contains(@id,'carrierCode')]")).sendKeys(carrier);
+			    driver.findElement(By.xpath("//input[contains(@id,'carrierName')]")).sendKeys(carrier_name);
+		    	if(!(remitDt.equals("")))
+			    	driver.findElement(By.xpath("//input[contains(@id,'remittanceDateOptional')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(remitDt)));
+			    driver.findElement(By.xpath("//input[contains(@id,'payerClaimNumber')]")).sendKeys(memberID);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'payerResponsibilty')]"))).selectByVisibleText(resp);
+			    driver.findElement(By.xpath("//input[contains(@id,'payerPaidAmount')]")).sendKeys(ppaid);
+			    driver.findElement(By.xpath("//input[contains(@id,'totalNonCovdAmount')]")).sendKeys(nonCovAmt);
+			    driver.findElement(By.xpath("//input[contains(@id,'remPatLiab')]")).sendKeys(patLiab);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'claimFilingIndicator')]"))).selectByVisibleText(clmInd);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'releaseOfInfo')]"))).selectByVisibleText("Y - Yes, Provider has a Signed Statement Permitting Release of Medical Billing Data Related to a Claim");
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'assignmentOfBenefits')]"))).selectByVisibleText("Yes");
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'relationshipToSubscriber')]"))).selectByVisibleText("18 - SELF");
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberLastName')]")).sendKeys(lastName);
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberFirstName')]")).sendKeys(firstName);
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberAddr1')]")).sendKeys(adrLine1);
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberCity')]")).sendKeys(city);
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberZip')]")).sendKeys(zip);
+			    
+			    //Enter medicare ID
+//			    sqlStatement = "select id_medicare from t_re_hib where sak_recip =(select sak_recip from t_re_base where id_medicaid = '"+memberID+"')";
+//			    colNames.add("ID_MEDICARE");
+//			    colValues = Common.executeQuery(sqlStatement, colNames);
+			    sqlStatement = "select b.id_medicaid, nvl(h.id_medicare, ' ') as id_medicare from t_re_base b LEFT JOIN t_re_hib h on b.sak_recip = h.sak_recip where b.id_medicaid = "+memberID;
+			    colNames.add("ID_MEDICARE");
+			    colValues = Common.executeQuery(sqlStatement, colNames);
+			    String subscriberId=colValues.get(0);
+			    if(subscriberId.equals(""))
+			    	subscriberId=memberID;
+			    driver.findElement(By.xpath("//input[contains(@id,'subscriberId')]")).sendKeys(subscriberId);
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'subscriberState')]"))).selectByVisibleText("MA - Massachusetts");
+			    driver.findElement(By.xpath("//input[contains(@id,'groupName')]")).sendKeys(carrier);
+				//Add Insurance type if needed
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'insuranceType')]"))).selectByVisibleText(insType[i]);
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+				
+			    Common.getPageError(trgt);
+		    }
+		    
+		    //PROCEDURE
+		    driver.findElement(By.id("cobTab:_MENUITEM_Procedures")).click();
+		    Common.getPageError(trgt);
+		    
+		    sqlStatement="select PROC,DIAG_XREF,CHARGES,UNITS,UNITS_MEAS,EMER,EPSDT,MOD1,MOD2,MOD3,MOD4,FDOS,TDOS,DTL from  R_PROC where TC='"+testCase+"'";
+		    dataList = Common.getDBTestData(sqlStatement, 14, Common.connection1);
+		    
+		   for (int i=0; i<dataList.size();i++) {
+		    	String[] detail= dataList.get(i);
+		    	String proc=detail[0];
+		    	String diag_xref=detail[1];
+		    	String charges=detail[2];
+		    	String units=detail[3];
+		    	String units_meas=detail[4];
+		    	String emer=detail[5];
+		    	String EPSDT=detail[6];
+		    	String mod1 = detail[7];
+		    	String mod2 = detail[8];
+		    	String mod3 = detail[9];
+		    	String mod4 = detail[10];
+		    	String f = detail[11];
+		    	String t = detail[12];
+		    	String dtl = detail[13];
+		    	
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
+			    driver.findElement(By.xpath("//input[contains(@id,'hcpcsProcedureCode')]")).sendKeys(proc);
+			    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+			    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
+				new Select(driver.findElement(By.xpath("//select[contains(@id,'placeOfService')]"))).selectByVisibleText("31 - SKILLED NURSING FACILITY");
+			    driver.findElement(By.xpath("//input[contains(@id,'diagnosisCrossReference1')]")).sendKeys(diag_xref);
+			    driver.findElement(By.xpath("//input[contains(@id,'charges')]")).sendKeys(charges);
+			    driver.findElement(By.xpath("//input[contains(@id,'units')]")).sendKeys(units);
+				//Family Planning Ind optional
+			    if (familyPlanningInd[i])
+					driver.findElement(By.xpath("//*[contains(@name,'familyPlanInd') and @value='true' and @type='radio']")).click();
+				new Select(driver.findElement(By.xpath("//select[contains(@id,'unitsOfMeasurment')]"))).selectByVisibleText(units_meas);
+			    if (!(emer.equals("")))
+					new Select(driver.findElement(By.xpath("//select[contains(@id,'emergency')]"))).selectByVisibleText("Yes");
+				new Select(driver.findElement(By.xpath("//select[contains(@id,'epsdt')]"))).selectByVisibleText(EPSDT);
+				
+				//enter modifiers
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier1')]")).sendKeys(mod1);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier2')]")).sendKeys(mod2);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier3')]")).sendKeys(mod3);
+			    driver.findElement(By.xpath("//input[contains(@id,'modifier4')]")).sendKeys(mod4);
+			    
+			    if(!(rendProv_proc.equals(""))&&dtl.equals("2"))
+		        {
+			    driver.findElement(By.xpath("//*[@alt='Rendering Provider Name Search']")).click(); 
+				driver.findElement(By.xpath("//input[contains(@id,'npi')]")).sendKeys(rendProv_proc);
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Search']")).click();
+				driver.findElement(By.xpath("//*[contains(@id,'0:displayName')]")).click();
+		        }
+			    //added by Anshul on 1/20/2024 to add rendering provider as needed. not disturbing previous rendering provider code to avoid old tcs failure
+			    if(!(renderingProvList[i].equals("")))
+		        {
+			    driver.findElement(By.xpath("//*[@alt='Rendering Provider Name Search']")).click(); 
+				driver.findElement(By.xpath("//input[contains(@id,'npi')]")).sendKeys(renderingProvList[i]);
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Search']")).click();
+				driver.findElement(By.xpath("//*[contains(@id,'0:displayName')]")).click();
+		        }
+			    
+			    if(!(orderingProv[i].equals(""))) {
+				    driver.findElement(By.xpath("//*[@alt='Ordering Provider Name Search']")).click();
+					driver.findElement(By.xpath("//input[contains(@id,'npi')]")).sendKeys(orderingProv[i]);
+					driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Search']")).click();
+					driver.findElement(By.xpath("//*[contains(@id,'0:displayName')]")).click();
+			    }
+			    
+				//Add Proc COB Line Details
+			    sqlStatement="select * from  r_proc_cob_line where TC='"+testCase+"' and dtl = '"+dtl+"'";
+			    dataList1 = Common.getDBTestData(sqlStatement, 15, Common.connection1);
+			    if (dataList1 != null) {
+				    for (int j=0; j<dataList1.size();j++) {
+				    	String[] detail1= dataList1.get(j);
+				    	String cobLine=detail1[2];
+				    	String carrier=detail1[3];
+				    	String bndlLine=detail1[4];
+				    	String remitDT=detail1[5];
+				    	String amt=detail1[6];
+				    	String unitsOfSvc = detail1[7];
+				    	String revCd = detail1[8];
+				    	String remPatLiab = detail1[9];
+				    	String cobProc = detail1[10];
+				    	String cobMod1 = detail1[11];
+				    	String cobMod2 = detail1[12];
+				    	String cobMod3 = detail1[13];
+				    	String cobMod4 = detail1[14];
+				    	
+						driver.findElement(By.id("proceduresTab:data:new_Button")).click();
+					    Common.getPageError(trgt);
+						new Select(driver.findElement(By.xpath("//select[contains(@id,'carrierCode')]"))).selectByVisibleText(carrier);
+					    driver.findElement(By.xpath("//input[contains(@id,'bundledIntoLineNumber')]")).sendKeys(bndlLine);
+					    if (!(remitDT.equals("")))
+						    driver.findElement(By.xpath("//input[contains(@id,'remittanceDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(remitDT)));
+					    driver.findElement(By.xpath("//input[contains(@id,'paidAmount')]")).sendKeys(amt);
+					    driver.findElement(By.xpath("//input[contains(@id,'paidUnitsOfService')]")).clear();
+					    driver.findElement(By.xpath("//input[contains(@id,'paidUnitsOfService')]")).sendKeys(unitsOfSvc);
+					    driver.findElement(By.xpath("//input[contains(@id,'remPatLiab')]")).sendKeys(remPatLiab);
+					    driver.findElement(By.xpath("//input[contains(@id,'procedureCode')]")).clear();
+					    driver.findElement(By.xpath("//input[contains(@id,'procedureCode')]")).sendKeys(cobProc);
+					    Common.multiElementSelect=2;
+					    Common.multiElements("//input[contains(@id,'modifier1')]").sendKeys(cobMod1);
+					    Common.multiElementSelect=2;
+					    Common.multiElements("//input[contains(@id,'modifier2')]").sendKeys(cobMod2);
+					    Common.multiElementSelect=2;
+					    Common.multiElements("//input[contains(@id,'modifier3')]").sendKeys(cobMod3);
+					    Common.multiElementSelect=2;
+					    Common.multiElements("//input[contains(@id,'modifier4')]").sendKeys(cobMod4);
+					    
+					    //Add COB Reasons Detail
+					    sqlStatement="select * from  r_proc_cob_line_dtl where TC='"+testCase+"' and dtl = '"+dtl+"' and cobline = '"+cobLine+"'";
+					    dataList2 = Common.getDBTestData(sqlStatement, 7, Common.connection1);
+					    if (dataList2 != null) {
+						    for (int k=0; k<dataList2.size();k++) {
+						    	String[] detail2= dataList2.get(k);
+						    	String gc=detail2[3];
+						    	String dtlAmt=detail2[4];
+						    	String un=detail2[5];
+						    	String rsnCode=detail2[6];
+						    	
+								driver.findElement(By.id("proceduresTab:reasons_data:new_Button")).click();
+							    Common.getPageError(trgt);
+							    new Select(driver.findElement(By.xpath("//select[contains(@id,'groupCode')]"))).selectByVisibleText(gc);
+							    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(dtlAmt);
+							    driver.findElement(By.xpath("//input[contains(@id,'unitsOfService')]")).sendKeys(un);
+							    driver.findElement(By.xpath("//input[contains(@id,'id') and contains(@id,'reason')]")).sendKeys(rsnCode);
+								driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+							    Common.getPageError(trgt);
+						    }
+					    }
+					    //Click Add button for cob line
+						driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+					    Common.getPageError(trgt);
+				    }
+			    }
+			    //Click Add button for main procedure line			    
+				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+			    Common.getPageError(trgt);
+		    }
+		   
+		   //Confirmation Tab
+		    driver.findElement(By.id("proceduresTab:_MENUITEM_Confirmation")).click();
+		    Common.getPageError(trgt);
+		    		    
+		    //Submit
+		    submit();
+		    resetValues();
+//			if(TestNGCustom.TCNo.equals("some test case")) //This is to validate any error when you click Submit 
+//				return;
+			
+			Common.getPageError(trgt);
+		    
+			//Add to report
+			claims.fillReport("prof", CT);
+
+		}
+		
+		public static String clmICN(String ct) throws Exception {
+			return driver.findElement(By.xpath("//*[contains(@id,'icnText')]")).getText();
+		}
+		
+		
+		public static String createRefClm(String refPrv, String refSL, String serPrv, String serSL, String mem, String effDt, String endDt, String unit) throws Exception{
+			//Base info
+		 	driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Referrals")).click();
+			driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:MainRfSearchBean_CriteriaPanel:NEW")).click();
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:ReferralsPanel:ReferralsDataPanel_ReferringPrSvcLoc")).clear();
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:ReferralsPanel:ReferralsDataPanel_ReferringPrSvcLoc")).sendKeys(refPrv);
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:ReferralsPanel:ReferralsReferringProvIDSearch")).clear();
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:ReferralsPanel:ReferralsReferringProvIDSearch")).sendKeys(refSL);
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:ReferralsPanel:ReferralsDataPanel_ServicePrSvcLoc")).clear();
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:ReferralsPanel:ReferralsDataPanel_ServicePrSvcLoc")).sendKeys(serPrv);
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:ReferralsPanel:ReferralsServiceProviderIDSearch")).clear();
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:ReferralsPanel:ReferralsServiceProviderIDSearch")).sendKeys(serSL);
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:ReferralsPanel:ReferralsMemberIdSearch")).clear();
+			driver.findElement(By.id("MMISForm:MMISBodyContent:ReferralsPanel:ReferralsMemberIdSearch")).sendKeys(mem);
+		    new Select(driver.findElement(By.id("MMISForm:MMISBodyContent:ReferralsPanel:ReferralsDataPanel_AssignCode"))).selectByVisibleText("CONSULT, TEST AND TREAT");
+		    //Line Item
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:RfLineItemPanel:RfLineItem_NewButtonClay:RfLineItemList_newAction_btn")).click();
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:RfLineItemPanel:RfLineItemDataPanel_RequirementEffectiveDate")).clear();
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:RfLineItemPanel:RfLineItemDataPanel_RequirementEffectiveDate")).sendKeys(effDt);	
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:RfLineItemPanel:RfLineItemDataPanel_RequirementEndDate")).clear();
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:RfLineItemPanel:RfLineItemDataPanel_RequirementEndDate")).sendKeys(Common.convertSysdatecustom(365));
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:RfLineItemPanel:RfLineItemDataPanel_RequirementEndDate")).sendKeys(endDt);
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:RfLineItemPanel:RfLineItemDataPanel_UntSvcRequirementQuantity")).clear();
+		    driver.findElement(By.id("MMISForm:MMISBodyContent:RfLineItemPanel:RfLineItemDataPanel_UntSvcRequirementQuantity")).sendKeys(unit);
+		    Common.SaveWarnings();
+		    return driver.findElement(By.xpath("//*[@id='MMISForm:MMISBodyContent:RfInformationBean_DataPanel']/tbody/tr/td/table/tbody/tr/td[1]/table/tbody/tr[2]/td[2]")).getText().trim();
+		   }
+
+		public static void resetValues() {
+				pos="11 - OFFICE";
+				delayRsn="";
+				adm=0; //Admission date +/- days from fdos
+				admType="1 - EMERGENCY"; //Admission type
+				admSource="1 - NON-HEALTH CARE FACILITY POINT OF ORIGIN"; //Admission source
+				patStatus="01 - DISCHARGED TO HOME OR SELF CARE (ROUTINE DISCHARGE)"; //Patient Status
+				orderingProv = new String[] {"","","","","","","","","",""}; //Ordering provider ID/NPI
+				renderingProvList = new String[] {"","","","","","","","","",""}; //Rendering Provider ID/NPI
+				insType = new String[] {"","","","","","","","","","" }; //Insurance Type in COB panel
+				enterTaxonomy=false;
+				taxonomy="282N00000X";
+				renderingProv="";
+				rendProv_proc="";
+				familyPlanningInd = new boolean[] {false,false,false,false,false,false,false,false,false,false}; 
+				patientResonForVisitDiagnosesBool = false;
+			for (int i=0;i<10;i++) {
+					insType[i]="";
+					//NDC
+					ndc[i]="";
+					ndcUnits[i]="";
+					ndcUofM[i]="";
+					rxQ[i]="";
+					rxNo[i]="";
+					rxDt[i]="";
+			}
+			
+			externalCauseOfInjury=false;
+            injuryDiagCodes.clear();
+            injuryAdmissiones.clear();
+            
+            ICDprocedureCode=false;
+            ICDprocedureCodes.clear();
+           ICDdates.clear();
+           
+            occurenceCodeDetail=false;
+           occurenceCode.clear();
+           occurenceType.clear();
+           occurencefromDate.clear();
+           occurencetoDate.clear();
+            
+
+           otherDiagnose=false;
+           otherDiagnosesCode.clear();
+           otherDiagnosesAdmission.clear();
+           procQualifierBool=false;
+           
+            enterOperatingPhysLastName=false;
+            operPhysFirstName="TESTING";
+            operPhysLastName="OPER";
+            operPhysNPI="1922020882";
+            
+           enterAttendingPhysLastName=false;
+           attenPhysFirstName="TESTING";
+            attenPhysLastName="OPER";
+            attenPhysNPI="1922020882";
+            
+            
+            physLastName="TESTING";
+            physFirstName="OPER";
+            physNPI="1922020882";
+
+			
+		}
+		
+		public static boolean icdVersion9(String firstDos) throws Exception {
+			Date refEffDt= Common.StrtoDT(ReferenceDt);
+			Date effDt= Common.StrtoDT(firstDos);
+
+			if (effDt.before(refEffDt))
+				return true;
+			else
+				return false;
+		}
+		
+		public static void submit() {
+			driver.findElement(By.xpath("//input[@class='buttonCommand' and @alt='Submit']")).click();
+			//Handle ICD Version warning if present
+			driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+			if (driver.findElements(By.xpath(trgt)).size()>0) {
+				String warning = driver.findElement(By.xpath(trgt)).getText();
+				if (warning.equals("The claim ICD Version has changed. Please ensure the ICD Version is the same for all Diagnoses Codes entered.")||warning.equals("The claim ICD Version has changed. Please ensure the ICD Version is the same for all Diagnoses and ICD Procedures Codes entered."))
+					driver.findElement(By.xpath("//input[@class='buttonCommand' and @alt='Submit']")).click();
+			}
+			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
+		}
+		
+		public static void serachClaims(String clmNo) {
+            
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Claims")).click();
+		driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_Search")).click();
+		driver.findElement(By.xpath("//input[@id='MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber']")).sendKeys(clmNo);
+		driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:SEARCH")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
+}
+
+
+
+}

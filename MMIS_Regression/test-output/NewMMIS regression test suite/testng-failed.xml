@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite configfailurepolicy="continue" name="Failed suite [NewMMIS regression test suite]">
+  <parameter name="selenium.port" value="4444"/>
+  <parameter name="environment" value="AWSUAT"/>
+  <parameter name="selenium.host" value="localhost"/>
+  <parameter name="selenium.browser" value="*firefox"/>
+  <parameter name="selenium.url" value="www.google.com"/>
+  <listeners>
+    <listener class-name="org.uncommons.reportng.HTMLReporter"/>
+  </listeners>
+  <test name="Claims Test(failed)">
+    <classes>
+      <class name="newMMIS_Subsystems.claims">
+        <methods>
+          <include name="claimsStartup"/>
+          <include name="startup"/>
+          <include name="init"/>
+          <include name="test31173"/>
+          <include name="LoginCheck"/>
+          <include name="teardown"/>
+        </methods>
+      </class> <!-- newMMIS_Subsystems.claims -->
+      <class name="newMMIS_Subsystems.Login">
+        <methods>
+          <include name="init"/>
+          <include name="init"/>
+        </methods>
+      </class> <!-- newMMIS_Subsystems.Login -->
+    </classes>
+  </test> <!-- Claims Test(failed) -->
+</suite> <!-- Failed suite [NewMMIS regression test suite] -->

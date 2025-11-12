@@ -1,0 +1,646 @@
+<html>
+<head>
+<title>TestNG:  Claims Test</title>
+<link href="../testng.css" rel="stylesheet" type="text/css" />
+<link href="../my-testng.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.log { display: none;} 
+.stack-trace { display: none;} 
+</style>
+<script type="text/javascript">
+<!--
+function flip(e) {
+  current = e.style.display;
+  if (current == 'block') {
+    e.style.display = 'none';
+    return 0;
+  }
+  else {
+    e.style.display = 'block';
+    return 1;
+  }
+}
+
+function toggleBox(szDivId, elem, msg1, msg2)
+{
+  var res = -1;  if (document.getElementById) {
+    res = flip(document.getElementById(szDivId));
+  }
+  else if (document.all) {
+    // this is the way old msie versions work
+    res = flip(document.all[szDivId]);
+  }
+  if(elem) {
+    if(res == 0) elem.innerHTML = msg1; else elem.innerHTML = msg2;
+  }
+
+}
+
+function toggleAllBoxes() {
+  if (document.getElementsByTagName) {
+    d = document.getElementsByTagName('div');
+    for (i = 0; i < d.length; i++) {
+      if (d[i].className == 'log') {
+        flip(d[i]);
+      }
+    }
+  }
+}
+
+// -->
+</script>
+
+</head>
+<body>
+<h2 align='center'>Claims Test</h2><table border='1' align="center">
+<tr>
+<td>Tests passed/Failed/Skipped:</td><td>16/11/0</td>
+</tr><tr>
+<td>Started on:</td><td>Thu Mar 31 16:52:40 EDT 2016</td>
+</tr>
+<tr><td>Total time:</td><td>1405 seconds (1405338 ms)</td>
+</tr><tr>
+<td>Included groups:</td><td></td>
+</tr><tr>
+<td>Excluded groups:</td><td></td>
+</tr>
+</table><p/>
+<small><i>(Hover the method name to see the test class name)</i></small><p/>
+<table width='100%' border='1' class='invocation-failed'>
+<tr><td colspan='4' align='center'><b>FAILED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td width="30%"><b>Exception</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td><b>Instance</b></td>
+</tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27390()'><b>test27390</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-2121029156" onClick='toggleBox("Output-2121029156", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-2121029156" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-2121029156">
+1.C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\ScreenShots\_31_Mar_2016__05_02_17PM_170.63.120.223_TC 27390.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2216091200004 is DENIED expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test27390(Unknown Source)
+... Removed 26 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace2121029156", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace2121029156'><pre>java.lang.AssertionError: ICN 2216091200004 is DENIED expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:494)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test27390(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1198)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1123)
+	at org.testng.TestNG.run(TestNG.java:1031)
+	at org.testng.TestNG.privateMain(TestNG.java:1338)
+	at org.testng.TestNG.main(TestNG.java:1307)
+</pre></div></td>
+<td>46</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31181()'><b>test31181</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1222197954" onClick='toggleBox("Output-1222197954", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1222197954" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1222197954">
+7.C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\ScreenShots\_31_Mar_2016__05_14_25PM_170.63.120.223_TC 31181.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Could not find edit 5927 NCCI ANOTHER SERVICE PREV PAID SAME CLAIM at detail 1 expected [true] but found [false]
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test31181(Unknown Source)
+... Removed 26 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1222197954", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1222197954'><pre>java.lang.AssertionError: Could not find edit 5927 NCCI ANOTHER SERVICE PREV PAID SAME CLAIM at detail 1 expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:494)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test31181(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1198)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1123)
+	at org.testng.TestNG.run(TestNG.java:1031)
+	at org.testng.TestNG.privateMain(TestNG.java:1338)
+	at org.testng.TestNG.main(TestNG.java:1307)
+</pre></div></td>
+<td>19</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31183()'><b>test31183</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1662193672" onClick='toggleBox("Output-1662193672", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1662193672" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1662193672">
+2.C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\ScreenShots\_31_Mar_2016__05_12_03PM_170.63.120.223_TC 31183.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Could not find edit 5927 NCCI ANOTHER SERVICE PREV PAID SAME CLAIM at detail 2 expected [true] but found [false]
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test31183(Unknown Source)
+... Removed 26 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1662193672", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1662193672'><pre>java.lang.AssertionError: Could not find edit 5927 NCCI ANOTHER SERVICE PREV PAID SAME CLAIM at detail 2 expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:494)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test31183(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1198)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1123)
+	at org.testng.TestNG.run(TestNG.java:1031)
+	at org.testng.TestNG.privateMain(TestNG.java:1338)
+	at org.testng.TestNG.main(TestNG.java:1307)
+</pre></div></td>
+<td>34</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31185()'><b>test31185</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-477187854" onClick='toggleBox("Output-477187854", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-477187854" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-477187854">
+3.C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\ScreenShots\_31_Mar_2016__05_12_37PM_170.63.120.223_TC 31185.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Could not find edit 5927 NCCI ANOTHER SERVICE PREV PAID SAME CLAIM at detail 2 expected [true] but found [false]
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test31185(Unknown Source)
+... Removed 26 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace477187854", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace477187854'><pre>java.lang.AssertionError: Could not find edit 5927 NCCI ANOTHER SERVICE PREV PAID SAME CLAIM at detail 2 expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:494)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test31185(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1198)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1123)
+	at org.testng.TestNG.run(TestNG.java:1031)
+	at org.testng.TestNG.privateMain(TestNG.java:1338)
+	at org.testng.TestNG.main(TestNG.java:1307)
+</pre></div></td>
+<td>28</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31187()'><b>test31187</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-571003874" onClick='toggleBox("Output-571003874", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-571003874" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-571003874">
+5.C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\ScreenShots\_31_Mar_2016__05_13_29PM_170.63.120.223_TC 31187.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2216091400012 is DENIED expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test31187(Unknown Source)
+... Removed 26 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace571003874", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace571003874'><pre>java.lang.AssertionError: ICN 2216091400012 is DENIED expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:494)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test31187(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1198)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1123)
+	at org.testng.TestNG.run(TestNG.java:1031)
+	at org.testng.TestNG.privateMain(TestNG.java:1338)
+	at org.testng.TestNG.main(TestNG.java:1307)
+</pre></div></td>
+<td>19</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31189()'><b>test31189</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1856684131" onClick='toggleBox("Output-1856684131", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1856684131" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1856684131">
+8.C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\ScreenShots\_31_Mar_2016__05_14_51PM_170.63.120.223_TC 31189.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2216091400015 is DENIED expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test31189(Unknown Source)
+... Removed 26 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1856684131", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1856684131'><pre>java.lang.AssertionError: ICN 2216091400015 is DENIED expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:494)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test31189(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1198)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1123)
+	at org.testng.TestNG.run(TestNG.java:1031)
+	at org.testng.TestNG.privateMain(TestNG.java:1338)
+	at org.testng.TestNG.main(TestNG.java:1307)
+</pre></div></td>
+<td>20</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31193()'><b>test31193</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1695523661" onClick='toggleBox("Output-1695523661", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1695523661" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1695523661">
+9.C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\ScreenShots\_31_Mar_2016__05_15_16PM_170.63.120.223_TC 31193.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2216091700063 is DENIED expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test31193(Unknown Source)
+... Removed 26 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1695523661", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1695523661'><pre>java.lang.AssertionError: ICN 2216091700063 is DENIED expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:494)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test31193(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1198)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1123)
+	at org.testng.TestNG.run(TestNG.java:1031)
+	at org.testng.TestNG.privateMain(TestNG.java:1338)
+	at org.testng.TestNG.main(TestNG.java:1307)
+</pre></div></td>
+<td>19</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31195()'><b>test31195</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-890172563" onClick='toggleBox("Output-890172563", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-890172563" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-890172563">
+10.C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\ScreenShots\_31_Mar_2016__05_15_41PM_170.63.120.223_TC 31195.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2216091700064 is DENIED expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test31195(Unknown Source)
+... Removed 26 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace890172563", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace890172563'><pre>java.lang.AssertionError: ICN 2216091700064 is DENIED expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:494)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test31195(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1198)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1123)
+	at org.testng.TestNG.run(TestNG.java:1031)
+	at org.testng.TestNG.privateMain(TestNG.java:1338)
+	at org.testng.TestNG.main(TestNG.java:1307)
+</pre></div></td>
+<td>19</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31197()'><b>test31197</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-816455635" onClick='toggleBox("Output-816455635", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-816455635" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-816455635">
+4.C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\ScreenShots\_31_Mar_2016__05_13_03PM_170.63.120.223_TC 31197.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2216091700061 is DENIED expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test31197(Unknown Source)
+... Removed 26 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace816455635", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace816455635'><pre>java.lang.AssertionError: ICN 2216091700061 is DENIED expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:494)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test31197(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1198)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1123)
+	at org.testng.TestNG.run(TestNG.java:1031)
+	at org.testng.TestNG.privateMain(TestNG.java:1338)
+	at org.testng.TestNG.main(TestNG.java:1307)
+</pre></div></td>
+<td>20</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31199()'><b>test31199</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-2133517358" onClick='toggleBox("Output-2133517358", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-2133517358" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-2133517358">
+6.C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\ScreenShots\_31_Mar_2016__05_14_00PM_170.63.120.223_TC 31199.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2216091400013 is DENIED expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test31199(Unknown Source)
+... Removed 26 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace2133517358", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace2133517358'><pre>java.lang.AssertionError: ICN 2216091400013 is DENIED expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:494)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test31199(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1198)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1123)
+	at org.testng.TestNG.run(TestNG.java:1031)
+	at org.testng.TestNG.privateMain(TestNG.java:1338)
+	at org.testng.TestNG.main(TestNG.java:1307)
+</pre></div></td>
+<td>26</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31201()'><b>test31201</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1053413176" onClick='toggleBox("Output-1053413176", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1053413176" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1053413176">
+11.C:\Users\gandhian\Desktop\Anshul\Workspace\Regression_TR\ScreenShots\_31_Mar_2016__05_16_05PM_170.63.120.223_TC 31201.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2216091400016 is DENIED expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test31201(Unknown Source)
+... Removed 26 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1053413176", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1053413176'><pre>java.lang.AssertionError: ICN 2216091400016 is DENIED expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:494)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test31201(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:80)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1198)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1123)
+	at org.testng.TestNG.run(TestNG.java:1031)
+	at org.testng.TestNG.privateMain(TestNG.java:1338)
+	at org.testng.TestNG.main(TestNG.java:1307)
+</pre></div></td>
+<td>18</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+</table><p>
+<table width='100%' border='1' class='invocation-passed'>
+<tr><td colspan='4' align='center'><b>PASSED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td width="30%"><b>Exception</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td><b>Instance</b></td>
+</tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test26912()'><b>test26912</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>40</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test26913()'><b>test26913</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>38</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test26915()'><b>test26915</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>22</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test26916()'><b>test26916</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>26</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27388()'><b>test27388</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>93</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27389()'><b>test27389</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>56</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27391()'><b>test27391</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>176</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27393()'><b>test27393</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>21</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27398()'><b>test27398</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>26</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27403()'><b>test27403</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>33</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27404()'><b>test27404</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>32</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27405()'><b>test27405</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>30</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27438()'><b>test27438</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>26</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31142()'><b>test31142</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>95</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31143()'><b>test31143</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>64</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31143edit()'><b>test31143edit</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>60</td>
+<td>newMMIS_Subsystems.claims@3a26cb0f</td></tr>
+</table><p>
+</body>
+</html>

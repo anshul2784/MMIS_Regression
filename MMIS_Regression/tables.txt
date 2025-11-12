@@ -1,0 +1,145 @@
+create TABLE r_memberlink
+(inactive_id varchar(12),
+active_id varchar(12),
+LAST varchar(20),
+FIRST varchar(20),
+FILEDATE varchar(10)
+)
+
+create TABLE r_mmq
+(trkno varchar(10), 
+MEMBER varchar(12),
+PROV varchar(12),
+SUBMIT_DATE varchar(8),
+FNAME varchar(10)
+)
+
+create TABLE r_EPSDT_letter
+(MEMBER varchar(12)
+)
+
+create TABLE R_MEMBER_ELGJD012
+(PARENT_MEMBER varchar(12),
+FILEDATE varchar(10),
+LAST varchar(20),
+FiRST varchar(20),
+SSN varchar(9),
+DOB varchar(10),
+CASE varchar(9),
+AID varchar(2),
+DEP varchar(2)
+)
+
+create TABLE R_MEMBER_ELGJD040
+(MEMBER varchar(12),
+MEM_FIRST varchar(20),
+DATE_ISSUED varchar(10),
+DATE_REQUESTED varchar(10)
+)
+
+Create Table R_Day2
+(TC varchar(12),
+ID varchar(20),
+DES varchar(50),
+Date_Requested Varchar(10)
+)
+
+Alter Table R_Proc add  ( 
+Mod1 Varchar(2),
+Mod2 Varchar(2),
+Mod3 Varchar(2),
+MOD4 varchar(2),
+DTL number(3)
+)
+
+Insert Into R_Proc Values
+('23137b', 'E0570', ' ', ' ', '1', '60', '1', 'UN - Unit', ' ', 'No', ' ', ' ', ' ', ' ', ' ', '1')
+
+//Advance claims
+Alter Table R_Claims_Billing
+Add  (FDOS number(10),
+TDOS number(10)
+)
+
+insert into r_claims_billing values
+('31143', 'C', '110026356D', '1800', '131', '1548202641', ' ',' ','0', '0' )
+
+insert into r_diag values
+('27381', 'Z006', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ')
+
+insert into r_diag_inst values
+('27397', 'Z006', 'Principal', 'Y - Yes')
+
+create TABLE r_cob
+(Tc Varchar(10),
+Carrier Varchar(10),
+Resp Varchar(50),
+ppaid Varchar(20),
+nonCovAmt Varchar(20),
+Patliab Varchar(20),
+clmInd varchar(100),
+DTL Number(3)
+)
+
+Insert Into R_Cob Values
+('31143', '0085000', 'P - Primary', '326.58', ' ', ' ', 'MB - MEDICARE PART B', '1')
+Insert Into R_Cob Values
+('31143', '0106096', 'S - Secondary', '326.58', ' ', ' ', 'CI - COMMERCIAL INSURANCE CO.', '1')
+
+create TABLE r_cob_line
+(Tc Varchar(10),
+Dtl Number(3),
+GC_COB Varchar(100),
+dtlamt_COB Varchar(10),
+Un_COB Varchar(6),
+rsncode_COB Varchar(5))
+
+Insert Into r_cob_line Values
+('27408', '1', 'CO - Contractual Obligations', '200.07', '1', '119' )
+
+
+create TABLE r_proc_cob_line
+(Tc Varchar(10),
+Dtl Number(3),
+cobline Number(3),
+Carrier Varchar(10),
+Bndlline Varchar(3),
+remitDT Varchar(6),
+Amt Varchar(10),
+Unitsofsvc Varchar(5),
+Revcd Varchar(8),
+remPatLiab Varchar(8),
+Cobproc Varchar(8),
+Cobmod1 Varchar(8),
+Cobmod2 Varchar(8),
+Cobmod3 Varchar(8),
+cobMod4 varchar(8)
+)
+
+Insert Into R_Proc_Cob_Line Values
+('31143', '1', '1', '0085000', ' ', '0', '326.58', '1', '300', ' ', '80047', ' ', ' ', ' ', ' ' )
+
+create TABLE r_proc_cob_line_dtl
+(Tc Varchar(10),
+Dtl Number(3),
+Cobline Number(3),
+Gc Varchar(100),
+dtlamt Varchar(10),
+Un Varchar(6),
+rsncode Varchar(5)
+)
+
+Insert Into R_Proc_Cob_Line_dtl Values
+('31143', '1', '1', 'CO - Contractual Obligations', '1391.78', '0', '45' )
+
+
+
+create TABLE R_VALUES
+(TC varchar(10),
+VAL_CODE varchar(200),
+VAL varchar(10)
+)
+
+insert into R_VALUES values
+('27398', '80 - COVERED DAYS - UB04 ONLY', '10')
+

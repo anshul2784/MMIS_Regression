@@ -1,0 +1,947 @@
+package newMMIS_Subsystems;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.sql.Connection; 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.SkipException;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+import org.openqa.selenium.NoSuchElementException;
+
+
+import ch.ethz.ssh2.Session;
+import ch.ethz.ssh2.StreamGobbler;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.sql.DriverManager;
+
+
+public class Common extends Login {
+	
+//	public static String sqlStatement;
+	public static Connection connection, connection1 = null;
+	public static Alert alert;
+	public static int multiElementSelect = 1;
+	public static String localUserDir="/home/angandhi/testRptFormat";
+
+	
+	//Brings Application to Home page before each @Test annotation
+	public static void resetBase() throws Exception  {
+		if (!(winHandleCurrent.equals("empty"))) 
+			Common.switchToMainWin();
+		
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+		if (!(driver.findElements(By.id("MMISForm:MMISHeader:header_value_home")).size()>0) || driver.findElements(By.xpath("//a[contains(@href, 'EHSProviderPortal/jsp/logout.jsp')]")).size()>0) {
+			System.out.println("Logging into Base application again because could not find an active Base window");
+			driver.quit();
+			//Login to the Base application. This will also set the timer to 30 seconds
+			testLoginBase();
+		}
+		
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+		if (driver.findElements(By.xpath("//input[@class='buttonImage' and @alt='Cancel All']")).size()>0) {
+			driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Cancel All']")).click();
+			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		}
+		
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.findElement(By.id("MMISForm:MMISHeader:header_value_home")).click();
+		driver.findElement(By.id("MMISForm:MMISHeader:header_value_home")).click();
+	}
+		
+		public static void resetPortal() throws Exception  {
+			if (!(winHandleCurrent.equals("empty"))) 
+				Common.switchToMainWin();
+			
+			driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+			if ((driver.findElements(By.id("MMISForm:MMISHeader:header_value_home")).size()>0) || !(driver.findElements(By.linkText("Logout")).size()>0)) {
+				System.out.println("Logging into Portal again because could not find an active Portal window");
+				driver.quit();
+				//Login to the portal. This will also set the timer to 30 seconds
+				testLoginPortal();
+			}
+			
+			driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+			if (driver.findElements(By.xpath("//input[@class='buttonCommand' and @value='Close']")).size()>0) 
+				driver.findElement(By.xpath("//input[@class='buttonCommand' and @value='Close']")).click();
+			else if (driver.findElements(By.xpath("//input[@class='buttonCommand' and @value='Cancel Service']")).size()>0) 
+				driver.findElement(By.xpath("//input[@class='buttonCommand' and @value='Cancel Service']")).click();
+			
+			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			driver.findElement(By.linkText("Home")).click();
+			isAlertPresent();
+			driver.findElement(By.linkText("Home")).click();
+	}
+	
+	public static void saveAll() {
+		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Save All']")).click();
+		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+		if ((driver.findElements(By.xpath("//input[@class='buttonImage' and @alt='Accept Change']")).size())>0) 
+			driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Accept Change']")).click();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		String message=driver.findElement(By.cssSelector("td.message-text")).getText();
+		Assert.assertTrue(message.equals("Save Successful."), "Save NOT successful Error Message: "+message+"..."); //Assert modified by Priya to include Login failure message in reports
+	}
+	
+	public static void cancelAll() {
+		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Cancel All']")).click();
+	}
+	
+	public static void update() {
+		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Update']")).click();
+	}
+	
+	public static void search() {
+		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Search']")).click();
+	}
+	
+	
+	public static void minMax() throws Exception {
+		//Check Minimize
+		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Minimize']")).click();
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+		Assert.assertTrue(!(driver.findElements(By.cssSelector("strong")).size()>0));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
+		//Check Maximize
+		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Maximize']")).click();
+		Assert.assertTrue(driver.findElements(By.cssSelector("strong")).size()>0);
+		
+		//Click on Help link
+	    driver.findElement(By.linkText("Help")).click();
+		
+		//Store the current window Handle
+		winHandleCurrent=driver.getWindowHandle();
+		
+
+		//Switch to new window
+		for(String winHandleNew:driver.getWindowHandles())
+			driver.switchTo().window(winHandleNew);
+		
+		Assert.assertTrue(driver.findElement(By.cssSelector("h1")).getText().equals("RELATED DATA MAINTENANCE HELP"));
+		Assert.assertTrue(driver.findElement(By.xpath("//html/body/table/tbody/tr/td/table[3]/tbody/tr/td/div/table/tbody/tr[6]/td[2]/p/b/span")).getText().equals("Cancel All"));
+
+		//Close the second window
+		driver.close();
+				
+		//Switch back to main window
+		switchToMainWin();
+		
+		//Store the current window Handle
+		winHandleCurrent=driver.getWindowHandle();
+		
+		
+		//Click on Print Button
+		driver.findElement(By.xpath("//input[@type='image' and @alt='Print']")).click();
+		
+		//Switch to new window
+		for(String winHandleNew:driver.getWindowHandles())
+			driver.switchTo().window(winHandleNew);
+		
+		if((driver.findElement(By.cssSelector("strong")).getText().equals("Codes")))
+			Assert.assertTrue(driver.findElement(By.cssSelector("strong")).getText().equals("Codes"));
+		else if((driver.findElement(By.cssSelector("strong")).getText().equals("Other")))
+			Assert.assertTrue(driver.findElement(By.cssSelector("strong")).getText().equals("Other"));
+		else
+			Assert.assertTrue(driver.findElement(By.cssSelector("strong")).getText().equals("Xref"));
+
+		//Close the second window
+		driver.close();
+			
+		//Switch back to main window
+		switchToMainWin();
+	}
+	
+	public static void switchToMainWin() {
+		driver.switchTo().window(winHandleCurrent);
+		winHandleCurrent="empty";
+	}
+	
+	//Get system date in MM/DD/YYYY format
+	public static String convertSysdate() {
+		Date sysdate=new Date();
+		SimpleDateFormat sdf= new SimpleDateFormat("MM/dd/yyyy");
+		return (sdf.format(sysdate).toString());
+	}
+	
+	//Get system date +/- days in MM/DD/YYYY format
+	public static String convertSysdatecustom(int i) {
+		SimpleDateFormat sdf= new SimpleDateFormat("MM/dd/yyyy");
+		Calendar cal = Calendar.getInstance();     
+		cal.add( Calendar.DATE, i );    
+		return (sdf.format(cal.getTime()).toString());
+	}
+	
+	//Get given date +/- days in MM/DD/YYYY format
+	public static String convertGivendatecustom(String inputStrDt, int i) throws Exception {
+		SimpleDateFormat sdf= new SimpleDateFormat("MM/dd/yyyy");
+		Date date =sdf.parse(inputStrDt);
+
+		Calendar cal = Calendar.getInstance();  
+		cal.setTime(date);
+		cal.add( Calendar.DATE, i );    
+		return (sdf.format(cal.getTime()).toString());
+	}
+	
+	//Get database date from yyyyMMdd format to MM/dd/YYYY format
+	public static String convertDate(String dbDate) throws Exception {
+		SimpleDateFormat sdf1= new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat sdf2= new SimpleDateFormat("yyyyMMdd");
+		
+		Date date=sdf2.parse(dbDate);
+		return sdf1.format(date).toString();
+	}
+	
+	//Get member sak from member ID
+	public static String getMemberSak(String id_member) throws SQLException {
+		String s = null;
+		sqlStatement="select SAK_RECIP from t_re_base where id_medicaid="+id_member;
+		Statement MemberSakstatement = null;
+		ResultSet MemberSakresultset = null;
+		
+		MemberSakstatement = connection.createStatement();
+		MemberSakresultset = MemberSakstatement.executeQuery(sqlStatement);
+		
+		while (MemberSakresultset.next()) {
+			s=MemberSakresultset.getString("SAK_RECIP");
+		}
+		return s;
+	}
+	
+	//Get member ID from member sak
+	public static String getMemberID(String sak) throws SQLException {
+		String s = null;
+		sqlStatement="select ID_MEDICAID from t_re_base where sak_recip="+sak;
+		Statement MemberSakstatement = null;
+		ResultSet MemberSakresultset = null;
+		
+		MemberSakstatement = connection.createStatement();
+		MemberSakresultset = MemberSakstatement.executeQuery(sqlStatement);
+		
+		while (MemberSakresultset.next()) {
+			s=MemberSakresultset.getString("ID_MEDICAID");
+		}
+		return s;
+	}
+	
+	//Execute SQL and fetch results
+	public static ArrayList<String>  executeQuery( String sqlStatement, ArrayList<String> fields ) throws SQLException {
+		ArrayList<String> col = new ArrayList<String>();
+		Statement statement = null;
+		ResultSet resultset = null;
+		
+		statement = connection.createStatement();
+		resultset = statement.executeQuery(sqlStatement);
+
+		if (resultset.next()) {
+			resultset = statement.executeQuery(sqlStatement);
+			while (resultset.next()) {
+				for (int i=0;i<fields.size();i++){
+					col.add(resultset.getString(fields.get(i)).trim());
+					}
+				} 
+			fields.clear();
+			return col;
+			} else {
+				col.add("null");
+				fields.clear();
+				return col;
+				}
+		}
+	
+	//Execute SQL and fetch results
+//	public static ArrayList<String>  executeQuery( String sqlStatement, ArrayList<String> fields ) throws SQLException {
+//		ArrayList<String> col = new ArrayList<String>();
+//		Statement statement = null;
+//		ResultSet resultset = null;
+//		
+//		statement = connection.createStatement();
+//		resultset = statement.executeQuery(sqlStatement);
+//
+//		if (resultset.next()) {
+//			resultset = statement.executeQuery(sqlStatement);
+//			while (resultset.next()) {
+//				for (int i=0;i<fields.size();i++){
+//					col.add(resultset.getString(fields.get(i)).trim());
+//					}
+//				} 
+//			fields.clear();
+//			} else {
+//				fields.clear();
+//				throw new SkipException("Skipping this test  because this SQL did not return any rows: "+sqlStatement);
+//			}
+//				
+//		return col;
+//		}
+	
+	//MO and UAT DB connection
+	public static boolean connectDB(String environment)
+			throws Exception {
+		
+		String u = "mnarala";
+		String p = "mnarala";
+
+		try{ 
+			String hostName;
+		    String serviceName;
+		    if (environment.equals("MO")) {
+		    	hostName="10.196.210.9";
+			    serviceName="mamism1";
+			    } 
+		    else if (environment.equals("MOREG")) {
+		    	hostName="170.63.149.70";
+			    serviceName="mamist3";
+		    }
+		    else if (environment.equals("PERF")) {
+		    	hostName="170.63.156.80";
+			    serviceName="mamisp3";
+			    p="Mnarala1!";
+		    }
+		    else if (environment.equals("POC")) {
+		    	hostName="170.63.156.69";
+			    serviceName="mamist5";
+		    }
+		    else {
+			    	hostName="10.196.210.71";
+			        serviceName="mamisa1";
+			        }
+			
+		    connection = DriverManager.getConnection("jdbc:oracle:thin:@"+hostName+":1521:"+serviceName,u,p);
+		    System.out.println("Connected to "+hostName+" "+serviceName);	
+		    return true;
+		    } catch(Exception e) {
+		    	return false;
+		    	}
+		}
+	
+	//MIP DB connection
+		public static boolean connectMIP() throws Exception {
+			try{ 
+				String host = "10.196.210.13";
+			    String svcName = "madocp1";
+			    
+			    connection1 = DriverManager.getConnection("jdbc:oracle:thin:@"+host+":1521:"+svcName,"automation","mn6ag+kh");
+			    System.out.println("Connected to "+host+" "+svcName);	
+			    return true;
+			    } catch(Exception e) {
+			    	return false;
+			    	}
+			}
+		
+		//Execute MIP SQL and fetch results
+		public static ArrayList<String>  executeQuery1( String sqlStatement, ArrayList<String> fields ) throws SQLException {
+			ArrayList<String> colMIP = new ArrayList<String>();
+			Statement st = null;
+			ResultSet res = null;
+			
+			st = connection1.createStatement();
+			res = st.executeQuery(sqlStatement);
+
+			if (res.next()) {
+				res = st.executeQuery(sqlStatement);
+				while (res.next()) {
+					for (int i=0;i<fields.size();i++){
+						colMIP.add(res.getString(fields.get(i)).trim());
+						}
+					} 
+				fields.clear();
+				return colMIP;
+				} else {
+					colMIP.add("null");
+					fields.clear();
+					return colMIP;
+					}
+		}
+		
+		//Portal login
+		public static void portalLogin() throws Exception {
+			//Logout of NewMMIS application
+			driver.findElement(By.linkText("Logout")).click();
+			driver.quit();
+			
+			//Login Back to Portal
+			testLoginPortal();
+		}
+		
+		//Portal logout
+		public static void portalLogout() throws Exception {
+			//Logout of NewMMIS application
+			driver.findElement(By.linkText("Logout")).click();
+			driver.quit();
+			
+			//Login Back to NewMMIS
+			testLoginBase();
+		}
+		
+		//***NO RECORDS FOUND***
+		public static void searchRecords(String memberId) throws Exception{
+	    	 try
+	            {
+	    		 driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+	    		 if(driver.findElement(By.xpath("//*[@id='MMISForm:MMISContentTable']/tbody/tr/td/div/table/tbody/tr/td/div/table/tbody/tr/td/span")).getText().equals("***No records found***"))
+	            	throw new SkipException("There are no records for this Member Id:"+memberId);
+	            }
+	    	 catch(NoSuchElementException Ex)
+	            {
+	            }
+	 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+	     }
+		
+		//Define Arraylists for preferences
+		public static ArrayList<String> codes = new ArrayList<String>();
+		public static ArrayList<String> other = new ArrayList<String>();
+		public static ArrayList<String> xref = new ArrayList<String>();
+
+		
+		//Set reset preferences
+		public static void Pref(ArrayList<String> codes, ArrayList<String> other, ArrayList<String> xref, String subsystem) throws Exception{
+			driver.findElement(By.linkText("Preferences")).click();
+		    
+			//Store the current window Handle
+			winHandleCurrent=driver.getWindowHandle();
+			
+			//Switch to new window
+			for(String winHandleNew:driver.getWindowHandles())
+				driver.switchTo().window(winHandleNew);
+			
+			//Verify that new preferences widow pops up
+			Assert.assertTrue(driver.findElement(By.cssSelector("td.header")).getText().equals("Preferences"));
+			
+			//Set preferences for codes
+			if (!(codes.get(0).equals("empty"))) {
+				for (int i=0; i<codes.size(); i++) 
+					driver.findElement(By.id(codes.get(i))).click();
+			}
+			
+			//Set preferences for other
+			if(!(other.get(0).equals("empty"))) {
+				if(!(codes.get(0).equals("empty"))) {
+					driver.findElement(By.linkText("Other")).click();
+					} 
+				for (int i=0; i<other.size(); i++) 
+					driver.findElement(By.id(other.get(i))).click();
+			}
+			
+			//Set preferences for xref
+			if(!(xref.get(0).equals("empty"))) {
+				if(!(codes.get(0).equals("empty")) || !(other.get(0).equals("empty"))) {
+					driver.findElement(By.linkText("Xref")).click();
+					} 
+				for (int i=0; i<xref.size(); i++) 
+					driver.findElement(By.id(xref.get(i))).click();
+			}
+			
+			
+			driver.findElement(By.xpath("//input[@type='image' and @alt='Save Preferences']")).click();
+			
+			//Call Alert to handle Popup
+			alert = driver.switchTo().alert();
+			System.out.println(alert.getText());
+			alert.accept();
+
+		    //Switch back to main window
+		    Common.switchToMainWin();
+		    
+		    //Reset page and come back on Related data to see preferences selected
+		    Common.resetBase();
+			driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_"+subsystem)).click();
+			driver.findElement(By.id("MMISForm:MMISMenu:_MENUITEM_RelatedData")).click();
+		}
+		
+		//Clear previous preferences
+		public static void clearPref(ArrayList<String> codes, ArrayList<String> other, ArrayList<String> xref){
+			codes.clear();
+			other.clear();
+			xref.clear();
+		}
+		
+		public static String generateRandomName(){
+			String allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			int stringLength = 8;
+			String randomString = "";
+			for (int i=0; i<stringLength; i++) {
+				int rnum = (int) Math.floor(Math.random() * allowedChars.length());
+				randomString += allowedChars.substring(rnum, rnum+1);
+			}
+			return randomString;
+		}
+		
+		public static String generateRandomTaxID(){
+			String allowedChars = "1234567890";
+			int stringLength = 9;
+			String randomString = "";
+			for (int i=0; i<stringLength; i++) {
+				int rnum = (int) Math.floor(Math.random() * allowedChars.length());
+				randomString += allowedChars.substring(rnum, rnum+1);
+			}
+			
+			return randomString;
+		}
+		
+		public static void warning(){
+			driver.findElement(By.xpath("//input[@type='checkbox' and contains(@name ,'Warning')]")).click();
+		}
+		
+		public static ArrayList<String[]> getDBTestData(String sqlStatement,int noOfCols, Connection conn) throws Exception {
+			ArrayList<String[]> rowList = new ArrayList<String[]>();
+			Statement statement = null;
+			ResultSet resultSet = null;
+			
+			statement = conn.createStatement();
+			resultSet = statement.executeQuery(sqlStatement);
+			String[] colList=null;
+			int i;
+			
+			// checking if empty
+			if (!(resultSet.isBeforeFirst())) 
+			{    
+				 System.out.println("No data");
+				return null;
+			} 
+
+			while (resultSet.next()) 
+			{
+				colList=new String[noOfCols];
+					for (i=0;i<noOfCols;i++)
+					{
+						colList[i]=resultSet.getString(i+1).trim();
+					}					
+				rowList.add(colList);
+		    } 
+			return rowList;
+				
+		}
+		
+		public static void getPageError(String target) {
+			driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+			if (driver.findElements(By.xpath(target)).size()>0) {
+				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+				int noOfErrors = driver.findElements(By.xpath(target)).size();
+				String Error = "";
+				WebElement element;
+				for (int i=0;i<noOfErrors;i++) {
+					element = driver.findElements(By.xpath(target)).get(i);
+					Error = Error+"Error("+(i+1)+") "+element.getText()+" ";			
+				}
+				Assert.assertTrue(false, Error); 
+			}
+			else
+				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		}
+		
+		public static void isAlertPresent() 
+		{ 
+		    try 
+		    { 
+				alert = driver.switchTo().alert();
+				System.out.println(alert.getText());
+				alert.accept(); 
+		    } 
+		    catch (NoAlertPresentException Ex) 
+		    { 
+		    }  
+		} 
+		
+		//***NO RECORDS FOUND***
+		
+	    
+	    public static String connectUNIX(String command, String error) throws Exception{
+
+	    	
+			String hostname;
+			if (env.equals("MO"))
+				hostname = "10.196.210.9";
+			else if ((env.equals("UAT")))
+				hostname = "10.196.210.71";
+			else
+				throw new SkipException("You are not conducting this test in MO or UAT, so skipping this report test case because current environment is not running cybermation");
+
+			String username = "angandhi";
+			String password = "LOndon.1";
+			String outputText = "";
+
+			try
+			{
+				// Create a connection instance
+				ch.ethz.ssh2.Connection conn = new ch.ethz.ssh2.Connection(hostname); //Can't use this in import statement because already have an SQL connection
+				conn.connect();
+
+				// Authenticate.
+				boolean isAuthenticated = conn.authenticateWithPassword(username, password);
+				if (isAuthenticated == false)
+					throw new IOException("Authentication failed.");
+
+				/* Create a session */
+				Session sess = conn.openSession();
+				System.out.println("Running Command:"+command);
+				sess.execCommand(command);
+
+				//Read response
+				InputStream stdout = new StreamGobbler(sess.getStdout());
+				BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
+				String line = ""; 
+				
+				while (true)
+				{
+					line = br.readLine();
+					if (line == null)
+						break;
+					outputText = outputText+line;
+				}
+				
+				if (outputText.equals("") && !(command.contains("echo")) && !(command.contains("cp")) && !(command.contains("chmod")) && !(command.contains("uncompress")) && !(command.contains("rm")) && !(command.contains("cd")) && !(command.contains("rm")))
+					Assert.assertTrue(false, error);
+				
+				/* Show exit status, if available (otherwise "null") */
+				System.out.println("ExitCode: " + sess.getExitStatus());
+
+				// Close this session and connection 
+				sess.close();
+				conn.close();
+
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace(System.err);
+				System.exit(2);
+			}
+			return outputText;
+	    }
+	    
+	    public static String monthUNIX(String fileDate){
+	    	
+	    	String[] i = new String [13];
+	    	i[1]="Jan";
+	    	i[2]="Feb";
+	    	i[3]="Mar";
+	    	i[4]="Apr";
+	    	i[5]="May";
+	    	i[6]="Jun";
+	    	i[7]="Jul";
+	    	i[8]="Aug";
+	    	i[9]="Sep";
+	    	i[10]="Oct";
+	    	i[11]="Nov";
+	    	i[12]="Dec";
+	    	
+	    	int monthNum1 = Integer.parseInt(fileDate.substring(0,1));
+	    	int monthNum2 = Integer.parseInt(fileDate.substring(1,2));
+	    	
+	    	if (monthNum1==0)
+	    		return i[monthNum2];
+	    	else
+	    		return i[10+monthNum2];
+
+	    }
+	    
+	    public static String dayUNIX(String fileDate){
+	    	
+	    	String dayNum1 = fileDate.substring(3,4);
+	    	String dayNum2 = fileDate.substring(4,5);
+	    	
+	    	if (dayNum1.equals("0"))
+	    		return " "+dayNum2;
+	    	else
+	    		return dayNum1+dayNum2;
+
+	    }
+	    
+	    public static String yearUNIX(String fileDate){
+	    		return fileDate.substring(6,10);
+	    }
+	    
+		public static void SaveWarnings(){
+			driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Save All']")).click();
+		    driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+			if (driver.findElements(By.xpath("//input[@type='checkbox' and contains(@name ,'Warnings')]")).size()>0){
+				int length=(driver.findElements(By.xpath("//input[@type='checkbox' and contains(@name ,'Warnings')]"))).size();
+		         for(int i=0;i<length;i++)
+		          {
+		        	 driver.findElements(By.xpath("//input[@type='checkbox' and contains(@name ,'Warnings')]")).get(i).click();
+		          }
+		         driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Save All']")).click();
+				}
+				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+				String message=driver.findElement(By.cssSelector("td.message-text")).getText();
+				Assert.assertTrue(message.equals("Save Successful."), "Save NOT successful Error Message: "+message+"...");
+			  }
+		
+		public static void save(){
+			driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Save All']")).click();
+		    driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+			if (driver.findElements(By.xpath("//input[@type='checkbox' and contains(@name ,'Warnings')]")).size()>0){
+				int length=(driver.findElements(By.xpath("//input[@type='checkbox' and contains(@name ,'Warnings')]"))).size();
+		         for(int i=0;i<length;i++)
+		        	 driver.findElements(By.xpath("//input[@type='checkbox' and contains(@name ,'Warnings')]")).get(i).click();
+			     driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Save All']")).click();
+			}
+			if ((driver.findElements(By.xpath("//input[@class='buttonImage' and @alt='Accept Change']")).size())>0) 
+				driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Accept Change']")).click();
+			//Again check if warning message is there
+			if (driver.findElements(By.xpath("//input[@type='checkbox' and contains(@name ,'Warnings')]")).size()>0){
+				int length=(driver.findElements(By.xpath("//input[@type='checkbox' and contains(@name ,'Warnings')]"))).size();
+		         for(int i=0;i<length;i++)
+		        	 driver.findElements(By.xpath("//input[@type='checkbox' and contains(@name ,'Warnings')]")).get(i).click();
+			     driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Save All']")).click();
+			}
+			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			String message=driver.findElement(By.cssSelector("td.message-text")).getText();
+			Assert.assertTrue(message.equals("Save Successful."), "Save NOT successful Error Message: "+message+"...");
+			
+		}
+		
+		public static void insertData(String SelSql, String col, String DelSql, String InsSql) throws SQLException {
+	    	Statement statement = Common.connection1.createStatement();
+			sqlStatement = SelSql;
+			colNames.add(col);
+			colValues = Common.executeQuery1(sqlStatement, colNames);
+			if (!(colValues.get(0).equals("null"))) {
+				sqlStatement = DelSql;
+				statement.executeQuery(sqlStatement);
+			}
+			sqlStatement = InsSql;
+			statement.executeQuery(sqlStatement);
+		}
+		
+		public static String fileName() throws Exception {
+			Thread.sleep(2000); //Allow time for file download
+			File directory = new File(tempDirPath);
+			File[] files = directory.listFiles();
+			if (files.length>1) {
+		        Arrays.sort( files, new Comparator<File>()
+		        {
+		        public int compare(File o1, File o2) {
+		            return Long.valueOf(o2.lastModified()).compareTo(o1.lastModified());
+		        }
+		        });
+			}
+//			files[0].renameTo(tempDirPath);
+	            return (files[0].getName());
+
+			
+		}
+		
+		public static String get834(String Pid, String dt834, String tc, String recp ) throws Exception{
+
+	        //Verify unix report
+			String command, error;
+
+			//Get Desired Filename
+			command = "ls -ltr /edi/data/X12_OUT/WEB/"+Pid+".834D.WEB.*.* | grep '"+monthUNIX(dt834)+" "+dayUNIX(dt834)+"'";
+			error = "834 not found";
+			String fileName = Common.connectUNIX(command, error);
+			//If the fileName has year stamp, get the correct year file
+			if (fileName.contains(yearUNIX(dt834))) {
+				command = "ls -ltr /edi/data/X12_OUT/WEB/"+Pid+".834D.WEB.*.* | grep '"+monthUNIX(dt834)+" "+dayUNIX(dt834)+"  "+yearUNIX(dt834)+"'";
+				fileName = Common.connectUNIX(command, error);
+			}
+		
+			fileName = fileName.substring(fileName.length()-56);
+			
+			log(" 834 filename for "+tc+" is: "+fileName);
+
+			//Verify duplicate member data in file
+			command = "cat "+fileName;
+			//command = "grep "+inactMem+" "+fileName;
+			error = "cannot open 834";
+			String outputText = Common.connectUNIX(command, error);
+			
+			outputText = outputText.replace("~", "~\r\n");
+			
+			//Store 834
+			String fileName1=tempDirPath+"834"+tc+".txt";
+	    	PrintWriter out = new PrintWriter(fileName1);
+	    	out.println(outputText);
+	    	out.close();
+
+	    	BufferedReader br = new BufferedReader(new FileReader(fileName1));
+			String pline="";
+	    	String line = ""; 
+			String targetText = "";
+			
+			while (line != null)
+			{
+				pline = line;
+				line = br.readLine();
+				if (line.contains(recp)) {
+					targetText = pline;
+					while (!(line.contains("INS"))) {
+						targetText = targetText+"\r\n"+line;
+						line = br.readLine();
+					}
+					break;
+				}
+			}
+			
+			if (targetText.equals(""))
+				Assert.assertTrue(false, "Member "+recp+" is not in this 834");
+			return targetText;
+	    }
+		
+		//Convert date fromat to integer
+		public static String convertDatetoInt(String date) throws Exception {
+			SimpleDateFormat sdf1= new SimpleDateFormat("yyyyMMdd");
+			SimpleDateFormat sdf2= new SimpleDateFormat("MM/dd/yyyy");
+			Date dbDate=sdf2.parse(date);
+			return sdf1.format(dbDate).toString();
+		    }
+		
+		//Get system date from String to Date  format
+		public static Date StrtoDT(String inputStrDt) throws Exception {
+			Date date =new SimpleDateFormat("MM/dd/yyyy").parse(inputStrDt);
+			return date;
+		}
+		
+	    public static void connectUNIXmultiCommands(String[] command) throws Exception{
+
+	    	
+			String hostname;
+			if (env.equals("MO"))
+				hostname = "10.196.210.9";
+			else if ((env.equals("UAT")))
+				hostname = "10.196.210.71";
+			else
+				throw new SkipException("You are not conducting this test in MO or UAT, so skipping this report test case because current environment is not running cybermation");
+
+			String username = "angandhi";
+			String password = "AIzwal.1";
+
+			try
+			{
+				// Create a connection instance
+				ch.ethz.ssh2.Connection conn = new ch.ethz.ssh2.Connection(hostname); //Can't use this in import statement because already have an SQL connection
+				conn.connect();
+
+				// Authenticate.
+				boolean isAuthenticated = conn.authenticateWithPassword(username, password);
+				if (isAuthenticated == false)
+					throw new IOException("Authentication failed.");
+
+				/* Create a session */
+				Session sess = conn.openSession();
+				for (int i=0;i<command.length;i++) {
+					System.out.println("Running Command:"+command[i]);
+					sess.execCommand(command[i]);
+					/* Show exit status, if available (otherwise "null") */
+					System.out.println("ExitCode: " + sess.getExitStatus());
+					Thread.sleep(2000);
+				}
+
+				// Close this session and connection 
+				sess.close();
+				conn.close();
+
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace(System.err);
+				System.exit(2);
+			}
+	    }
+	    
+	    //Elements present twice on page in TR, so creating problems, so below code is added
+	    public static WebElement multiElements(String trgt) {
+		    int elementSize = driver.findElements(By.xpath(trgt)).size();
+		    WebElement multiElement;
+//		    System.out.println(elementSize+" "+trgt+" "+multiElementSelect);
+//		    for (int i=0;i<elementSize;i++)
+//		    	System.out.println(driver.findElements(By.xpath(trgt)).get(i).getText());
+		    if (elementSize==1)
+		    	multiElement=driver.findElements(By.xpath(trgt)).get(0);
+		    else
+		    	multiElement=driver.findElements(By.xpath(trgt)).get(multiElementSelect);
+		    if (multiElementSelect!=1)
+		    	multiElementSelect=1;
+		    return multiElement;
+
+	    }
+	    
+	    //Get first day of current month
+		public static String getFirstDay() {
+			SimpleDateFormat sdf= new SimpleDateFormat("MM/dd/yyyy");
+			Calendar cal = Calendar.getInstance();
+		    int firstDate = cal.getActualMinimum(Calendar.DATE);
+
+		    cal.set(Calendar.DATE, firstDate);  
+			return (sdf.format(cal.getTime()).toString());
+		}
+	    
+	    //Get last day of current month
+		public static String getLastDay() {
+			SimpleDateFormat sdf= new SimpleDateFormat("MM/dd/yyyy");
+			Calendar cal = Calendar.getInstance();
+		    int lastDate = cal.getActualMaximum(Calendar.DATE);
+
+		    cal.set(Calendar.DATE, lastDate);  
+			return (sdf.format(cal.getTime()).toString());
+		}
+		
+		//Unzips unix files if zipped
+	    public static String chkCompress(String fl) throws Exception {
+	    	
+	    	String command,error,flName=fl;
+	    	String lastindex = flName.substring(fl.length()-1, fl.length());
+	    	if (lastindex.equals("Z")) {
+//	    		//clear localUserDir
+//	        	command = "rm -fr "+localUserDir+"/*";
+//	        	error = "rm  "+localUserDir+" was not successfull";
+//	        	Common.connectUNIX(command, error);
+	    		//Empty localUserDir
+//	    		String comm[] = new String[2];
+//	    		comm[0] = "cd "+localUserDir;
+//	    		comm[1] = "rm -f *";
+//	    		connectUNIXmultiCommands(comm);
+	    		//copy file to local user dir
+	        	command = "cp "+flName+" "+localUserDir;
+	        	error = "There was no report file found to copy to "+localUserDir;
+	        	Common.connectUNIX(command, error);
+	        	//Get new filename
+//	        	command = "ls "+localUserDir+"/*.Z";//This is creating problems if other .Z files are present as well
+	        	command = "ls "+localUserDir+flName.substring(fl.lastIndexOf("/"), fl.length());
+	        	error = "There was no compressed file found in "+localUserDir;
+	        	flName=Common.connectUNIX(command, error);
+	        	//uncompress the file
+	        	command = "uncompress "+flName;
+	        	error = "There was no report file found";
+	    		Common.connectUNIX(command, error);
+	    		//Verify file was uncompressed
+	    		flName=flName.substring(0, flName.length()-2);
+	        	command = "ls "+flName;
+	        	error = "The uncompressed file '"+flName+"' was not found";
+	        	String resp = Common.connectUNIX(command, error);
+	    		Assert.assertTrue(resp.equals(flName), "Uncompress was not successfull for "+fl);
+	    		log("The uncompressed filename is: "+flName);
+	    		return flName;
+	    	}
+	    	else
+	    		return fl;
+	    		
+	    }
+
+	}

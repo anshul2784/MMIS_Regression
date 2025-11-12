@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<suite name="NewMMIS regression test suite">
+
+ <parameter name="selenium.host" value="localhost"></parameter>
+ <parameter name="selenium.port" value="4444"></parameter>
+ <parameter name="selenium.browser" value="*firefox"></parameter>
+ <parameter name="selenium.url" value="www.google.com"></parameter>
+ <parameter name="environment" value="PERF"></parameter>
+ <listeners>
+	<listener class-name="org.uncommons.reportng.HTMLReporter"/>
+ </listeners> 
+ 
+   <test name="Login test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.Login">
+        <methods>
+      	    <include name="testDBconnect"/>
+      	    <exclude name="testLoginBase"/>		
+        </methods>
+      </class> 
+    </classes>
+  </test> 
+  
+      <test name="Misc test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.misc">
+        <methods>
+      	    <include name="changePwdBase"/>
+        </methods>
+      </class> 
+    </classes>
+  </test> 
+  
+    
+  
+
+  
+  
+    <test name="Close Logs test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.Login">
+        <methods>
+      	    <include name="closeLogs"/>	
+        </methods>
+      </class> 
+    </classes>
+  </test> 
+  
+</suite> 

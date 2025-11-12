@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Regression_TR" basedir=".">
+	<property name="build.dir" value="${basedir}/build" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="test.reports" value="${basedir}/test-output" />
+	<property name="screenshots.dir" value="${basedir}/Screenshots" />
+	<property name="screenshots.dir" value="${basedir}/Screenshots" />
+	<property name="temp.dir" value="${basedir}/temp" />
+	<property name="name" value="value" />
+
+	<target name="setClassPath">
+		<path id="classpath_jars">
+			<path id="${basedir}/" />
+			<fileset dir="${lib.dir}" includes="*.jar" />
+		</path>
+		<pathconvert pathsep=":" property="test.classpath" refid="classpath_jars" />
+	</target>
+
+	<path id="master-classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar">
+			</include>
+		</fileset>
+		<pathelement path="${build.dir}">
+		</pathelement>
+	</path>
+	
+	<taskdef name="testng" classname="org.testng.TestNGAntTask">
+			<classpath>
+				<pathelement location="lib/testng-6.4.jar" />
+			</classpath>
+		</taskdef>
+	<target name="loadTestNG" depends="setClassPath">
+		<taskdef resource="testngtasks" classpath="${lib.dir}/testng-6.4.jar" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="c:\Failed-Test" />
+		<mkdir dir="${screenshots.dir}" />
+		<mkdir dir="${temp.dir}" />
+	</target>
+
+	<target name="sendMail" description="Send email notification">
+		<mail mailhost="itd-smtp-dmz.state.ma.us" mailport="25" subject="AIMS Restart Smoke Test Results" messagefile="C:\Scripts\eclipse\AutomationScripts\test-output\emailable-report.html" encoding="mime" messagemimetype="text/html" charset="Windows-1251">
+			<from address="clearquestadmin@massmail.state.ma.us" />
+			<to address="clearquestadmin@massmail.state.ma.us" />
+		</mail>
+		<echo message="Mail sent!" />
+	</target>
+
+	<target name="clean">
+		<echo message="deleting existing directories" />
+		<delete dir="${build.dir}" />
+		<delete dir="c:\Failed-Test" />
+		<delete dir="${screenshots.dir}" />
+		<delete dir="${temp.dir}" />
+	</target>
+
+	<target name="compile" depends="clean, init, loadTestNG">
+		<javac destdir="${build.dir}" srcdir="${src.dir}" classpath="${test.classpath}" encoding="cp1252" />
+	</target>
+	<target name="runmo" depends="compile">
+		<testng classpath="${test.classpath}:${build.dir}" >
+			<xmlfileset dir="${basedir}" includes="testngMO.xml " />
+		</testng>
+	<!--	<testng listeners="org.fest.swing.testng.ScreenshotOnFailureListener" outputDir="${basedir}/screenshots/" haltOnFailure="true" verbose="2">
+			<classfileset dir="${test.classpath}" includes="**/*.class" />
+			<classpath location="${test.classpath}" />
+			<classpath location="${test.classpath}" />
+			<classpath refid="${test.classpath}" />
+		</testng>-->
+	</target>
+
+	<target name="runuat" depends="compile">
+		<testng classpath="${test.classpath}:${build.dir}" suitename="Login">
+			<xmlfileset dir="${basedir}" includes="testngUAT.xml " />			
+		</testng>
+	</target>
+	
+		<target name="runmoreg" depends="compile">
+		<testng classpath="${test.classpath}:${build.dir}" suitename="Login">
+			<xmlfileset dir="${basedir}" includes="testngMOREG.xml " />			
+		</testng>
+	</target>
+	
+	<target name="runperf" depends="compile">
+		<testng classpath="${test.classpath}:${build.dir}" suitename="Login">
+			<xmlfileset dir="${basedir}" includes="testngPERF.xml " />			
+		</testng>
+	</target>
+
+	<target name="runprod" depends="compile">
+		<testng classpath="${test.classpath}:${build.dir}" suitename="MasterSuite">
+			<xmlfileset dir="${basedir}" includes="testngprod.xml " />
+		</testng>
+	</target>
+
+	<target name="stop-server">
+		<get taskname="selenium-shutdown" src="http://localhost:4445/selenium-server/driver/?cmd=shutDownSeleniumServer" dest="result.txt" ignoreerrors="true" />
+		<echo taskname="selenium-shutdown" message="QA good work" />
+	</target>
+
+	<target name="testng-xslt-report">
+		<delete dir="${basedir}/testng-xslt">
+		</delete>
+		<mkdir dir="${basedir}/testng-xslt">
+		</mkdir>
+		<xslt in="${basedir}/test-output/testng-results.xml" style="${src.dir}/newMMIS_Subsystems/testng-results.xsl" out="${basedir}/testng-xslt/index.html" classpathref="master-classpath" processor="SaxonLiaison">
+			<param expression="${basedir}/testng-xslt/" name="testNgXslt.outputDir" />
+			<param expression="true" name="testNgXslt.sortTestCaseLinks" />
+			<param expression="FAIL,SKIP,PASS,CONF,BY_CLASS" name="testNgXslt.testDetailsFilter" />
+			<param expression="true" name="testNgXslt.showRuntimeTotals" />
+			<classpath refid="master-classpath">
+			</classpath>
+		</xslt>
+	</target>
+
+	<target name="failed-tests" description="Run TestNG unit tests">
+		<testng classpathref="master-classpath" outputDir="${test.reports}" verbose="2" haltonfailure="true">
+			<xmlfileset dir="${test.reports}" includes="testng-failed.xml" />
+		</testng>
+		<testng listeners="org.fest.swing.testng.ScreenshotOnFailureListener" outputDir="${basedir}/screenshots/" haltOnFailure="true" verbose="2">
+			<classfileset dir="${test.classpath}" includes="**/*.class" />
+			<classpath location="${test.classpath}" />
+			<classpath location="${test.classpath}" />
+			<classpath refid="${test.classpath}" />
+		</testng>
+
+	</target>
+</project>

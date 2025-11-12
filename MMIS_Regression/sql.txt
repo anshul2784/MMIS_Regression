@@ -1,0 +1,46 @@
+select * from s_login
+
+select * from R_Claims_Billing
+Insert Into R_Claims_Billing Values
+('27405', 'L', '110026577A', '4483.60', '221', '1548202641', ' ',' ','-60', '-30' )
+update R_Claims_Billing set tob='210' where tc = '27405'
+
+select * from r_diag where tc = '26916'
+Insert Into R_Diag Values
+('26916', 'R112', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ')
+
+Select * From R_Proc Where Tc = '27404'
+Insert Into R_Proc Values
+('27405', ' ', '-60', '-30', '', '4483.60', '30', 'DA - Days', ' ', 'No', '100', ' ', ' ', ' ', ' ', '1')
+update R_proc set rev='100' where tc = '27403'
+
+select * from R_Diag_Inst
+Insert Into R_Diag_Inst Values
+('27405', 'A200', 'Principal', 'Y - Yes');
+Insert Into R_Diag_Inst Values
+('27405', 'A200', 'Admitting', ' ');
+
+select * from r_cob where tc='27391'
+Insert Into R_Cob Values
+('27389', '0085000', 'P - Primary', '5.00', ' ', ' ', 'MB - MEDICARE PART B');
+
+
+Select * From R_Proc_Cob_Line Where Tc = '31142'
+Insert Into R_Proc_Cob_Line Values
+('27388', '3', '1', '0027080', '1', '0', '0', '1', ' ', ' ', 'H2012', ' ', ' ', ' ', ' ' );
+
+select * from r_proc_cob_line_dtl where tc = '27388'
+Insert Into R_Proc_Cob_Line_Dtl Values
+('27389', '3', '1', 'CO - Contractual Obligations', '40', '0', '150' );
+Insert Into R_Proc_Cob_Line_Dtl Values
+('27390', '1', '1', 'PR - Patient Responsibility', '-20', '0', '1' );
+
+select * from R_values where tc = '27438'
+Insert Into R_Values Values
+('27405', '80 - COVERED DAYS - UB04 ONLY', '30')
+
+Insert Into S_Login Values
+('ST', 'BASE', 'https://staging-base.ehs.state.ma.us/newMMIS', 'ynaini1', 'Nayini08')
+
+
+

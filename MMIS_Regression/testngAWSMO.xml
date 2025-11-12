@@ -1,0 +1,1243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<suite name="NewMMIS regression test suite" configfailurepolicy="continue">
+
+ <parameter name="selenium.host" value="localhost"></parameter>
+ <parameter name="selenium.port" value="4444"></parameter>
+ <parameter name="selenium.browser" value="*firefox"></parameter>
+ <parameter name="selenium.url" value="www.google.com"></parameter>
+ <parameter name="environment" value="AWSMO"></parameter>
+ <listeners>
+	<listener class-name="org.uncommons.reportng.HTMLReporter"/>
+ </listeners> 
+ 
+   <test name="Login test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.Login">
+        <methods>
+      	    <include name="testDBconnect"/>
+      	    <include name="testLoginBase"/>		
+        </methods>
+      </class> 
+    </classes>
+  </test> 
+  
+  //Change display to 100% in windows settings before performing these tests
+    <!--     <test name="Member test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.Member">
+        <methods>
+        <include name="test22528"/>
+      	    <include name="test22529"/> 
+      	    <include name="test22530"/> 
+      	    <include name="test22531"/> 
+      	    <include name="test22532"/> 
+      	    <include name="test22534"/> 
+      	    <include name="test22538"/> 
+      	    <include name="test22539"/> 
+      	    <include name="test22541"/> 
+      	    <include name="test22549"/> 
+      	    <include name="test23393"/>
+      	    <include name="test23394"/>
+      	    <include name="test23395"/> 
+      	    <include name="test23396"/> 
+      	    <include name="test23397"/> 
+      	    <include name="test23407"/> 
+      	    <include name="test23384"/>
+      	    <include name="test23385"/> 
+      	    <include name="test24487"/> 
+      	    <include name="test26281"/> 
+      	    <include name="test26282"/> 
+      	    <include name="test26280"/> 
+      	    <include name="test24485"/>
+      	    <include name="test22554a_23403"/>
+      	    <include name="test23387"/> 
+      	    <include name="test23391"/> 
+      	    <include name="test23392"/> 
+      	    <exclude name="test23366"/> //MMQ tc to be skipped as per email conversation with Usha 11/15/2023
+      	    <exclude name="test23380"/> //MMQ tc to be skipped as per email conversation with Usha 11/15/2023
+      	    <exclude name="test22536"/> //MMQ tc to be skipped as per email conversation with Usha 11/15/2023
+      	    <include name="test23408"/> 
+      	    <include name="test23472a"/> 
+      	    <exclude name="test23389"/> //MMQ tc to be skipped as per email conversation with Usha 11/15/2023 
+      	    <exclude name="test24486"/> //DF 37214
+      	    <include name="test26277"/>  
+      	    <include name="test22550"/> 
+      	    <include name="test22551"/> 
+      	    <include name="test22552"/> 
+      	    <include name="test22553_23372"/> 
+      	    <include name="test23365"/> 
+      	    <include name="test23373"/> 
+      	    <include name="test23375a"/> 
+      	    <include name="test23376a"/> 
+      	    <include name="test23388a"/> 
+      	    <include name="test24488"/> 
+      	    <include name="test23382"/>
+      	    <include name="test23381"/>
+      	    <include name="test28552"/>
+      	    <include name="test28553"/>
+      	    <include name="test28554"/>
+      	    <include name="test32913a"/> //Either request ELGJD099 run after this TC, or wait till Sunday, as it runs weekly every sunday
+			<include name="test32914a"/> //Either request ELGJD099 run after this TC, or wait till Sunday, as it runs weekly every sunday
+			<include name="test32937"/>
+			<include name="test32939"/>
+			<include name="test32940"/>
+			<include name="test32941"/>
+			<include name="test32942"/>
+			<include name="test32943"/>
+			<include name="test32944"/>
+			<include name="test32945"/>
+			<include name="test32946"/>
+			<include name="test32947"/>
+			<include name="test32948"/>
+			<include name="test32950"/>
+			<include name="test32951"/>
+			<include name="test32952"/>
+			<include name="test32953"/>
+			<include name="test32954"/>
+			<include name="test32955a"/>
+			<include name="test32956a"/>
+      	    <include name="test32959a"/>       	    
+      	    <include name="test32960a"/> 
+      	    <include name="test26278"/>
+      	    <include name="testMMQpositive"/>
+      	    <include name="testMMQnegative"/>
+      	    
+      	    //Mahammad CNS Started
+        
+          	<include name="test47312"/>
+            <include name="test47313"/>
+            <include name="test47314"/> 
+            <include name="test47315"/>
+            <include name="test47316"/>
+            <include name="test47317"/>
+            <include name="test47318"/>
+            <include name="test47319"/>
+            <include name="test47337"/> 
+            <include name="test47338"/>
+            <include name="test47339"/>
+            <include name="test47340"/>
+            <include name="test47341"/>
+            <include name="test47342"/>
+            <include name="test47343"/>
+            <include name="test47344"/>
+            <include name="test47345"/>
+            <include name="test47346"/>
+            <include name="test47347"/>
+            <include name="test47348"/>
+            <include name="test47349"/>
+            <include name="test47350"/>
+            <include name="test47351"/>
+            <include name="test47352"/>
+            <include name="test47353"/>
+            <include name="test47354"/>
+            <include name="test47355"/>
+            <include name="test47356"/>
+            <include name="test47357"/>
+            <include name="test47358"/>
+            <include name="test47359"/>
+            <include name="test47360"/>
+            <include name="test47361"/>
+            <include name="test47377"/>
+            <include name="test47379"/>
+            <include name="test47380"/>
+            <include name="test47381"/>
+            <include name="test47382"/>
+            <include name="test47383"/>
+            <include name="test47384"/>
+            <include name="test47386"/>
+            <include name="test47387"/>
+            <include name="test47401"/>
+            <include name="test47402"/>
+            <include name="test47435"/>
+            
+            //Abujot CNS started
+                
+            <exclude name="test47311"/> //this TC gave sql issue
+           	<exclude name="test47336"/> //this TC gave sql issue
+	        <include name="test47320"/>
+	        <include name="test47321"/>
+	        <include name="test47322"/>
+	        <exlcude name="test47323"/>
+	        <include name="test47335"/>
+	        <include name="test47334"/>
+	        <include name="test47333"/>
+	        <include name="test47332"/>
+	        <include name="test47331"/>
+	        <include name="test47330"/>
+	        <include name="test47329"/>
+	        <include name="test47328"/> 
+	        <include name="test47324"/>
+	        <include name="test47325"/>
+	        <include name="test47326"/>
+            <include name="test47327"/>
+            <include name="test47362"/>
+            <include name="test47363"/>
+            <include name="test47364"/> 
+            <include name="test47365"/> 
+            <include name="test47366"/>
+            <include name="test47367"/> 
+            <include name="test47369a"/> 
+            <include name="test47369b"/> 
+            <include name="test47370"/>
+            <include name="test47371"/>
+            <include name="test47372"/>
+            <include name="test47374"/>
+            <exclude name="test47375"/> //target closed error
+            <include name="test47376a"/>
+            <include name="test47376b"/>
+            <include name="test47376c"/>
+            <include name="test47376d"/>
+            <include name="test47388"/>
+            <include name="test47389"/>
+            <include name="test47390"/>
+            <include name="test47391"/> 
+            <include name="test47400"/>
+            <include name="test47518"/> 
+            <include name="test47368"/> ask anshul emailed the tc. see that if can be used
+  
+        </methods> 
+      </class> 
+    </classes>
+  </test> --> 
+
+   <!--   <test name="EVS test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.EVS">
+        <methods>
+			<include name="RM_2_111"/>
+			<include name="RM_3_116"/>
+			<include name="RM_5_480"/>
+			<include name="RM_6_480"/>
+			<include name="RM_7_485"/>
+			<include name="RM_8_485"/>
+			<include name="RM_9_516"/> 
+			<include name="RM_10_006"/> 
+			<include name="RM_12_031"/> 
+			<include name="RM_13_036"/> 
+			<include name="RM_14_041"/> 
+			<include name="RM_15_046"/> 
+			<include name="RM_16_051"/>
+			<include name="RM_19_171"/>
+			<include name="RM_20_201"/>
+			<include name="RM_20_231"/> 
+			<include name="RM_28_391"/>
+			<include name="RM_29_495"/> 
+			<include name="RM_30_495"/> 
+			<include name="RM_31_495"/>
+			<include name="RM_32_495"/>
+			<include name="RM_34_520"/> 
+			<include name="RM_40_601"/>
+			<include name="RM_41_602"/>
+			<include name="RM_42_603"/>
+			<include name="RM_43_604"/>
+			<include name="RM_45_608"/> 
+			<include name="RM_46_611"/>
+			<include name="RM_48_612"/>
+			<include name="RM_49_612"/>
+			<include name="RM_50_613"/> 
+			<include name="RM_51_613"/> 
+			<include name="RM_68_126"/>
+			<include name="RM_71_071"/>
+			<include name="RM_74_74"/>
+			<include name="RM_76_525"/> 
+			<include name="RM_89_646"/> 
+			<include name="RM_121_121"/>
+			<include name="RM_186_186"/> 
+			<include name="RM_246_246"/> 
+			<include name="RM_366_366"/>
+			<include name="RM_530_530"/> 
+			<include name="RM_596_596"/>
+			<include name="RM_597_597"/>
+			<include name="RM_614_614"/>
+			<include name="RM_740_311"/>
+			<include name="RM_742_311"/>
+			<include name="RM_747_021"/> 
+			<include name="RM_749_021"/>
+			<include name="RM_770_648"/>
+			<include name="RM_773_500"/>
+			<include name="RM_792_637"/>
+			<include name="RM_827_386"/>
+			<include name="RM_831_386"/>
+			<include name="RM_832_386"/>
+			<include name="RM_840_386"/>
+			<include name="RM_841_386"/>
+			<include name="RM_853_636"/> 
+			<include name="RM_915_647"/>
+			<include name="RM_936_656"/>
+			<include name="RM_937_656"/>
+			<include name="RM_938_656"/>
+			<include name="RM_939_656"/>
+			<include name="RM_940_656"/>
+			<include name="RM_941_656"/> 
+			<include name="RM_942_656"/>
+			<include name="RM_985_658"/>
+			<include name="RM_986_661"/>
+			<include name="RM_987_662"/>
+			<include name="RM_1055_617"/>
+			<include name="RM_1056_617"/>
+			<include name="RM_1059_618"/>
+			<include name="RM_1061_618"/>
+			<include name="RM_1063_619"/>
+			<include name="RM_1065_619"/> 
+			<include name="RM_1119_663"/>
+			<include name="RM_1120_664"/>
+			<include name="RM_1136_616"/>
+			<include name="RM_1138_616"/>
+			<include name="RM_1151_634"/> 
+			<include name="RM_1231_665"/> 
+			<include name="RM_950_611"/> 
+			<include name="RM_951_611"/>
+			<include name="RM_952_611"/>
+			<include name="RM_953_611"/>
+			<include name="RM_954_611"/>
+			<include name="RM_955_611"/>
+			<include name="RM_956_611"/> 
+			<include name="RM_957_611"/>
+			<include name="RM_958_611"/>
+			<include name="RM_959_611"/>
+			<include name="RM_960_611"/> 
+			<include name="RM_961_611"/>
+			<include name="RM_962_611"/>
+			<include name="RM_963_611"/>
+			<include name="RM_964_611"/>
+			<include name="RM_965_611"/>
+			<include name="RM_966_611"/>
+			<include name="RM_967_611"/>
+			<include name="RM_968_611"/>
+			<include name="RM_969_611"/>
+			<include name="RM_970_611"/>
+			<include name="RM_971_611"/>
+			<include name="RM_972_611"/>
+			<include name="RM_973_611"/>
+			<include name="RM_974_611"/>
+			<include name="RM_975_611"/>
+			<include name="RM_976_611"/>
+			<include name="RM_977_611"/>
+			<include name="RM_980_611"/> 
+			<include name="RM_981_611"/>
+			<include name="RM_982_611"/>
+			<include name="connectorFullHSN"/>
+			<include name="qhpFullHSN"/>
+			<include name="connectorPartHSN"/> 
+			<include name="qhpPartHSN"/>
+			<include name="RM_1503_679"/>
+			<include name="RM_1539_636"/>
+			<include name="RM_1540"/>
+			<include name="RM_1541"/>
+			<include name="RM_1560"/>
+			<exclude name="RM_791_637"/> //DF 32098 on this
+			<exclude name="RM_35_522"/> //Gloria-Remove 35-522 edit for no longer valid
+			<exclude name="RM_943_657"/> [GN] removed from prod
+			<exclude name="RM_949_657"/> [GN] removed from prod
+			<exclude name="RM_640_640"/> [GN] Currently we don’t have CommCare assignments therefore we cannot test this RM
+			<exclude name="RM_271_271"/> //remove
+			<exclude name="RM_461_461"/> //remove
+			<exclude name="RM_650"/> //remove
+			//[GN] No longer found
+			<exclude name="RM_944_657"/>
+			<exclude name="RM_945_657"/>
+			<exclude name="RM_946_657"/>
+			<exclude name="RM_947_657"/>
+			<exclude name="RM_948_657"/> 
+			<exclude name="RM_1_035"/>
+			<exclude name="RM_741_311"/>
+			<exclude name="RM_748_021"/> 
+			<exclude name="RM_1060_618"/>
+			<exclude name="RM_1064_619"/> 
+			<exclude name="RM_1137_616"/>
+			<exclude name="RM_1144_056"/>
+			<exclude name="RM_1145_056"/>
+			<exclude name="RM_1146_056"/>
+			<exclude name="RM_1147_056"/>
+			<exclude name="RM_1148_616"/> 
+			<exclude name="RM_1155_634"/>
+			<exclude name="RM_1156_634"/>
+			<exclude name="RM_1157_634"/>
+			<exclude name="RM_1158_634"/>
+        </methods>
+      </class> 
+    </classes>
+  </test> --> 
+  
+
+  
+ <!-- <test name="Claims Test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.claims">
+        <methods>
+			//Anshul start
+			<include name="test31143edit"/>
+			<include name="test31143"/>
+			<include name="test31142"/>
+			<include name="test27388"/>
+			<include name="test27389"/>
+			<include name="test27390"/>
+			<include name="test27391"/>
+			<include name="test27393"/>
+			<include name="test27398"/>
+			<include name="test27438"/>
+			<include name="test26912"/>
+			<include name="test26913"/>
+			<include name="test26915"/>
+			<include name="test26916"/>
+			<include name="test27403"/>
+			<include name="test27404"/>
+			<include name="test27405"/>
+			<include name="test31183"/>
+			<include name="test31185"/>
+			<include name="test31197"/>
+			<include name="test31187"/>
+			<include name="test31199"/>
+			<include name="test31181"/>
+			<include name="test31189"/>
+			<include name="test31193"/>
+			<include name="test31195"/>
+			<include name="test31201"/>
+			<exclude name="test31203"/> //Do Not do this TC as of now
+			<include name="test27381"/>
+			<include name="test27397"/>
+			<include name="test27399"/>
+			<include name="test27434"/>
+			<include name="test27436"/>
+			<include name="test27408"/>
+			<include name="test27394"/>
+			<include name="test27409"/>
+			<include name="test27400"/>		
+			<exclude name="test27411a"/> //Renuka asked to cancel
+			<exclude name="test27411b"/> //27411a is cancelled
+			<exclude name="test27411c"/> //27411a is cancelled
+			<include name="test27440"/>
+			<include name="test32253"/>
+			<include name="test32254a"/>
+			<include name="test32254b"/>
+			<include name="test32256a"/>
+			<include name="test32256b"/>
+			<include name="test32259"/>
+			<include name="test32263a"/>
+			<include name="test32263b"/>
+			<include name="test32263c"/>
+			<include name="test32265"/>
+			<include name="test32267"/>
+			<include name="test32268"/>
+			<include name="test32269"/>
+			<include name="test32270"/>
+			<include name="test32271"/>
+		    <include name="test32273"/>
+			<include name="test32274"/>
+			<include name="test32279"/>
+			<include name="test32284"/>
+			//Anshul end
+			
+			//Priya start
+			<include name="test31256_PAS"/>  
+			<include name="test32236_PAS"/>   
+			<include name="test32248_PAS"/>  
+			<include name="test32249_PAS"/>  
+			<include name="test31250_PAS"/> 
+			<include name="test31257_PAS"/> 
+			<include name="test32237_PAS"/>    
+			<include name="test32250_PAS"/>  
+			<include name="test31251_PAS"/>   
+			<include name="test31258_PAS"/>
+			<include name="test32245_PAS"/>   
+			<include name="test32251_PAS"/>   
+			<include name="test31214_PAS"/> 
+			<include name="test31253_PAS"/>  
+			<include name="test32235_PAS"/>  
+			<include name="test32246_PAS"/>  
+			<include name="test32240_PAS"/>
+			<include name="test32247_PAS"/>
+			<include name="test34530"/>  
+			<include name="test34531"/> 
+			<include name="test34532"/>  
+			<include name="test34533"/>  
+			<include name="test34534"/>  
+			<include name="test34545"/> 
+			<include name="test34549"/>  
+			<include name="test34551"/> 
+			<include name="test34553"/>  
+			<include name="test32287"/>  
+			<include name="test32288"/> 
+			<include name="test32289"/>   
+			<include name="test32290"/> 
+			<include name="test32291"/>  
+			<include name="test32292"/>
+			<include name="test35885"/> 
+			<include name="test35963"/> 
+			<include name="test32427"/> 
+			<include name="test36784"/>  
+			<include name="test32185a"/> 
+			<include name="test32185b"/>
+			<include name="test32185c"/> 
+			<include name="test32185d"/> 
+			<include name="test32200"/> 
+			<include name="test30425"/> 
+			<include name="test31158"/> 
+			<include name="test31162"/>  
+			<include name="test31164"/>  
+			<include name="test31165"/> 
+			<include name="test31166"/> 
+			<include name="test31167"/> 
+			//Priya end
+			
+			//Rajesh start
+			
+			//Rajesh Institutional Start
+			<include name="test32177C" />
+			<include name="test32178A" />
+			<include name="test32178B" />
+			<include name="test32178D" />
+			<include name="test32179A" />
+			<include name="test32179B" />
+			<include name="test32180C" />
+			<include name="test32189" />
+			<include name="test32195A" />
+			<include name="test32195B" />
+			<include name="test32195C" />
+			<include name="test32195D" />
+			<include name="test32196A" />
+			<include name="test32196B" />
+			<include name="test32196C" />
+			<include name="test32197B" />
+			<include name="test32197C" />
+			<include name="test32197D" />
+			<include name="test32316" />
+			<include name="test32317" />
+			<include name="test32324" />
+			<include name="test32387" />
+			<include name="test32388" />
+			<include name="test32389" />
+			<include name="test32390" />
+			<include name="test32392" />
+			<include name="test32513" />
+			<include name="test32517" />
+			<include name="test32312" />
+			<include name="test32313" />
+			<include name="test32320" />
+			<include name="test32321" />
+			<include name="test34660" />
+			<include name="test32012" />
+			<include name="test32067" />
+			//Rajesh Institutional End
+			
+			//Rajesh Professional Start
+			<include name="test30430" /> 
+			<include name="test31169" />
+			<include name="test32314" />
+			<include name="test32511" />
+			<include name="test34309" />
+			<include name="test35888" />
+			<include name="test35911" />
+			<include name="test31176" />
+			<include name="test32083" />
+			<include name="test32315" />
+			<include name="test34550" />
+			<include name="test34552" />
+			<include name="test35890" />
+			<include name="test35910" />
+			<include name="test35924" />
+			<include name="test35934" />
+			<include name="test30429" />
+			<include name="test26931" />
+			<include name="test31948" />
+			<include name="test31949" />
+			<include name="test30940" />
+			<include name="test31177" />
+			<include name="test31229" />
+			<include name="test32322" />
+			<include name="test32515" />
+			<include name="test35926" />
+			<include name="test35949" />
+			<include name="test31178" />
+			<include name="test31224" />
+			<include name="test32089" />
+			<include name="test32319" />
+			<include name="test32323" />
+			<include name="test35895" />
+			<include name="test35932" />
+			<include name="test36776" />
+			<include name="test30942" />
+			<include name="test31203" />
+			<include name="test31231" />
+			<include name="test32310" />
+			<include name="test35904" />
+			<include name="test32318" />
+			<include name="test35941A" />
+			<include name="test35941B" />
+			<include name="test35960" />
+			//Rajesh Professional Start
+			
+			//Rajesh End
+			
+			//COB TCs
+			
+			//Anshul CoB start
+			<include name="test25425"/> 
+			<include name="test25223"/>
+			<include name="test25474"/>
+			<include name="test29807"/>
+			<include name="test30517"/>
+			<include name="test35704"/>
+			<include name="test35996"/>
+			<include name="test41514"/>
+			<include name="test23977"/>
+			<include name="test26394"/>
+			<include name="test23947"/>	
+			<include name="test30918"/>
+			<include name="test31344"/>
+			<include name="test35685"/>
+			<include name="test39538"/>
+			<include name="test31305"/>
+			//Anshul CoB end
+			
+			//Durga CoB start
+			<include name="test32468"/>		
+			//Durga CoB end
+			
+			//Abujot CoB start
+				<include name="test41412"/>
+				<include name="test31322"/> 
+				<include name="test41507"/>
+				<include name="test41506"/>
+				<include name="test39539a"/>
+				<include name="test39539b"/>
+				<include name="test41515"/>
+				<include name="test30458"/>
+				<include name="test30460"/>
+				<include name="test38923"/>
+				<include name="test39618"/>
+				<include name="test39619"/>
+				<include name="test35679"/>
+				<include name="test41510"/>
+				<include name="test41498"/>
+				<include name="test41512"/>
+				<include name="test41534"/>
+				<include name="test26394"/> 
+				<include name="test46062"/> 
+				<include name="test41541"/>
+				<include name="test31343"/>
+				<include name="test46061"/> 
+				<include name="test25992"/>
+				<include name="test46046"/>
+				<include name="test46048"/> 
+				<include name="test46058"/> 
+				<include name="test46050"/> 
+				<include name="test46051"/> 
+				<include name="test46052"/>  
+				<include name="test46054"/> 
+				<include name="test46053"/> 
+				<include name="test46055"/> 
+				<include name="test46064"/> 
+				<include name="test46059"/>                
+				<include name="test31345"/> 
+				<include name="test43507"/> 
+				<include name="test43479"/> 
+				<include name="test43824"/>		
+			//Abujot CoB end
+			
+			//Rajesh CoB Start
+		    <include name="test32293" />
+            <include name="test34114" />
+            <include name="test34124" />
+            <include name="test34125" />    
+		    //Rajesh CoB End
+			
+			//Day_2
+			<include name="test27411d"/>
+			<include name="test32263d"/>
+        </methods>
+      </class> 
+    </classes>
+  </test> -->
+  
+  
+  <!-- <test name="TPL test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.TPL">
+        <methods>
+        <include name="test22455a"/> 
+		<include name="test22456"/> 
+		<include name="test22459"/> 
+		<include name="test23291a"/> 
+		<include name="test23310_22788"/>
+		<include name="test31938a"/>
+		<include name="test31939a"/> //See notes in TC
+		<include name="test31940"/> //DF 30245 and 30246 against this
+		<include name="test31941_22788"/>
+		<include name="test31414_31432_31466_HMS_PartA"/> //Recovery start
+		<include name="test31414_31432_31466_ACCS_PartA"/> 
+		<include name="test31432_HMS_PartA"/>
+		<include name="test31424_HMS_PartA"/>
+		<include name="test31427_HMS_PartA"/>
+		<include name="test31431_ACCS_PartA"/>
+		<include name="test31439_ACCS_PartA"/>
+		<include name="test31456_ACCS_PartA"/>
+		<include name="test31461_ACCS_PartA"/> //Recovery end
+		<include name="test33853_SOHEMA_PartA"/> //TPL Resource HMS/SOHEMA Start
+		<include name="test33854_HMS_PartA"/>
+		<include name="test33870_HMS_PartA"/>
+		Day 2
+		<include name="test22455b"/>
+		<include name="test23291b"/> //This letter may not produce because job TPLJM902 is turned off in UAT. Check before running.
+		<include name="test31938b"/> //TPLJD959/TPLJD960 has been archived via 36603 - Deactivate TPL jobs in lower env, so this job does not run in any environment.
+		<include name="test31939b"/> //This tc is failing because TPLJD901 is turned off in UAT. Check before running. If job not running, do not do this TC.
+		<include name="test31414_31432_31466_HMS_PartB"/>
+		<include name="test31414_31432_31466_ACCS_PartB"/>
+		<include name="test31432_HMS_PartB"/>
+		<include name="test31424_HMS_PartB"/>
+		<include name="test31427_HMS_PartB"/>
+		<include name="test31431_ACCS_PartB"/>		
+		<include name="test31439_ACCS_PartB"/>
+		<include name="test31456_ACCS_PartB"/>
+		<include name="test31461_ACCS_PartB"/>
+		<include name="test33853_SOHEMA_PartB"/>0.
+		<include name="test33854_HMS_PartB"/>
+		<include name="test33870_HMS_PartB"/>
+		Month->Verify ELGJM600 has run after the code promotion for current regression cycle before running this test case 
+		<include name="test31942"/>
+        </methods>
+      </class> 
+    </classes>
+  </test>  -->
+  
+         <!--  <test name="Member Day2 test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.MemberDay2">
+        <methods>
+        	<include name="test22554b_23403"/> 
+       		<include name="test23472b"/>
+      	    <include name="test23375b"/>  
+      	    
+      	    <include name="test32959b"/>
+      	    <include name="test32960b"/>
+      	    <include name="test32913b"/> //run this next day after ELGJD099 has run on sunday/or ad-hoc
+      	    <include name="test32914b"/> //run this next day after ELGJD099 has run on sunday/or ad-hoc
+      	    <include name="test32955b"/> 
+      	    <include name="test32956b"/>
+        </methods>
+      </class> 
+    </classes>
+  </test>  -->
+  
+ 
+  
+       <!--    <test name="Member Day3 test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.MemberDay3">
+        <methods>
+      	    <include name="test23388b"/>
+      	    <include name="test23376b"/>
+        </methods>
+      </class> 
+    </classes>
+  </test>  -->
+  
+
+
+ 
+   <!--  <test name="HIPAA test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.HIPAA">
+        <methods>
+       		<include name="test32144a"/> 
+        	<include name="test32145a"/>
+        	<include name="test22400a"/>
+        	<include name="test32137a"/> 
+        	<include name="test22385"/> 
+        	<include name="test22386_test23447"/> 
+        	<include name="test22387"/>
+			<include name="test22389"/>
+			<include name="test22391"/>
+        	<include name="test22393_test22395_test22401"/>
+        	<include name="test22394"/>
+        	<include name="test23142"/>
+        	<include name="test23143"/>
+        	<include name="test23446"/>
+        	<include name="test22399a"/> 
+        	<include name="test22390a"/>
+        	<include name="test32131"/>
+       		<include name="test32132"/>
+       		<include name="test32133"/>
+       		<include name="test32134"/>
+       		<include name="test32135"/>
+       		<include name="test32136"/>
+       		<include name="test32138"/>
+       		<include name="test32139"/>
+        	//Day 2
+        	<include name="test32140"/>
+        	<include name="test32142"/>
+		    <include name="test32144b"/>
+		    <include name="test32145b"/> 
+		    <include name="test22400b"/>
+		    <include name="test22399b"/>
+		    <include name="test22390b"/>
+		    <include name="test32137b"/>
+		    //Day 3
+		    <include name="test32144c"/>
+		    <include name="test32145c"/>
+		    <include name="test22400c"/>
+        </methods>
+      </class> 
+    </classes>
+  </test> -->
+
+
+ 
+//after data refresh, make sure PIDs 110048577 and 110000254 have billing ind set to Y and have program elig 
+  <!--      <test name="EPSDT test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.EPSDT">
+        <methods>
+      	    <include name="test22379"/>	
+      	    <include name="test23426"/>	
+      	    <include name="test22371a"/>
+      	    <include name="test22378"/>
+       	    <include name="enterClaims"/>  
+       	    <include name="test22798"/>
+       	    <include name="test22380"/>     
+       	    <include name="test23137a"/>	    
+       	    <include name="test23137b"/>
+       	    <include name="test22382"/>
+       	    <include name="test31968"/>
+       	    <include name="test31979"/>
+       	    <include name="test31980"/>
+       	    <include name="test31991"/>
+       	    <include name="test32002"/>
+       	    <include name="test32013"/>
+       	    <include name="test32025"/>
+       	    <include name="test32026"/>
+       	    <include name="test174"/>
+       	    <include name="test32082"/>
+       	    <include name="test32083"/>
+       	    <include name="test22383"/>
+       	    <include name="test18804a"/>
+       	    <include name="test18805"/>
+       	    day 2
+       	    <include name="test22371b"/>
+       	    <include name="test23137aday2"/>
+       	    //Run on Thur or Mon (in UAT) after test18804a has run
+       	    <include name="test18804b"/>
+        </methods>
+      </class> 
+    </classes>
+  </test> -->
+
+ 
+//after data refresh, make sure PID 110000314 has program elig 
+   <!--    <test name="Provider test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.Provider">
+        <methods>
+        	<include name="test22467"/>
+        	<exclude name="test22928a"/>
+      	    <include name="test23135a"/>
+      	    <include name="test22461a"/>
+      	    <exclude name="test22463"/> //Due to captcha on POSC
+      	    <exclude name="test22464"/> //Due to captcha on POSC
+      	    <include name="test22465"/>
+      	    <include name="test22466"/>
+      	    <include name="test22472"/>
+      	    <include name="test22469"/>
+      	    <include name="test22471"/>
+      	    <include name="test23097"/>
+      	    <include name="test23099a"/>
+      	    <include name="test23101a"/>
+      	    <include name="test23102"/>
+      	    <include name="test23103"/>
+      	    <include name="test23105a"/>
+      	    <include name="test23107"/>
+      	    <include name="test23108"/>
+      	    <include name="test23110a"/>
+      	    <include name="test23113"/>
+      	    <include name="test23115a"/>
+      	    <include name="test23116"/>
+      	    <include name="test23117"/>
+      	    <include name="test23118"/>
+      	    <include name="test23119"/>
+      	    <include name="test23120"/>
+      	    <include name="test23121"/>
+      	    <include name="test23122"/>
+			<include name="test23123"/>
+			<include name="test23124"/>
+			<include name="test23125"/>
+			<include name="test23127"/>
+			<include name="test23128"/>
+			<exclude name="test23129"/> //Captcha check
+			<include name="test23483"/>
+			<include name="test23130"/>
+			<include name="test23131"/>
+			<include name="test23132"/>
+			<include name="test23134"/>
+			<include name="test23098"/>
+      	    //run in end
+      	    <include name="test22461b"/>	
+      	    <include name="test23099b"/>
+      	    <include name="test23481a"/>
+      	    <include name="test35703"/>
+      	    <exclude name="test22928b"/>
+      	    <include name="test23481b"/>
+      	    
+      	    //New Provider TCs - Run on Tuesday unless otherwise noted
+      	    
+      	    	//Mahammad Start
+      	    		<include name="test44118a"/>
+					<include name="test44122"/>
+					<include name="test44121"/>
+					<include name="test44125"/>
+					<include name="test44128"/>
+					<include name="test44129"/>
+					<include name="test44132"/>        
+					<include name="test44137"/>        
+					<include name="test44139a"/> 
+					<include name="test44140a"/>
+					<include name="test44142"/>
+					<include name="test44146a"/>
+					<include name="test44136a"/> 
+					<include name="test44149a"/>
+					<include name="test44135a"/>
+				//Mahammad End
+					
+				//Abujot Start
+					<include name="test44178"/>
+					<include name="test44168"/>
+					<include name="test44162a"/>
+					<include name="test44161a"/> 
+					<include name="test44164a"/> //can run anyday 
+					<include name="test44175"/>
+					<include name="test44159"/>
+					<include name="test44169a"/> 
+					<include name="test44155a"/>
+				//Abujot End
+      	    
+      	    day 2
+      	    <include name="test23105b"/>
+      	    <include name="test23110b"/>
+      	    <include name="test23133"/>
+      	    
+      	    //New Provider TCs - Run on Thursday unless otherwise noted (44173)
+      	    
+      	    	//Mahammad Start
+      	    		<include name="test44136b"/>
+                    <include name="test44118b"/>
+                    <include name="test44139b"/>
+                    <include name="test44140b"/>
+                    <include name="test44149b"/>
+                    <include name="test44135b"/>
+				//Mahammad End
+					
+				//Abujot Start
+					<include name="test44162b"/> 
+                    <include name="test44177"/>   
+                    <include name="test44169b"/>
+                    <include name="test44161b"/> 
+                    <include name="test44165"/>  
+                   	<include name="test44166"/>
+                    <include name="test44160"/>
+                    <include name="test44154"/>                                                          
+                   	<include name="test44173"/> //This runs every thursday so test on friday/Day_3
+                    <include name="test44164b"/>
+					<include name="test44155b"/>  
+				//Abujot End
+				
+      	    day 3
+      	    <exclude name="test23135b"/> //Needs 22463 which is not running due to captcha
+      	    run weekly
+      	    <include name="test23115b"/>
+        </methods>
+      </class> 
+    </classes>
+  </test> -->
+  
+<test name="Provider test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.Provider">
+        <methods>
+        	
+      	    <include name="testSED"/>
+        </methods>
+      </class> 
+    </classes>
+  </test>  
+  
+ 
+ <!-- <test name="Referrals test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.Referrals">
+         <methods> 
+         
+            <include name="testaddWZMembers"/>
+            <include name="test22474"/>
+            <include name="test22477"/>
+            <include name="test23413a"/>
+            <include name="test23411"/>
+            <include name="test22481"/> 
+            <include name="test22483"/>
+            <include name="test22496"/>  
+            <include name="test22497"/> 
+            <include name="test31228"/> 
+            <include name="test31229"/>   
+            <include name="test31230"/>
+            <include name="test31239"/>  
+            <include name="test31240"/>  
+            
+          </methods>
+      </class> 
+    </classes>
+  </test>   -->
+ 
+   <!-- <test name="Referrals_Portal test" preserve-order="true">
+        <classes>
+           <class name="newMMIS_Subsystems.Referrals_Portal">
+              <methods>
+             
+           <include name="test22479"/>
+           <include name="test22487"/>
+           <include name="test23413b"/>
+           <include name="test23414"/>
+           <include name="test22480"/>
+           <include name="test22489"/>
+           <include name="test22490"/>
+           <include name="test22491"/>
+           <include name="test22492"/>
+           <include name="test22493"/>
+           <include name="test22484"/> 
+              
+           
+         
+          </methods>
+       </class> 
+    </classes>
+  </test>  -->
+ 
+  
+<!--  <test name="PAS test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.PAS">
+         <methods>
+         
+                                 <include name="test23601a"/> 
+                                           <include name="test23602a"/>
+                                          <include name="test23603a"/>
+                                          <include name="test23604a"/> 
+                                           <include name="test23599a"/> 
+                                           <include name="test23252a"/> 
+                                           <include name="test23253a"/>
+                                          <include name="test23256a"/>  
+ 
+      
+                                           <include name="test32204"/>
+                                          <include name="test23230"/>
+                                          <include name="test23231"/>
+                                          <include name="test23233"/>
+                                          <include name="test23234"/>
+                                          <include name="test23235"/> 
+                                           <include name="test23236"/>
+                                          <include name="test23237"/> 
+                                           <include name="test23238"/>
+                                          <include name="test23239"/>
+                                          <include name="test23242"/>
+                                          <include name="test23244"/>
+                                          <include name="test23254"/>
+                                          <include name="test23255"/> 
+ 
+                                           <include name="test23836"/>
+                                          <include name="test23601b"/>
+                                          <include name="test23602b"/>
+                                          <include name="test23603b"/>
+                                          <include name="test23604b"/> 
+                                           <include name="test23599b"/> 
+                                           <include name="test23252b"/>
+                                          <include name="test23253b"/> 
+                                           <include name="test23256b"/>  
+                                           <include name="test22575"/> 
+ 
+ 
+         </methods>
+      </class> 
+    </classes>
+  </test> -->
+
+  
+  <!--       <test name="PA test" preserve-order="true">
+     <classes>
+      <class name="newMMIS_Subsystems.PA">
+         <methods>
+                          
+             <include name="test22501a"/>
+             <include name="test23183"/>
+             <include name="test23178"/>
+             <include name="test23179"/>
+             <include name="test23180"/>
+             <include name="test23181"/>
+             <include name="test23182"/>
+             <include name="test23184_23185"/>  //  need to run after 23180 
+             <include name="test23186"/>      	//need to run after 23182
+             <include name="test23188_23191"/>
+             <include name="test23190"/>
+             <include name="test23192"/>
+             <include name="test23193"/>
+             <include name="test23194"/>
+             <include name="test23195"/>
+             <include name="test23196"/>
+             <include name="test23199"/>
+             <include name="test23201"/>
+             <include name="test23203"/>
+             <include name="test23206"/>
+             <include name="test23208"/>
+             <include name="test23209"/>
+             <exclude name="test23210"/>  //this test case is not working Firefox
+             <include name="test23220"/>
+             <include name="test23211"/>
+             <include name="test23213"/>
+		     <include name="test23216"/>
+             <include name="test31478"/>
+             <exclude name="test31479"/> //Anshul-Figure out why is it excluded
+             <include name="test23488"/>
+             <include name="test23486"/>
+             <include name="test23485"/>
+             <include name="test27699"/> 
+             <include name="test22597"/>
+             <include name="test31392"/>
+             <include name="test22501b"/>  
+              </methods>
+            </class> 
+         </classes>
+       </test> -->
+       
+     <!--  <test name="PA_Portal test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.PA_Portal">
+        <methods>
+			
+			<include name="test23212"/>
+ 
+	        <include name="test22500"/>
+	        <include name="test22499"/>
+	        <include name="test22573"/>
+	        <include name="test23212"/>
+	        <include name="test23189"/>
+	        <include name="test23202"/>
+	        <include name="test23204"/>
+	        <include name="test23205"/>
+	        <include name="test23207"/>
+	        <include name="test23214"/>
+	        <include name="test23215"/>
+	        <include name="test23216"/>
+	        <include name="test23217"/> 
+	        	       
+	        <include name="test39262"/> 
+	        <include name="test39263"/> 
+	        <include name="test39264"/> 
+	        <include name="test39265a"/>  
+	        <include name="test39265b"/> 
+	        <include name="test39265c"/>  
+	        <include name="test39265d"/>
+	        <include name="test39265e"/>  
+	        <include name="test39265f"/>  
+	        <include name="test39265g"/>  
+	        <include name="test39265h"/>    
+	        <include name="test39265i"/> 
+	        <include name="test39266"/>
+	        <include name="test39268"/>  
+
+        </methods>
+      </class> 
+    </classes>
+  </test>  -->
+ 
+
+   <!-- <test name="AIMS test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.aims">
+        <methods>
+
+      	    <include name="test1"/>
+      	    <include name="test2"/>
+      	    <include name="test3"/>
+      	    <include name="test4"/>
+      	    <include name="test5"/>
+      	    <include name="test6"/>
+      	    <include name="test7"/>
+      	    <include name="test8"/>
+      	    <include name="test9"/>
+      	    <include name="test10"/>
+
+        </methods>
+      </class> 
+    </classes>
+  </test> -->
+
+ <!--   <test name="MC test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.MC">
+        <methods>
+
+      	    <include name="test834"/>
+
+
+        </methods>
+      </class> 
+    </classes>
+  </test> -->
+  
+ <!-- <test name="Managed care ACOC test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.ManagedCareACOC">
+        <methods>
+      	    <include name="test35410"/>
+      	   	<include name="test35411_A"/>
+       	    <include name="test35411_B"/>
+      	    
+        </methods>
+      </class> 
+    </classes>
+  </test> -->
+  
+
+  
+ <!--   <test name="TPT test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.tptTesting">
+        <methods>
+      	    <include name="download834_monthly"/>
+      	
+      	    
+        </methods>
+      </class> 
+    </classes>
+  </test> -->
+  
+
+  
+
+  
+<!--  <test name="Member test" preserve-order="true"> //This is not a regression test. This is just to create new members on the fly.
+    <classes>
+      <class name="newMMIS_Subsystems.Member">
+        <methods>
+
+      	    <include name="testCreateMember"/>
+      	    <include name="testCreateMember_TPL"/>
+      	    <include name="testAdd_TPL"/>
+      	    <include name="testCreateMember_copay"/>
+      	    <include name="testMIP"/> 
+        </methods> 
+      </class> 
+    </classes>
+  </test> -->
+  
+ 
+
+
+    <test name="Close Logs test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.Login">
+        <methods>
+      	    <include name="closeLogs"/>	
+        </methods>
+      </class> 
+    </classes>
+  </test> 
+  
+</suite> 
