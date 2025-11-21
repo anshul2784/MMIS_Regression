@@ -14,6 +14,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18242,6 +18243,222 @@ public void test47333() throws Exception{
 		}
 			    	}
     }
+    
+    
+    /*******************************************************************************************
+    ********************************************************************************************
+    ********************************************************************************************
+    NAME:						DSNP Start
+    Created By: 				Anshul Gandhi, Mahammad Mohsunov, 
+    Created Date: 				05/08/2013
+    Modified Date & Comments:	
+
+    ********************************************************************************************
+    ********************************************************************************************
+    ********************************************************************************************/
+  //test48998a
+	   @Test
+		public void test48998a() throws Exception {
+			TestNGCustom.TCNo = "test48998a";
+			log("//TC test48998a");
+
+			//get members
+			sqlStatement = "select b.id_medicaid from t_re_base b, t_re_pmp_assign p, t_re_elig elig, t_pub_hlth_pgm h, T_re_copay_segment copay, t_re_medicare_a medicarePartA "
+					+ " where b.sak_recip = p.sak_recip"
+					+ " and b.sak_recip = copay.sak_recip"
+					+ " and b.ind_active = 'Y'"
+					+ " and b.dte_death = 0"
+					+ " and copay.AMT_COST_Sharing > 0"
+					+ " and p.cde_status1 <> 'H'"
+					+ " and p.dte_end = 22991231"
+					+ " and elig.dte_end = 22991231"
+					+ " and elig.Sak_Recip = b.Sak_Recip"
+					+ " and p.sak_pub_hlth = h.sak_pub_hlth"
+					+ " and h.cde_pgm_health = 'MSTD'"
+					
+//					+ " And exists (select e.dte_end from t_re_aid_elig e where e.sak_recip =b.sak_recip and e.dte_end = 22991231 group by e.dte_end having count(e.dte_end) = 1)"
+//					+ " And  exists ( select ma.sak_recip from t_re_medicare_a ma where ma.Sak_Recip=b.Sak_Recip)"	// existin Medicar A
+//					+ " And  exists ( select rs.sak_recip from t_tpl_resource rs, t_coverage_xref e Where rs.Sak_Recip=b.Sak_Recip and rs.sak_tpl_resource = e.sak_tpl_resource )" // existin TPL
+//					+ " And exists (select elig1.sak_recip from t_re_elig elig1 where elig1.sak_recip =elig.sak_recip and elig1.dte_end = 22991231 group by elig1.sak_recip having count(elig1.sak_recip) =1)"
+//					+ " and rownum < 2"
+				
+					+ " And exists (select elig1.sak_recip from t_re_elig elig1 where elig1.sak_recip =elig.sak_recip and elig1.dte_end = 22991231 group by elig1.sak_recip having count(elig1.sak_recip) =1)"
+					+ " and not exists (select elig2.sak_recip from t_re_elig elig2 where elig2.sak_recip =elig.sak_recip and elig2.cde_status1 = 'H')"
+					+ " And exists (select e.sak_pgm_elig from t_re_aid_elig e where e.sak_recip =elig.sak_recip and e.sak_pgm_elig=elig.sak_pgm_elig group by e.sak_pgm_elig having count(e.sak_pgm_elig) =1)"
+					+ " And  exists ( select ma.sak_recip from t_re_medicare_a ma where ma.Sak_Recip=b.Sak_Recip)"
+					+ " And  exists ( select rs.sak_recip from t_tpl_resource rs, t_coverage_xref e Where rs.Sak_Recip=b.Sak_Recip and rs.sak_tpl_resource = e.sak_tpl_resource )"
+					+ " and rownum < 2";
+			
+			
+			
+			
+			colNames.add("id_medicaid");
+
+			colNames.add("ID_MEDICAID");
+			colValues = Common.executeQuery(sqlStatement, colNames);
+
+			if (colValues.get(0).equals("null"))
+				throw new SkipException("Skipping this test because there was no member link request");
+
+			String memId = colValues.get(0);
+
+			System.out.println(memId + "--------------------------member-");
+			log(memId + "--member id-");
+			updateMemEligibilityStatusToHistory(memId, "48998");
+
+			// Store member id in the day2 DB
+			String SelSql = "select * from r_day2 where TC = '48998' and des = 'MemberID'";
+			String col = "ID";
+			String DelSql = "delete from r_day2 where TC = '48998' and des = 'MemberID'";
+			String InsSql = "insert into r_day2 values ('48998', '" + memId + "', 'MemberID', '"
+					+ Common.convertSysdate() + "')";
+			Common.insertData(SelSql, col, DelSql, InsSql);
+
+		}
+    
+	   public void updateMemEligibilityStatusToHistory(String memId, String testCase) throws InterruptedException, SQLException {
+		   String aidCat="na";
+		   String pmpId= "na"; 
+		   String pmpEffectiveDte="na";
+		   String pmpServiceLoc= "na";
+		   String benifitPlanEffectiveDte= "na";
+		   String bpName = "na"; 
+		   String bpEnddt = "na"; 
+		   String bpStatus = "na";
+		  	// update elig
+				    Member.memberSearch(memId);
+			    	driver.findElement(By.linkText("Member Benefit Plan")).click();
+			    	
+			    	//sort by end date
+			    	Thread.sleep(2000);
+			    	driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligList:EligBean_ColHeader_endDate")).click();
+			    	driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligList:EligBean_ColHeader_endDate")).click();
+			    	int bpSize=driver.findElements(By.xpath("//*[contains(@id,'EligBean_ColValue_benefitPlan')]")).size();
+			    	
+			    	;
+			    	for (int j=0;j<bpSize;j++) {
+			    		
+			    		bpName = driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligList_"+j+":EligBean_ColValue_benefitPlan")).getText();
+			    		bpEnddt = driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligList_"+j+":EligBean_ColValue_endDate")).getText();
+			    		bpStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligList_"+j+":EligBean_ColValue_status1Code")).getText();
+
+
+			    		if (bpEnddt.equals("12/31/2299") && bpStatus.equals("Active") ) {
+			    			
+			    			driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligList_"+j+":EligBean_ColValue_benefitPlan")).click();
+			    			benifitPlanEffectiveDte = driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligDataPanel_EffectiveDate")).getAttribute("value");
+			    			System.out.println(benifitPlanEffectiveDte.split("/")[2]+"-"+benifitPlanEffectiveDte.split("/")[0]+"-"+benifitPlanEffectiveDte.split("/")[1]+"-------------benifitPlanEffectiveDte");
+			    			 Thread.sleep(3000);
+			    			
+			    			// benefit plan
+			    			new Select (driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligDataPanel_Status1Code"))).selectByVisibleText("History");
+
+			    		 aidCat = driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligList_0:AidEligBean_ColValue_aidDes")).getText().split(" ")[0];
+			    		 System.out.println(aidCat+"-------------aid cat");
+			    		 
+			 			  driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligList_0:AidEligBean_ColValue_aidDes")).click(); // click aid cat
+			 			
+			    		  new Select (driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligDataPanel_Status1Code"))).selectByVisibleText("History");
+			 			  
+		    	        	driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:AidRecipientBenefitPlanPanel:AidEligPanel_updateAction_btn")).click(); // click update aid cat
+		    	        	Thread.sleep(3000);
+		    	        	driver.findElement(By.id("MMISForm:MMISBodyContent:EligPanel:EligPanel_updateAction_btn")).click(); // clcik update elig
+			    		 Thread.sleep(3000);
+			    		 Common.saveAll();
+			    		 Thread.sleep(3000);
+			    		 break;
+			    		}
+			    		
+			    	}
+			    	
+			    	
+			    	    driver.findElement(By.linkText("PMP Assignment History - SU")).click();
+			    	     Thread.sleep(2000);
+				    	driver.findElement(By.id("MMISForm:MMISBodyContent:RePmpAssignSuHistoryPanel:RePmpAssignSuList:RePmpAssignSuBean_ColHeader_endDate")).click(); // sort by end date
+				    	driver.findElement(By.id("MMISForm:MMISBodyContent:RePmpAssignSuHistoryPanel:RePmpAssignSuList:RePmpAssignSuBean_ColHeader_endDate")).click(); // sort by end date
+					    int pmpAssignmentHistorySize=driver.findElements(By.xpath("//*[contains(@id,':RePmpAssignSuBean_ColValue_publicHlthPgm_pgmHealthCode')]")).size();
+					  
+					     // check sort on date first 
+	                    for (int j=0;j<pmpAssignmentHistorySize;j++) {
+				    		
+	                    	String pmpAssignmentHistoryName = driver.findElement(By.id("MMISForm:MMISBodyContent:RePmpAssignSuHistoryPanel:RePmpAssignSuList_"+j+":RePmpAssignSuBean_ColValue_publicHlthPgm_pgmHealthCode")).getText();
+	                    	String pmpAssignmentHistoryEnddt = driver.findElement(By.id("MMISForm:MMISBodyContent:RePmpAssignSuHistoryPanel:RePmpAssignSuList_"+j+":RePmpAssignSuBean_ColValue_endDate")).getText();
+	                    	String pmpAssignmentHistoryStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:RePmpAssignSuHistoryPanel:RePmpAssignSuList_"+j+":RePmpAssignSuBean_ColValue_status1Description")).getText();
+	                    	
+	                    	System.out.println(pmpAssignmentHistoryName);
+				    		System.out.println(pmpAssignmentHistoryEnddt);
+				    		System.out.println(pmpAssignmentHistoryStatus);
+				    		//check put effective date, PMP id , service loc in day 2 table 
+				    		if (pmpAssignmentHistoryEnddt.equals("12/31/2299") && pmpAssignmentHistoryStatus.equals("Active") && pmpAssignmentHistoryName.equals("MSTD")  ) {
+				    			
+				    			pmpEffectiveDte = driver.findElement(By.id("MMISForm:MMISBodyContent:RePmpAssignSuHistoryPanel:RePmpAssignSuList_"+j+":RePmpAssignSuBean_ColValue_effectiveDate")).getText();
+		                    	pmpServiceLoc = driver.findElement(By.id("MMISForm:MMISBodyContent:RePmpAssignSuHistoryPanel:RePmpAssignSuList_"+j+":RePmpAssignSuBean_ColValue_pmpServiceLocDisplay")).getText();
+		                    	pmpId = driver.findElement(By.id("MMISForm:MMISBodyContent:RePmpAssignSuHistoryPanel:RePmpAssignSuList_"+j+":RePmpAssignSuBean_ColValue_pmpProviderIdDisplay")).getText();
+		                    	
+				    			System.out.println("in if statement ----------------------------------------------------");
+				    			System.out.println(pmpEffectiveDte);
+					    		System.out.println(pmpServiceLoc);
+					    		System.out.println(pmpId);
+				    			driver.findElement(By.id("MMISForm:MMISBodyContent:RePmpAssignSuHistoryPanel:RePmpAssignSuList_"+j+":RePmpAssignSuBean_ColValue_publicHlthPgm_pgmHealthCode")).click(); // click MC program
+					    		new Select (driver.findElement(By.id("MMISForm:MMISBodyContent:RePmpAssignSuHistoryPanel:RePmpAssignDataPanel_Status1Code"))).selectByVisibleText("History");
+
+				 			   driver.findElement(By.id("MMISForm:MMISBodyContent:RePmpAssignSuHistoryPanel:RePmpAssignSuHistoryPanel_updateAction_btn")).click(); // click update PMP
+				 			   Thread.sleep(3000);
+				 			 
+						    	Common.saveAll();
+						    	break;
+				    		}
+				    		
+	                    }
+		    			System.out.println("after for----------------------------------------------------");
+
+	        			// Store aid cat in the day2 DB
+	        			String SelSql = "select * from r_day2 where TC = '"+testCase+"' and des = 'aidCat'";
+	        			String col = "ID";
+	        			String DelSql = "delete from r_day2 where TC = '"+testCase+"' and des = 'aidCat'";
+	        			String InsSql = "insert into r_day2 values ('"+testCase+"', '" + aidCat + "', 'aidCat', '"
+	        					+ Common.convertSysdate() + "')";
+	        			Common.insertData(SelSql, col, DelSql, InsSql);
+	        			// Store pmp id in the day2 DB
+	        			 SelSql = "select * from r_day2 where TC = '"+testCase+"' and des = 'pmpId'";
+	        			 col = "ID";
+	        			 DelSql = "delete from r_day2 where TC = '"+testCase+"' and des = 'pmpId'";
+	        			 InsSql = "insert into r_day2 values ('"+testCase+"', '" + pmpId + "', 'pmpId', '"
+	        					+ Common.convertSysdate() + "')";
+	        			Common.insertData(SelSql, col, DelSql, InsSql);
+	        			// Store effective date in the day2 DB
+	        			 SelSql = "select * from r_day2 where TC = '"+testCase+"' and des = 'pmpEffectiveDte'";
+	        			 col = "ID";
+	        			 DelSql = "delete from r_day2 where TC = '"+testCase+"' and des = 'pmpEffectiveDte'";
+	        			 InsSql = "insert into r_day2 values ('"+testCase+"', '"+pmpEffectiveDte.split("/")[2]+"-"+pmpEffectiveDte.split("/")[0]+"-"+pmpEffectiveDte.split("/")[1]+"', 'pmpEffectiveDte', '"
+	        					+ Common.convertSysdate() + "')";
+	        			Common.insertData(SelSql, col, DelSql, InsSql);
+	        			// Store service loc  in the day2 DB
+	        			 SelSql = "select * from r_day2 where TC = '"+testCase+"' and des = 'pmpServiceLoc'";
+	        			 col = "ID";
+	        			 DelSql = "delete from r_day2 where TC = '"+testCase+"' and des = 'pmpServiceLoc'";
+	        			 InsSql = "insert into r_day2 values ('"+testCase+"', '" + pmpServiceLoc + "', 'pmpServiceLoc', '"
+	        					+ Common.convertSysdate() + "')";
+	        			Common.insertData(SelSql, col, DelSql, InsSql);
+	        			// Store benifit plan effiective date  in the day2 DB
+	        			 SelSql = "select * from r_day2 where TC = '"+testCase+"' and des = 'benifitPlanEffectiveDte'";
+	        			 col = "ID";
+	        			 DelSql = "delete from r_day2 where TC = '"+testCase+"' and des = 'benifitPlanEffectiveDte'";
+	        			 InsSql = "insert into r_day2 values ('"+testCase+"', '"+benifitPlanEffectiveDte.split("/")[2]+"-"+benifitPlanEffectiveDte.split("/")[0]+"-"+benifitPlanEffectiveDte.split("/")[1]+"', 'benifitPlanEffectiveDte', '"
+	        					+ Common.convertSysdate() + "')";
+	        			Common.insertData(SelSql, col, DelSql, InsSql);
+	        			
+	        			// Store benifit plan effiective date  in the day2 DB
+	        			 SelSql = "select * from r_day2 where TC = '"+testCase+"' and des = 'benifitPlanName'";
+	        			 col = "ID";
+	        			 DelSql = "delete from r_day2 where TC = '"+testCase+"' and des = 'benifitPlanName'";
+	        			 InsSql = "insert into r_day2 values ('"+testCase+"', '"+bpName+"', 'benifitPlanName', '"
+	        					+ Common.convertSysdate() + "')";
+	        			Common.insertData(SelSql, col, DelSql, InsSql);
+			    	//Thread.sleep(25000);
+		  	 }
+    
+    
     
     
     public void addPPA(String amount, int days) {
