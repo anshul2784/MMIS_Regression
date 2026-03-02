@@ -751,24 +751,8 @@
     </classes>
   </test> -->
   
-  <test name="Claims Test" preserve-order="true">
-    <classes>
-      <class name="newMMIS_Subsystems.claims">
-        <methods>
-			//COB TCs
-			
-			//Anshul CoB start
-	
-			
-			
-			<include name="test31173"/>
-			
-			   </methods>
-      </class> 
-    </classes>
-  </test>
   
- <!--  <test name="Claims Test" preserve-order="true">
+ <!--  <test name="COB Claims Test" preserve-order="true">
     <classes>
       <class name="newMMIS_Subsystems.claims">
         <methods>
@@ -941,6 +925,102 @@
     </classes>
   </test> -->
   
+ <!-- <test name="COB Claims Test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.claims">
+        <methods>
+			//COB TCs
+			
+			
+					<include name="test31171"/>
+					<include name="test31172"/>
+					<include name="test31173"/>
+					<include name="test31174"/>
+					
+					<include name="test32214"/>
+					<include name="test32215"/>
+					
+                    <include name="test33894"/>
+                    <include name="test33908"/>
+                    <include name="test33934"/>
+                    <include name="test33995"/>
+                    <include name="test33942"/>                   
+                    <incldue name="test33974a"/>
+                    <include name="test33974b"/>
+                    
+                    <include name="test34143a"/>
+                    <include name="test34143b"/>
+                    
+                    <include name="test34143c"/>
+                    
+                    <include name="test34141"/>
+                    
+
+                    <include name="test31528"/>
+                    <include name="test31803"/>  
+                     
+					<include name="test38612"/> mahammad end					
+					<include name="test31159"/>
+					
+					<include name="test31160"/>
+					
+					
+					<include name="test31219"/>
+					<include name="test31222"/>
+					
+					<include name="test31244"/>
+					
+					<include name="test31800"/>
+					<include name="test31801"/>
+					<include name="test31802"/>
+					
+					<include name="test31803"/>
+					<include name="test32232"/>
+					<include name="test32234"/>
+					<include name="test32241"/>
+					<include name="test32242"/>
+					<include name="test32243"/>
+					
+					<include name="test32349"/>
+					
+					<include name="test33986a"/>
+					<include name="test33986b"/>
+					<include name="test33989a"/>
+					<include name="test33989b"/>
+					
+					<include name="test34306"/>		
+					
+					<include name="test34653"/> 
+					
+					<include name="test33933"/>
+					
+			
+        </methods>
+      </class> 
+    </classes>
+  </test> -->
+  
+  <test name="COB Claims Test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.claims">
+        <methods>
+			//COB TCs
+								
+					<include name="test38612"/> 					
+					
+				
+					<include name="test31802"/>
+				
+					<include name="test34306"/>		
+					
+					
+					
+			
+        </methods>
+      </class> 
+    </classes>
+  </test> 
+  
   <!-- <test name="TPL test" preserve-order="true">
     <classes>
       <class name="newMMIS_Subsystems.TPL">
@@ -990,7 +1070,7 @@
     </classes>
   </test>  -->
 
-  
+
   
          <!--  <test name="Member Day2 test" preserve-order="true">
     <classes>
@@ -1010,6 +1090,8 @@
       </class> 
     </classes>
   </test>  -->
+ 
+
   
        <!--    <test name="Member Day3 test" preserve-order="true">
     <classes>
@@ -1021,7 +1103,7 @@
       </class> 
     </classes>
   </test>  -->
-  
+
   
  
    <!--  <test name="HIPAA test" preserve-order="true">
@@ -1069,7 +1151,6 @@
       </class> 
     </classes>
   </test> -->
-
   
 //after data refresh, make sure PIDs 110048577 and 110000254 have billing ind set to Y and have program elig 
   <!--      <test name="EPSDT test" preserve-order="true">
@@ -1109,7 +1190,6 @@
       </class> 
     </classes>
   </test> -->
-  
 
  
 //after data refresh, make sure PID 110000314 has program elig 
@@ -1236,25 +1316,10 @@
       </class> 
     </classes>
   </test> -->
-
-<!-- <test name="Provider test" preserve-order="true">
-    <classes>
-      <class name="newMMIS_Subsystems.Provider">
-        <methods>
-        
-              	   <include name="test23105b"/>
-      	    <include name="test23110b"/>
-      	    <include name="test23133"/>
-              	    
-        
-      	    <exclude name="test22469"/>
-      	    <exclude name="test23101a"/>
-      
-        </methods>
-      </class> 
-    </classes>
-  </test> -->
+  
  
+  
+
  <!-- <test name="Referrals test" preserve-order="true">
     <classes>
       <class name="newMMIS_Subsystems.Referrals">

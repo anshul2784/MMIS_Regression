@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><EligibilityRequest
+xmlns="http://xmlns.hhs.ma.gov/HHS/serviceobjects/versions/1.0/EligibilityServices"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<transactionsource id_medicaid="100050324753" id_other="001040313" id_source="DSS" />
+<demographic cde_citizen="C" cde_lang_written="ENG" cde_race="WHITE" cde_sex="F" dte_birth="2007-11-20" nam_first="DAYSHOR" nam_last="ANDERSON" nam_mid_init=" " res_adr_city="SPRINGFIELD" res_adr_state="MA" res_adr_street_1="DAYSHOR NIEYAIR ANDERSON" res_adr_street_2=" " res_adr_zip_code="01109"/><case cde_case_status="1" hoh_nam_first="DAYSHOR" hoh_nam_init=" " hoh_nam_last="BUGS" num_case="479133462"/>
+<eligibility amt_gross_income="14198.22" cde_cat="08" cde_elig_status="1" cde_line="00" cde_office="600" cde_open_reason="01" cde_region="01" dte_appl="2025-11-20" dte_begin_elig="2025-11-20" family_size="07" /> <categoryofcare cde_cat_care="FOS" dte_effective="2026-01-14" dte_end="2299-12-29"  />
+</EligibilityRequest>

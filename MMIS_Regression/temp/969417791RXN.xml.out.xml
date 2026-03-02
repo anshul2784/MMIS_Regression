@@ -1,0 +1,7 @@
+<EligibilityResponse txnElapsedTime="0.31"><Response result_type="W"
+id_medicaid="100238270498"
+id_other="969417791"
+id_source="MHO"
+><FaultDetail code="2332"
+description="Primary SSN is invalid.                                                    "
+/></Response></EligibilityResponse>

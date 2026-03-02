@@ -1,0 +1,9 @@
+<EligibilityResponse txnElapsedTime="0.33"><Response result_type="W"
+id_medicaid="100234858148"
+id_other="950218"
+id_source="HCF"
+><FaultDetail code="2346"
+description="Agency is not authorized to submit data in this field: cde_citizen         "
+/><FaultDetail code="2428"
+description="Agency updating cde_race is lower in the hierarchy level                   "
+/></Response></EligibilityResponse>

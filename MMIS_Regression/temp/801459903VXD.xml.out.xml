@@ -1,0 +1,9 @@
+<EligibilityResponse txnElapsedTime="0.03"><Response result_type="E"
+id_medicaid="100002395497"
+id_other="801459903"
+id_source="HCF"
+><FaultDetail code="2346"
+description="Agency is not authorized to submit data in this field: cde_citizen         "
+/><FaultDetail code="2305"
+description="Member cannot be over 150 years of age                                     "
+/></Response></EligibilityResponse>

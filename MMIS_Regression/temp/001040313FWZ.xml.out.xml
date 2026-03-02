@@ -1,0 +1,9 @@
+<EligibilityResponse txnElapsedTime="0.34"><Response result_type="W"
+id_medicaid="100050324753"
+id_other="001040313"
+id_source="DSS"
+><FaultDetail code="2002"
+description="Potential duplicate member id                                              "
+/><FaultDetail code="2346"
+description="Agency is not authorized to submit data in this field: cde_citizen         "
+/></Response></EligibilityResponse>

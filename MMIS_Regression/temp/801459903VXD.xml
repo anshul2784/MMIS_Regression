@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><EligibilityRequest
+xmlns="http://xmlns.hhs.ma.gov/HHS/serviceobjects/versions/1.0/EligibilityServices"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<transactionsource id_medicaid=" " id_other="801459903" id_source="HCF"/>
+<demographic cde_citizen="C" cde_lang_written="ENG" cde_race="WHITE" cde_sex="F" dte_birth="1800-02-25" nam_first="MARY" nam_last="MCCARTHY" nam_mid_init=" " num_primary_ssn="007301513" res_adr_city="BRAINTREE" res_adr_state="MA" res_adr_street_1="8 HELEN ST" res_adr_street_2=" " res_adr_zip_code="02184"/><case cde_case_status="1" hoh_nam_first="MARY" hoh_nam_init=" " hoh_nam_last="MCCARTHY" num_case="684709358"/>
+<eligibility amt_gross_income="14198.22" cde_cat="HA" cde_elig_status="1" cde_line="00" cde_office="600" cde_open_reason="01" cde_region="01" dte_appl="2025-02-25" dte_begin_elig="2025-02-25" family_size="07" />
+</EligibilityRequest>

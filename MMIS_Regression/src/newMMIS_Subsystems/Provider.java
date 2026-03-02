@@ -904,7 +904,7 @@ public class Provider extends Login{
 		driver.findElement(By.xpath("//input[@class='buttonCommand' and @alt='Continue to next page']")).click();
 		driver.findElement(By.xpath("//input[@class='buttonCommand' and @alt='Continue to next page']")).click();
 		driver.findElement(By.xpath("//input[@class='buttonCommand' and @alt='Submit']")).click();
-		
+		Thread.sleep(10000);
 		//Get ATN from DB because no ATN displayed on POSC for Rel Entity enrollment
     	sqlStatement = "select sak_atn from t_pr_appln where rownum < 2 order by sak_atn desc";
     	colNames.add("SAK_ATN");
@@ -3043,7 +3043,7 @@ public class Provider extends Login{
 	    Common.search();
 	    //Select SVC loc B
 	    driver.findElement(By.id("MMISForm:MMISBodyContent:ProviderSearchResults_1:_id16")).click();
-	    Assert.assertTrue((driver.findElement(By.xpath("//table[@id='MMISForm:MMISBodyContent:ProviderInformationBean_DataPanel']/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[24]/td[2]")).getText().equals(Common.convertSysdatecustom(-1))), "Provider's Last Claim Submission date mismatch");
+	    Assert.assertTrue((driver.findElement(By.xpath("//table[@id='MMISForm:MMISBodyContent:ProviderInformationBean_DataPanel']/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[23]/td[2]")).getText().equals(Common.convertSysdatecustom(-1))), "Provider's Last Claim Submission date mismatch");
 	}
 	
 	@Test

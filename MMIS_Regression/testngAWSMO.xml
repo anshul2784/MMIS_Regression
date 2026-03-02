@@ -200,7 +200,7 @@
       </class> 
     </classes>
   </test> --> 
-
+  
    <!--   <test name="EVS test" preserve-order="true">
     <classes>
       <class name="newMMIS_Subsystems.EVS">
@@ -634,6 +634,106 @@
 				<include name="test43507"/> 
 				<include name="test43479"/> 
 				<include name="test43824"/>		
+				//get code
+				<include name="test38932"/> // good new ones
+				    <include name="test39053"/> // good
+				    <include name="test39135"/>
+				    <include name="test39153"/> //  good
+                    <include name="test39248"/>
+				    <include name="test39251"/>
+				    <include name="test39252"/> //good
+				    <include name="test39253"/>
+				    <include name="test35711"/>
+				    <include name="test35715"/>
+				    <include name="test35593"/>
+				    <include name="test26932"/> // jot
+					<include name="test31171"/>
+					<include name="test31172"/>
+					<include name="test31173"/>
+					<include name="test31174"/>
+					<include name="test31225"/>
+					<include name="test31226"/>
+					<include name="test32176"/>
+					<include name="test32182"/>
+					<include name="test32187"/>
+					<include name="test32199"/>
+					<include name="test32210"/>
+					<include name="test32212"/>
+					<include name="test32214"/>
+					<include name="test32215"/>
+					<include name="test32217"/>
+                    <include name="test32225"/>
+                    <include name="test32227"/>                    
+                    <include name="test32272"/>
+                    <include name="test32277"/>
+                    <include name="test32286"/>
+                    <include name="test33894"/>
+                    <include name="test33908"/>
+                    <include name="test33934"/>
+                    <include name="test33995"/>
+                    <include name="test33942"/>                   
+                    <incldue name="test33974a"/>
+                    <include name="test33974b"/>
+                    <include name="test34143a"/>
+                    <include name="test34143b"/>
+                    <include name="test34143c"/>
+                    <include name="test35883"/> // sum of item issue..check this later
+                    <include name="test34141"/>
+                    <exclude name="test35892"/> // this is cancelled as per Usha           
+                    <include name="test36775"/>                   
+                    <include name="test42035"/>
+                    <include name="test42033"/>
+                    <include name="test34661"/>
+                    <include name="test34659"/>
+                    <include name="test31528"/>
+                    <include name="test31534"/>                     
+                    <include name="test31798"/>
+                    <include name="test31803"/>  
+				    <include name="test24148"/>//mahammad strt
+					<include name="test24068a"/>
+					<include name="test24068b"/>
+					<include name="test31366"/>
+					<include name="test31363"/>
+					<include name="test31303"/>
+					<include name="test31072"/>
+					<include name="test41409"/>  
+					<include name="test38612"/> mahammad end					
+					<include name="test26929"/> // Mahammad Start 2
+					<include name="test31159"/>
+					<include name="test31160"/>
+					<include name="test31179"/>
+					<include name="test31219"/>
+					<include name="test31222"/>
+					<include name="test31244"/>
+					<include name="test31800"/>
+					<include name="test31801"/>
+					<include name="test31802"/>
+					<include name="test31803"/>
+					<include name="test32232"/>
+					<include name="test32234"/>
+					<include name="test32241"/>
+					<include name="test32242"/>
+					<include name="test32243"/>
+					<include name="test32325"/>
+					<include name="test32349"/>
+					<include name="test33986a"/>
+					<include name="test33986b"/>
+					<include name="test33989a"/>
+					<include name="test33989b"/>		
+					<include name="test34305a"/>
+					<include name="test34305b"/>
+					<include name="test34306"/>					
+					<include name="test34556a"/>
+					<include name="test34556b"/>					
+					<include name="test34557a"/>
+					<include name="test34557b"/>		
+					<include name="test25425"/> 
+					<include name="test34653"/> 
+					<include name="test34654"/>	
+					<include name="test33933"/>
+					<include name="test33988"/> 
+					<include name="test34199"/>
+ 					<exclude name="test39272"/> // this is cancelled as per Usha           
 			//Abujot CoB end
 			
 			//Rajesh CoB Start
@@ -651,6 +751,327 @@
     </classes>
   </test> -->
   
+  
+ <!--  <test name="COB Claims Test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.claims">
+        <methods>
+			//COB TCs
+			
+			//Anshul CoB start
+	
+			<include name="test35996"/>
+			
+			
+			<include name="test39538"/>
+			
+			<include name="test31305"/>
+			//Anshul CoB end
+			
+			//Durga CoB start
+			<include name="test32468"/>		
+			//Durga CoB end
+			
+			//Abujot CoB start
+				<include name="test41412"/>
+				<include name="test31322"/> 
+				<include name="test41507"/>
+				<include name="test41506"/>
+				<include name="test39539a"/>
+				<include name="test39539b"/>
+				<include name="test41515"/>
+				<include name="test30458"/>
+				<include name="test30460"/>
+				<include name="test38923"/>
+				<include name="test39618"/>
+				<include name="test39619"/>
+				<include name="test35679"/>
+				<include name="test41510"/>
+				<include name="test41498"/>
+				<include name="test41512"/>
+				<include name="test41534"/>
+				<include name="test26394"/> 
+				<include name="test46062"/> 
+				<include name="test41541"/>
+				<include name="test31343"/>
+				<include name="test46061"/> 
+				<include name="test25992"/>
+				<include name="test46046"/>
+				<include name="test46048"/> 
+				<include name="test46058"/> 
+				<include name="test46050"/> 
+				<include name="test46051"/> 
+				<include name="test46052"/>  
+				<include name="test46054"/> 
+				<include name="test46053"/> 
+				<include name="test46055"/> 
+				<include name="test46064"/> 
+				<include name="test46059"/>                
+				<include name="test31345"/> 
+				<include name="test43507"/> 
+				<include name="test43479"/> 
+				<include name="test43824"/>		
+				//get code
+				<include name="test38932"/> // good new ones
+				    <include name="test39053"/> // good
+				    <include name="test39135"/>
+				    <include name="test39153"/> //  good
+                    <include name="test39248"/>
+				    <include name="test39251"/>
+				    <include name="test39252"/> //good
+				    <include name="test39253"/>
+				    <include name="test35711"/>
+				    <include name="test35715"/>
+				    <include name="test35593"/>
+				    <include name="test26932"/> // jot
+					<include name="test31171"/>
+					<include name="test31172"/>
+					<include name="test31173"/>
+					<include name="test31174"/>
+					<include name="test31225"/>
+					<include name="test31226"/>
+					<include name="test32176"/>
+					<include name="test32182"/>
+					<include name="test32187"/>
+					<include name="test32199"/>
+					<include name="test32210"/>
+					<include name="test32212"/>
+					<include name="test32214"/>
+					<include name="test32215"/>
+					<include name="test32217"/>
+                    <include name="test32225"/>
+                    <include name="test32227"/>                    
+                    <include name="test32272"/>
+                    <include name="test32277"/>
+                    <include name="test32286"/>
+                    <include name="test33894"/>
+                    <include name="test33908"/>
+                    <include name="test33934"/>
+                    <include name="test33995"/>
+                    <include name="test33942"/>                   
+                    <incldue name="test33974a"/>
+                    <include name="test33974b"/>
+                    <include name="test34143a"/>
+                    <include name="test34143b"/>
+                    <include name="test34143c"/>
+                    <include name="test35883"/> // sum of item issue..check this later
+                    <include name="test34141"/>
+                    <exclude name="test35892"/> // this is cancelled as per Usha           
+                    <include name="test36775"/>                   
+                    <include name="test42035"/>
+                    <include name="test42033"/>
+                    <include name="test34661"/>
+                    <include name="test34659"/>
+                    <include name="test31528"/>
+                    <include name="test31534"/>                     
+                    <include name="test31798"/>
+                    <include name="test31803"/>  
+				    <include name="test24148"/>//mahammad strt
+					<include name="test24068a"/>
+					<include name="test24068b"/>
+					<include name="test31366"/>
+					<include name="test31363"/>
+					<include name="test31303"/>
+					<include name="test31072"/>
+					<include name="test41409"/>  
+					<include name="test38612"/> //mahammad end					
+					<include name="test26929"/> // Mahammad Start 2
+					<include name="test31159"/>
+					<include name="test31160"/>
+					<include name="test31179"/>
+					<include name="test31219"/>
+					<include name="test31222"/>
+					<include name="test31244"/>
+					<include name="test31800"/>
+					<include name="test31801"/>
+					<include name="test31802"/>
+					<include name="test31803"/>
+					<include name="test32232"/>
+					<include name="test32234"/>
+					<include name="test32241"/>
+					<include name="test32242"/>
+					<include name="test32243"/>
+					<include name="test32325"/>
+					<include name="test32349"/>
+					<include name="test33986a"/>
+					<include name="test33986b"/>
+					<include name="test33989a"/>
+					<include name="test33989b"/>		
+					<include name="test34305a"/>
+					<include name="test34305b"/>
+					<include name="test34306"/>					
+					<include name="test34556a"/>
+					<include name="test34556b"/>					
+					<include name="test34557a"/>
+					<include name="test34557b"/>		
+					<include name="test25425"/> 
+					<include name="test34653"/> 
+					<include name="test34654"/>	
+					<include name="test33933"/>
+					<include name="test33988"/> 
+					<include name="test34199"/>
+ 					<exclude name="test39272"/> // this is cancelled as per Usha           
+			//Abujot CoB end
+			
+			//Rajesh CoB Start
+		    <include name="test32293" />
+            <include name="test34114" />
+            <include name="test34124" />
+            <include name="test34125" />    
+		    //Rajesh CoB End
+			
+        </methods>
+      </class> 
+    </classes>
+  </test> -->
+  
+ <!-- <test name="COB Claims Test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.claims">
+        <methods>
+			//COB TCs
+			
+			
+					<include name="test31171"/>
+					<include name="test31172"/>
+					<include name="test31173"/>
+					<include name="test31174"/>
+					
+					<include name="test32214"/>
+					<include name="test32215"/>
+					
+                    <include name="test33894"/>
+                    <include name="test33908"/>
+                    <include name="test33934"/>
+                    <include name="test33995"/>
+                    <include name="test33942"/>                   
+                    <incldue name="test33974a"/>
+                    <include name="test33974b"/>
+                    
+                    <include name="test34143a"/>
+                    <include name="test34143b"/>
+                    
+                    <include name="test34143c"/>
+                    
+                    <include name="test34141"/>
+                    
+
+                    <include name="test31528"/>
+                    <include name="test31803"/>  
+                     
+					<include name="test38612"/> mahammad end					
+					<include name="test31159"/>
+					
+					<include name="test31160"/>
+					
+					
+					<include name="test31219"/>
+					<include name="test31222"/>
+					
+					<include name="test31244"/>
+					
+					<include name="test31800"/>
+					<include name="test31801"/>
+					<include name="test31802"/>
+					
+					<include name="test31803"/>
+					<include name="test32232"/>
+					<include name="test32234"/>
+					<include name="test32241"/>
+					<include name="test32242"/>
+					<include name="test32243"/>
+					
+					<include name="test32349"/>
+					
+					<include name="test33986a"/>
+					<include name="test33986b"/>
+					<include name="test33989a"/>
+					<include name="test33989b"/>
+					
+					<include name="test34306"/>		
+					
+					<include name="test34653"/> 
+					
+					<include name="test33933"/>
+					
+			
+        </methods>
+      </class> 
+    </classes>
+  </test> -->
+  
+  <test name="COB Claims Test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.claims">
+        <methods>
+								
+				<include name="test31143edit"/>
+			<include name="test31143"/>
+			<include name="test31142"/>
+			<include name="test27388"/>
+			<include name="test27389"/>
+			<include name="test27390"/>
+			<include name="test27391"/>
+			<include name="test27393"/>
+			<include name="test27398"/>
+			<include name="test27438"/>
+			<include name="test26912"/>
+			<include name="test26913"/>
+			<include name="test26915"/>
+			<include name="test26916"/>
+			<include name="test27403"/>
+			<include name="test27404"/>
+			<include name="test27405"/>
+			<include name="test31183"/>
+			<include name="test31185"/>
+			<include name="test31197"/>
+			<include name="test31187"/>
+			<include name="test31199"/>
+			<include name="test31181"/>
+			<include name="test31189"/>
+			<include name="test31193"/>
+			<include name="test31195"/>
+			<include name="test31201"/>
+			<exclude name="test31203"/> //Do Not do this TC as of now
+			<include name="test27381"/>
+			<include name="test27397"/>
+			<include name="test27399"/>
+			<include name="test27434"/>
+			<include name="test27436"/>
+			<include name="test27408"/>
+			<include name="test27394"/>
+			<include name="test27409"/>
+			<include name="test27400"/>		
+			<exclude name="test27411a"/> //Renuka asked to cancel
+			<exclude name="test27411b"/> //27411a is cancelled
+			<exclude name="test27411c"/> //27411a is cancelled
+			<include name="test27440"/>
+			<include name="test32253"/>
+			<include name="test32254a"/>
+			<include name="test32254b"/>
+			<include name="test32256a"/>
+			<include name="test32256b"/>
+			<include name="test32259"/>
+			<include name="test32263a"/>
+			<include name="test32263b"/>
+			<include name="test32263c"/>
+			<include name="test32265"/>
+			<include name="test32267"/>
+			<include name="test32268"/>
+			<include name="test32269"/>
+			<include name="test32270"/>
+			<include name="test32271"/>
+		    <include name="test32273"/>
+			<include name="test32274"/>
+			<include name="test32279"/>
+			<include name="test32284"/>
+					
+					
+			
+        </methods>
+      </class> 
+    </classes>
+  </test> 
   
   <!-- <test name="TPL test" preserve-order="true">
     <classes>
@@ -700,6 +1121,8 @@
       </class> 
     </classes>
   </test>  -->
+
+
   
          <!--  <test name="Member Day2 test" preserve-order="true">
     <classes>
@@ -719,8 +1142,8 @@
       </class> 
     </classes>
   </test>  -->
-  
  
+
   
        <!--    <test name="Member Day3 test" preserve-order="true">
     <classes>
@@ -732,9 +1155,8 @@
       </class> 
     </classes>
   </test>  -->
+
   
-
-
  
    <!--  <test name="HIPAA test" preserve-order="true">
     <classes>
@@ -781,9 +1203,7 @@
       </class> 
     </classes>
   </test> -->
-
-
- 
+  
 //after data refresh, make sure PIDs 110048577 and 110000254 have billing ind set to Y and have program elig 
   <!--      <test name="EPSDT test" preserve-order="true">
     <classes>
@@ -949,18 +1369,9 @@
     </classes>
   </test> -->
   
-<test name="Provider test" preserve-order="true">
-    <classes>
-      <class name="newMMIS_Subsystems.Provider">
-        <methods>
-        	
-      	    <include name="testSED"/>
-        </methods>
-      </class> 
-    </classes>
-  </test>  
-  
  
+  
+
  <!-- <test name="Referrals test" preserve-order="true">
     <classes>
       <class name="newMMIS_Subsystems.Referrals">
@@ -985,6 +1396,8 @@
       </class> 
     </classes>
   </test>   -->
+  
+  
  
    <!-- <test name="Referrals_Portal test" preserve-order="true">
         <classes>
@@ -1009,6 +1422,8 @@
        </class> 
     </classes>
   </test>  -->
+  
+  
  
   
 <!--  <test name="PAS test" preserve-order="true">

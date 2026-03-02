@@ -318,9 +318,13 @@ public class EPSDT extends Login{
         driver.findElement(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterRequestBean_CriteriaPanel:LetterRequestDataPanel_MemberId")).sendKeys(partMem);
         Common.search();
         //Generate first letter
+        int ltrsize = driver.findElements(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults_0:_id58")).size();
+	    Assert.assertTrue(ltrsize==1, "First letter not found for member"+partMem);
         driver.findElement(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults_0:_id58")).click();
 		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Generate and Print']")).click();
         //Generate second letter
+		ltrsize = driver.findElements(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults_1:_id58")).size();
+	    Assert.assertTrue(ltrsize==1, "Second letter not found for member"+partMem);
         driver.findElement(By.id("MMISForm:MMISBodyContent:LetterRequestSearchPanel:LetterSearchResults_1:_id58")).click();
 		driver.findElement(By.xpath("//input[@class='buttonImage' and @alt='Generate and Print']")).click();
     }
@@ -604,7 +608,7 @@ public class EPSDT extends Login{
 
 		//Claim Detail
 		driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
-		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_procedureCodeString")).getText().equals("99392"), "Procedure code mismatch");
+		Assert.assertTrue(driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_procedureCodeString')]")).getText().equals("99392"), "Procedure code mismatch");
 
 		//Error
 		driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim10")).click();
