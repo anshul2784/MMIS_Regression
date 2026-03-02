@@ -880,8 +880,8 @@ public class HIPAA extends Login {
 		log("\r\n"+Common.connectUNIX(command, error));
 		
 		//Get Desired Filename
-//		command = "ls -ltr /customer/dsma/"+unixDir+"/rpt/hip0050.rpt.* | grep '"+Common.monthUNIX(Common.convertSysdatecustom(-1))+" "+Common.dayUNIX(Common.convertSysdatecustom(-1))+"'";
-		command = "ls -ltr /customer/dsma/"+unixDir+"/rpt/hip0050.rpt.* | tail -1"; //grabs the latest gdg of the file
+		command = "ls -ltr /customer/dsma/"+unixDir+"/rpt/hip0050.rpt.* | grep '"+Common.monthUNIX(Common.convertSysdatecustom(-1))+" "+Common.dayUNIX(Common.convertSysdatecustom(-1))+"'";
+//		command = "ls -ltr /customer/dsma/"+unixDir+"/rpt/hip0050.rpt.* | tail -1"; //grabs the latest gdg of the file
 
 		error = "There was no report file found";
 		fileName = Common.connectUNIX(command, error);

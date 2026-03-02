@@ -1,0 +1,7 @@
+<EligibilityResponse txnElapsedTime="0.55"><Response result_type="W"
+id_medicaid="100010852687"
+id_other="494608013"
+id_source="MHO"
+><FaultDetail code="2333"
+description="Case/Aid Cat/Dep NUM combo already exists on DB for a different Member ID  "
+/></Response></EligibilityResponse>

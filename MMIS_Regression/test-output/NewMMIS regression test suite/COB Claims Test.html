@@ -1,0 +1,1701 @@
+<html>
+<head>
+<title>TestNG:  COB Claims Test</title>
+<link href="../testng.css" rel="stylesheet" type="text/css" />
+<link href="../my-testng.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.log { display: none;} 
+.stack-trace { display: none;} 
+</style>
+<script type="text/javascript">
+<!--
+function flip(e) {
+  current = e.style.display;
+  if (current == 'block') {
+    e.style.display = 'none';
+    return 0;
+  }
+  else {
+    e.style.display = 'block';
+    return 1;
+  }
+}
+
+function toggleBox(szDivId, elem, msg1, msg2)
+{
+  var res = -1;  if (document.getElementById) {
+    res = flip(document.getElementById(szDivId));
+  }
+  else if (document.all) {
+    // this is the way old msie versions work
+    res = flip(document.all[szDivId]);
+  }
+  if(elem) {
+    if(res == 0) elem.innerHTML = msg1; else elem.innerHTML = msg2;
+  }
+
+}
+
+function toggleAllBoxes() {
+  if (document.getElementsByTagName) {
+    d = document.getElementsByTagName('div');
+    for (i = 0; i < d.length; i++) {
+      if (d[i].className == 'log') {
+        flip(d[i]);
+      }
+    }
+  }
+}
+
+// -->
+</script>
+
+</head>
+<body>
+<h2 align='center'>COB Claims Test</h2><table border='1' align="center">
+<tr>
+<td>Tests passed/Failed/Skipped:</td><td>21/31/4</td>
+</tr><tr>
+<td>Started on:</td><td>Fri Dec 12 16:18:37 EST 2025</td>
+</tr>
+<tr><td>Total time:</td><td>2290 seconds (2290261 ms)</td>
+</tr><tr>
+<td>Included groups:</td><td></td>
+</tr><tr>
+<td>Excluded groups:</td><td></td>
+</tr>
+</table><p/>
+<small><i>(Hover the method name to see the test class name)</i></small><p/>
+<table width='100%' border='1' class='invocation-failed'>
+<tr><td colspan='4' align='center'><b>FAILED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td width="30%"><b>Exception</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td><b>Instance</b></td>
+</tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test26912()'><b>test26912</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1112073835" onClick='toggleBox("Output-1112073835", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1112073835" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1112073835">
+5.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_29_34PM_192.168.1.125_TC 26912.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test26912(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1112073835", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1112073835'><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test26912(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>8</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test26913()'><b>test26913</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-870019773" onClick='toggleBox("Output-870019773", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-870019773" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-870019773">
+6.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_29_45PM_192.168.1.125_TC 26913.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test26913(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace870019773", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace870019773'><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test26913(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>6</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test26915()'><b>test26915</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1004862656" onClick='toggleBox("Output-1004862656", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1004862656" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1004862656">
+7.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_30_00PM_192.168.1.125_TC 26915.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test26915(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1004862656", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1004862656'><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test26915(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>10</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test26916()'><b>test26916</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1819897025" onClick='toggleBox("Output-1819897025", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1819897025" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1819897025">
+8.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_30_14PM_192.168.1.125_TC 26916.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test26916(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1819897025", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1819897025'><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test26916(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>9</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27388()'><b>test27388</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-408909888" onClick='toggleBox("Output-408909888", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-408909888" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-408909888">
+1.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_25_00PM_192.168.1.125_TC 27388.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Remittance Date cannot be entered at both &apos;COB tab - COB Detail&apos; and any &apos;Procedure tab - COB Line Details&apos;. Please correct and submit. Error(2) Remittance Date cannot be entered at both &apos;COB tab - COB Detail&apos; and any &apos;Procedure tab - COB Line Details&apos;. Please correct and submit. Error(3) Remittance Date cannot be entered at both &apos;COB tab - COB Detail&apos; and any &apos;Procedure tab - COB Line Details&apos;. Please correct and submit. Error(4) Remittance Date cannot be entered at both &apos;COB tab - COB Detail&apos; and any &apos;Procedure tab - COB Line Details&apos;. Please correct and submit. Error(5) Remittance Date cannot be entered at both &apos;COB tab - COB Detail&apos; and any &apos;Procedure tab - COB Line Details&apos;. Please correct and submit. Error(6) Remittance Date cannot be entered at both &apos;COB tab - COB Detail&apos; and any &apos;Procedure tab - COB Line Details&apos;. Please correct and submit.  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.B(Unknown Source)
+	at newMMIS_Subsystems.claims.test27388(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace408909888", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace408909888'><pre>java.lang.AssertionError: Error(1) Remittance Date cannot be entered at both &apos;COB tab - COB Detail&apos; and any &apos;Procedure tab - COB Line Details&apos;. Please correct and submit. Error(2) Remittance Date cannot be entered at both &apos;COB tab - COB Detail&apos; and any &apos;Procedure tab - COB Line Details&apos;. Please correct and submit. Error(3) Remittance Date cannot be entered at both &apos;COB tab - COB Detail&apos; and any &apos;Procedure tab - COB Line Details&apos;. Please correct and submit. Error(4) Remittance Date cannot be entered at both &apos;COB tab - COB Detail&apos; and any &apos;Procedure tab - COB Line Details&apos;. Please correct and submit. Error(5) Remittance Date cannot be entered at both &apos;COB tab - COB Detail&apos; and any &apos;Procedure tab - COB Line Details&apos;. Please correct and submit. Error(6) Remittance Date cannot be entered at both &apos;COB tab - COB Detail&apos; and any &apos;Procedure tab - COB Line Details&apos;. Please correct and submit.  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.B(Unknown Source)
+	at newMMIS_Subsystems.claims.test27388(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>111</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27390()'><b>test27390</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-903716563" onClick='toggleBox("Output-903716563", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-903716563" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-903716563">
+2.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_27_17PM_192.168.1.125_TC 27390.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2225346200006 is DENIED expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test27390(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace903716563", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace903716563'><pre>java.lang.AssertionError: ICN 2225346200006 is DENIED expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test27390(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>58</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27391()'><b>test27391</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-481525476" onClick='toggleBox("Output-481525476", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-481525476" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-481525476">
+3.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_28_09PM_192.168.1.125_TC 27391.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.B(Unknown Source)
+	at newMMIS_Subsystems.claims.test27391(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace481525476", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace481525476'><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.B(Unknown Source)
+	at newMMIS_Subsystems.claims.test27391(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>48</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27393()'><b>test27393</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1917607102" onClick='toggleBox("Output-1917607102", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1917607102" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1917607102">
+4.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_28_31PM_192.168.1.125_TC 27393.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test27393(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1917607102", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1917607102'><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test27393(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>17</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27394()'><b>test27394</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1440939580" onClick='toggleBox("Output-1440939580", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1440939580" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1440939580">
+21.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_43_46PM_192.168.1.125_TC 27394.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2225346300004 is not Paid. It is Denied expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test27394(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1440939580", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1440939580'><pre>java.lang.AssertionError: ICN 2225346300004 is not Paid. It is Denied expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test27394(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>26</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27397()'><b>test27397</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-54617902" onClick='toggleBox("Output-54617902", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-54617902" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-54617902">
+19.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_39_58PM_192.168.1.125_TC 27397.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Could not find edit 2007 QMB MEMBER- BILL MEDICARE FIRST at detail 1 expected [true] but found [false]
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test27397(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace54617902", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace54617902'><pre>java.lang.AssertionError: Could not find edit 2007 QMB MEMBER- BILL MEDICARE FIRST at detail 1 expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test27397(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>53</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27403()'><b>test27403</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-697463019" onClick='toggleBox("Output-697463019", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-697463019" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-697463019">
+9.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_31_16PM_192.168.1.125_TC 27403.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Could not find edit 2528 LTC - POTENTIAL MEDICARE IN FIRST 100 DAYS at detail 00 expected [true] but found [false]
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test27403(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace697463019", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace697463019'><pre>java.lang.AssertionError: Could not find edit 2528 LTC - POTENTIAL MEDICARE IN FIRST 100 DAYS at detail 00 expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test27403(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>57</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27436()'><b>test27436</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1831875736" onClick='toggleBox("Output-1831875736", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1831875736" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1831875736">
+20.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_42_42PM_192.168.1.125_TC 27436.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Could not find edit 2007 QMB MEMBER- BILL MEDICARE FIRST at detail 1 expected [true] but found [false]
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test27436(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1831875736", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1831875736'><pre>java.lang.AssertionError: Could not find edit 2007 QMB MEMBER- BILL MEDICARE FIRST at detail 1 expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test27436(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>63</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31181()'><b>test31181</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1648387359" onClick='toggleBox("Output-1648387359", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1648387359" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1648387359">
+14.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_35_51PM_192.168.1.125_TC 31181.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test31181(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1648387359", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1648387359'><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test31181(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>6</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31183()'><b>test31183</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1325147644" onClick='toggleBox("Output-1325147644", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1325147644" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1325147644">
+10.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_32_59PM_192.168.1.125_TC 31183.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test31183(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1325147644", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1325147644'><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test31183(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>8</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31185()'><b>test31185</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1336762904" onClick='toggleBox("Output-1336762904", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1336762904" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1336762904">
+11.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_33_30PM_192.168.1.125_TC 31185.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Could not find edit 5927 NCCI ANOTHER SERVICE PREV PAID SAME CLAIM at detail 2 expected [true] but found [false]
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test31185(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1336762904", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1336762904'><pre>java.lang.AssertionError: Could not find edit 5927 NCCI ANOTHER SERVICE PREV PAID SAME CLAIM at detail 2 expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test31185(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>25</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31187()'><b>test31187</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1004219512" onClick='toggleBox("Output-1004219512", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1004219512" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1004219512">
+13.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_34_10PM_192.168.1.125_TC 31187.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Your transaction was not processed. The transaction service is not currently available, please try your transaction again later.- Error Code: 110  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.O(Unknown Source)
+	at newMMIS_Subsystems.claims.test31187(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1004219512", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1004219512'><pre>java.lang.AssertionError: Error(1) Your transaction was not processed. The transaction service is not currently available, please try your transaction again later.- Error Code: 110  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.O(Unknown Source)
+	at newMMIS_Subsystems.claims.test31187(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>22</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31189()'><b>test31189</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-631621595" onClick='toggleBox("Output-631621595", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-631621595" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-631621595">
+15.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_36_17PM_192.168.1.125_TC 31189.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Your transaction was not processed. The transaction service is not currently available, please try your transaction again later.- Error Code: 110  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.O(Unknown Source)
+	at newMMIS_Subsystems.claims.test31189(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace631621595", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace631621595'><pre>java.lang.AssertionError: Error(1) Your transaction was not processed. The transaction service is not currently available, please try your transaction again later.- Error Code: 110  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.O(Unknown Source)
+	at newMMIS_Subsystems.claims.test31189(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>21</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31193()'><b>test31193</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1145882513" onClick='toggleBox("Output-1145882513", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1145882513" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1145882513">
+16.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_36_28PM_192.168.1.125_TC 31193.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test31193(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1145882513", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1145882513'><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test31193(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>6</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31195()'><b>test31195</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-793808700" onClick='toggleBox("Output-793808700", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-793808700" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-793808700">
+17.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_36_54PM_192.168.1.125_TC 31195.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2225346700002 is DENIED expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test31195(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace793808700", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace793808700'><pre>java.lang.AssertionError: ICN 2225346700002 is DENIED expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test31195(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>22</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31197()'><b>test31197</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-69160933" onClick='toggleBox("Output-69160933", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-69160933" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-69160933">
+12.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_33_43PM_192.168.1.125_TC 31197.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test31197(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace69160933", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace69160933'><pre>java.lang.AssertionError: Error(1) Billing Provider ID is required. Please enter Billing Provider ID.  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.M(Unknown Source)
+	at newMMIS_Subsystems.claims.test31197(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>10</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31201()'><b>test31201</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1298483237" onClick='toggleBox("Output-1298483237", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1298483237" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1298483237">
+18.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_38_04PM_192.168.1.125_TC 31201.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Your transaction was not processed. The transaction service is not currently available, please try your transaction again later.- Error Code: 110  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.O(Unknown Source)
+	at newMMIS_Subsystems.claims.test31201(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1298483237", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1298483237'><pre>java.lang.AssertionError: Error(1) Your transaction was not processed. The transaction service is not currently available, please try your transaction again later.- Error Code: 110  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.O(Unknown Source)
+	at newMMIS_Subsystems.claims.test31201(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>66</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32254a()'><b>test32254a</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1152488702" onClick='toggleBox("Output-1152488702", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1152488702" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1152488702">
+22.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_48_04PM_192.168.1.125_TC 32254a.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Could not find edit 2566 MEMBER HAS MEDICARE SUPPLEMENTAL INSURANCE -HEADER at detail 1 expected [true] but found [false]
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test32254a(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1152488702", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1152488702'><pre>java.lang.AssertionError: Could not find edit 2566 MEMBER HAS MEDICARE SUPPLEMENTAL INSURANCE -HEADER at detail 1 expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.chkEdit(Unknown Source)
+	at newMMIS_Subsystems.claims.test32254a(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>60</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32256a()'><b>test32256a</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1110913929" onClick='toggleBox("Output-1110913929", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1110913929" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1110913929">
+24.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_49_05PM_192.168.1.125_TC 32256a.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2225346000004 is not Paid. It is Denied expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test32256a(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1110913929", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1110913929'><pre>java.lang.AssertionError: ICN 2225346000004 is not Paid. It is Denied expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test32256a(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>52</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32259()'><b>test32259</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-87035052" onClick='toggleBox("Output-87035052", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-87035052" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-87035052">
+26.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_49_50PM_192.168.1.125_TC 32259.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Your transaction was not processed. The transaction service is not currently available, please try your transaction again later.- Error Code: 110  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.A(Unknown Source)
+	at newMMIS_Subsystems.claims.test32259(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace87035052", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace87035052'><pre>java.lang.AssertionError: Error(1) Your transaction was not processed. The transaction service is not currently available, please try your transaction again later.- Error Code: 110  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.A(Unknown Source)
+	at newMMIS_Subsystems.claims.test32259(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>36</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32263a()'><b>test32263a</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-662433937" onClick='toggleBox("Output-662433937", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-662433937" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-662433937">
+27.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_50_35PM_192.168.1.125_TC 32263a.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2225346000006 is not Suspended. It is Denied expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test32263a(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace662433937", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace662433937'><pre>java.lang.AssertionError: ICN 2225346000006 is not Suspended. It is Denied expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test32263a(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>41</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32267()'><b>test32267</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1184248953" onClick='toggleBox("Output-1184248953", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1184248953" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1184248953">
+30.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_51_57PM_192.168.1.125_TC 32267.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2225346000008 is not Paid. It is Denied expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test32267(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1184248953", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1184248953'><pre>java.lang.AssertionError: ICN 2225346000008 is not Paid. It is Denied expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test32267(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>32</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32268()'><b>test32268</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-177389135" onClick='toggleBox("Output-177389135", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-177389135" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-177389135">
+31.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_52_35PM_192.168.1.125_TC 32268.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2225346000009 is not Paid. It is Denied expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test32268(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace177389135", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace177389135'><pre>java.lang.AssertionError: ICN 2225346000009 is not Paid. It is Denied expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test32268(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>34</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32270()'><b>test32270</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-526981115" onClick='toggleBox("Output-526981115", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-526981115" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-526981115">
+32.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_53_47PM_192.168.1.125_TC 32270.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) The sum of all claim level COB adjustment amounts and claim level COB payments must balance to the claim level charged amount. Please correct and submit.  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.A(Unknown Source)
+	at newMMIS_Subsystems.claims.test32270(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace526981115", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace526981115'><pre>java.lang.AssertionError: Error(1) The sum of all claim level COB adjustment amounts and claim level COB payments must balance to the claim level charged amount. Please correct and submit.  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.A(Unknown Source)
+	at newMMIS_Subsystems.claims.test32270(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>32</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32271()'><b>test32271</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-2007004340" onClick='toggleBox("Output-2007004340", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-2007004340" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-2007004340">
+33.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_54_31PM_192.168.1.125_TC 32271.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: Error(1) Your transaction was not processed. The transaction service is not currently available, please try your transaction again later.- Error Code: 110  expected [true] but found [false]
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.C(Unknown Source)
+	at newMMIS_Subsystems.claims.test32271(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace2007004340", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace2007004340'><pre>java.lang.AssertionError: Error(1) Your transaction was not processed. The transaction service is not currently available, please try your transaction again later.- Error Code: 110  expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.Common.getPageError(Unknown Source)
+	at newMMIS_Subsystems.advSubmitClaims.C(Unknown Source)
+	at newMMIS_Subsystems.claims.test32271(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>39</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32273()'><b>test32273</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-462777594" onClick='toggleBox("Output-462777594", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-462777594" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-462777594">
+34.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_55_15PM_192.168.1.125_TC 32273.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2225346300005 is not Paid. It is Denied expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test32273(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace462777594", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace462777594'><pre>java.lang.AssertionError: ICN 2225346300005 is not Paid. It is Denied expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test32273(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>40</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32284()'><b>test32284</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-992457879" onClick='toggleBox("Output-992457879", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-992457879" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-992457879">
+35.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_56_47PM_192.168.1.125_TC 32284.png<br/>
+</div>
+</td>
+<td><div><pre>java.lang.AssertionError: ICN 2225346300008 is not Paid. It is Denied expected [true] but found [false]
+	at newMMIS_Subsystems.claims.test32284(Unknown Source)
+... Removed 24 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace992457879", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace992457879'><pre>java.lang.AssertionError: ICN 2225346300008 is not Paid. It is Denied expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:94)
+	at org.testng.Assert.failNotEquals(Assert.java:496)
+	at org.testng.Assert.assertTrue(Assert.java:42)
+	at newMMIS_Subsystems.claims.test32284(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>22</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+</table><p>
+<table width='100%' border='1' class='invocation-passed'>
+<tr><td colspan='4' align='center'><b>PASSED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td width="30%"><b>Exception</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td><b>Instance</b></td>
+</tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27381()'><b>test27381</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>53</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27389()'><b>test27389</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>70</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27398()'><b>test27398</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>23</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27399()'><b>test27399</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>31</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27400()'><b>test27400</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>28</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27404()'><b>test27404</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>61</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27405()'><b>test27405</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>23</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27408()'><b>test27408</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>31</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27409()'><b>test27409</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>54</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27434()'><b>test27434</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>57</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27438()'><b>test27438</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>18</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test27440()'><b>test27440</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>28</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31142()'><b>test31142</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>112</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31143()'><b>test31143</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>62</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31143edit()'><b>test31143edit</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>70</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test31199()'><b>test31199</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>80</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32253()'><b>test32253</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>69</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32265()'><b>test32265</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>32</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32269()'><b>test32269</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>33</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32274()'><b>test32274</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>37</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32279()'><b>test32279</b><br>Test class: newMMIS_Subsystems.claims</td>
+<td></td>
+<td>22</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+</table><p>
+<table width='100%' border='1' class='invocation-skipped'>
+<tr><td colspan='4' align='center'><b>SKIPPED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td width="30%"><b>Exception</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td><b>Instance</b></td>
+</tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32254b()'><b>test32254b</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1508720236" onClick='toggleBox("Output-1508720236", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1508720236" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1508720236">
+23.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_48_07PM_192.168.1.125_TC 32254b.png<br/>
+</div>
+</td>
+<td><div><pre>org.testng.SkipException: Skipping this test because TC 27411a failed
+	at newMMIS_Subsystems.claims.test32254b(Unknown Source)
+... Removed 21 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1508720236", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1508720236'><pre>org.testng.SkipException: Skipping this test because TC 27411a failed
+	at newMMIS_Subsystems.claims.test32254b(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>0</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32256b()'><b>test32256b</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-2030294088" onClick='toggleBox("Output-2030294088", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-2030294088" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-2030294088">
+25.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_49_08PM_192.168.1.125_TC 32256b.png<br/>
+</div>
+</td>
+<td><div><pre>org.testng.SkipException: Skipping this test because TC 27411a failed
+	at newMMIS_Subsystems.claims.test32256b(Unknown Source)
+... Removed 21 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace2030294088", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace2030294088'><pre>org.testng.SkipException: Skipping this test because TC 27411a failed
+	at newMMIS_Subsystems.claims.test32256b(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>0</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32263b()'><b>test32263b</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1798194863" onClick='toggleBox("Output-1798194863", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1798194863" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1798194863">
+28.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_50_39PM_192.168.1.125_TC 27411b.png<br/>
+</div>
+</td>
+<td><div><pre>org.testng.SkipException: Skipping this test because TC 32263a failed
+	at newMMIS_Subsystems.claims.test32263b(Unknown Source)
+... Removed 21 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1798194863", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1798194863'><pre>org.testng.SkipException: Skipping this test because TC 32263a failed
+	at newMMIS_Subsystems.claims.test32263b(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>0</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+<tr>
+<td title='newMMIS_Subsystems.claims.test32263c()'><b>test32263c</b><br>Test class: newMMIS_Subsystems.claims<br/>
+<a href="#Output-1213367860" onClick='toggleBox("Output-1213367860", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-1213367860" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-1213367860">
+29.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_12_Dec_2025__04_50_43PM_192.168.1.125_TC 32263c.png<br/>
+</div>
+</td>
+<td><div><pre>org.testng.SkipException: Skipping this test because TC 32263a failed
+	at newMMIS_Subsystems.claims.test32263c(Unknown Source)
+... Removed 21 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1213367860", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1213367860'><pre>org.testng.SkipException: Skipping this test because TC 32263a failed
+	at newMMIS_Subsystems.claims.test32263c(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.TestNG.privateMain(TestNG.java:1355)
+	at org.testng.TestNG.main(TestNG.java:1324)
+</pre></div></td>
+<td>0</td>
+<td>newMMIS_Subsystems.claims@564fabc8</td></tr>
+</table><p>
+</body>
+</html>

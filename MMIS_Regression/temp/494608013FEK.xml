@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><EligibilityRequest
+xmlns="http://xmlns.hhs.ma.gov/HHS/serviceobjects/versions/1.0/EligibilityServices"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<transactionsource id_medicaid="100010852687" id_other="494608013" id_source="MHO"/>
+<demographic cde_citizen="C" cde_lang_written="ENG" cde_race="WHITE" cde_sex="F" dte_birth="1966-01-25" nam_first="KAREN" nam_last="ALLEN" nam_mid_init=" " res_adr_city="FOXBORO" res_adr_state="MA" res_adr_street_1="19 FULLER RD" res_adr_street_2=" " res_adr_zip_code="02035"/><case cde_case_status="1" hoh_nam_first="KAREN" hoh_nam_init=" " hoh_nam_last="ALLEN" num_case="029600474"/>
+<eligibility amt_gross_income="14198.22" cde_cat="42" cde_elig_status="1" cde_line="00" cde_office="600" cde_open_reason="01" cde_close_reason="00" cde_region="01" dte_appl="2025-01-25" dte_begin_elig="2025-01-25" dte_end_elig="2026-01-14" family_size="07" /><eligibility amt_gross_income="14198.22" cde_cat="02" cde_elig_status="1" cde_line="99" cde_office="600" cde_open_reason="01" cde_region="01" dte_appl="2025-01-25" dte_begin_elig="2025-01-25" family_size="07" />
+</EligibilityRequest>

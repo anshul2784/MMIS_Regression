@@ -1,0 +1,11 @@
+<EligibilityResponse txnElapsedTime="0.33"><Response result_type="W"
+id_medicaid="100238270415"
+id_other="853261911"
+id_source="DSS"
+><FaultDetail code="2002"
+description="Potential duplicate member id                                              "
+/><FaultDetail code="2346"
+description="Agency is not authorized to submit data in this field: cde_citizen         "
+/><FaultDetail code="2333"
+description="Case/Aid Cat/Dep NUM combo already exists on DB for a different Member ID  "
+/></Response></EligibilityResponse>

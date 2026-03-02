@@ -91,7 +91,6 @@ import org.testng.annotations.Test;
 		
 		public static boolean patientReason=false;
 		public static ArrayList<String> patientReasonDiagCode = new ArrayList<String>();
-
 		
 		//values
 		public static String pos="11 - OFFICE";
@@ -107,6 +106,16 @@ import org.testng.annotations.Test;
 		public static String taxonomy="282N00000X";
 		public static boolean patientResonForVisitDiagnosesBool=false;
 		public static String procQualifier="HC - HCPCS Codes"; //Proc Qualifier
+		
+		public static String srvFacProvName="KETTERINGHAM";
+		public static String srvFacNPI="1023049236";
+		public static String srvFacAdr1="#728 ACC 15 PARKMAN ST";
+		public static String srvFacAdr2="";
+		public static String srvFacCity="BOSTON";
+		public static String srvFacZip="02114";
+		public static String patientResonForVisitDiagnoses="Z006";
+
+
 
 		
 		 //NDC
@@ -200,6 +209,24 @@ import org.testng.annotations.Test;
 			//Taxonomy optional
 		    if (enterTaxonomy)
 		    	driver.findElement(By.xpath("//input[contains(@id,'billingProviderTaxonomy')]")).sendKeys(taxonomy);
+		    
+		    if (enterOperatingPhysLastName) {
+		    	driver.findElement(By.xpath("//input[contains(@id,'operatingPhysLastName')]")).sendKeys(physLastName);
+	    		driver.findElement(By.xpath("//input[contains(@id,'operatingPhysFirstName')]")).sendKeys(physFirstName);
+	    		driver.findElement(By.xpath("//input[contains(@id,'operatingPhysicianNPI')]")).sendKeys(physNPI);
+		    }
+		    
+		    if (enterOperatingPhysLastName) {
+		    	driver.findElement(By.xpath("//input[contains(@id,'operatingPhysLastName')]")).sendKeys(operPhysFirstName);
+	    		driver.findElement(By.xpath("//input[contains(@id,'operatingPhysFirstName')]")).sendKeys(operPhysLastName);
+	    		driver.findElement(By.xpath("//input[contains(@id,'operatingPhysicianNPI')]")).sendKeys(operPhysNPI);
+		    }
+		    
+		    if (enterAttendingPhysLastName) {
+		    	driver.findElement(By.xpath("//input[contains(@id,'attendingPhysLastName')]")).sendKeys(attenPhysFirstName);
+	    		driver.findElement(By.xpath("//input[contains(@id,'attendingPhysFirstName')]")).sendKeys(attenPhysLastName);
+	    		driver.findElement(By.xpath("//input[contains(@id,'attendingPhysicianNPI')]")).sendKeys(attenPhysNPI);
+		    }
 		    
 		    //Fill other claim info
 		    new Select(driver.findElement(By.xpath("//select[contains(@id,'releaseOfInfo')]"))).selectByVisibleText("Y - Yes, Provider has a Signed Statement Permitting Release of Medical Billing Data Related to a Claim");
@@ -410,23 +437,56 @@ import org.testng.annotations.Test;
 		    new Select(driver.findElement(By.xpath("//select[contains(@id,'principalPoa')]"))).selectByVisibleText(indicator);
 		    driver.findElement(By.xpath("//input[contains(@id,'admittingDiag')]")).sendKeys(AdmitDiag);
 		    
-//		    //Add Diagnosis
-//		    sqlStatement="select * from  R_DIAG_INST where TC='"+testCase+"'";
-//		    dataList = Common.getDBTestData(sqlStatement, 4, Common.connection1);
-//		    for (int i=0; i<dataList.size();i++) {
-//		    	String[] diagRow= dataList.get(i);
-//		    	String diag=diagRow[1];
-//		    	String type=diagRow[2];
-//		    	String ind=diagRow[3];
-//		    	
-//			    driver.findElement(By.id("instExtendedTab:diagnosisDataTable:new_Button")).click();
-//			    driver.findElement(By.xpath("//input[contains(@id,'diagnosisCode')]")).sendKeys(diag);
-//			    new Select(driver.findElement(By.xpath("//select[contains(@id,'type')]"))).selectByVisibleText(type);
-//				if (!(ind.equals(" ")))
-//				    new Select(driver.findElement(By.xpath("//select[contains(@id,'poaCode')]"))).selectByVisibleText(ind);
-//				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
-//			    Common.getPageError(trgt);
-//		    }
+		    //Add Diagnosis Other
+		    sqlStatement="select * from  R_DIAG_INST where diag_type ='Other' and TC='"+testCase+"'";
+			dataList = Common.getDBTestData(sqlStatement, 4, Common.connection1);
+		    if (dataList != null) {
+
+		    	for (int i=0; i<dataList.size();i++) {
+		    		String[] diagRow= dataList.get(i);
+		    		String diag=diagRow[1];
+		    		//String type=diagRow[2];
+		    		String ind=diagRow[3];
+		    		driver.findElement(By.xpath("//input[@id='instExtendedTab:diagnosisOtherDataTable:new_Button']")).click();
+		    		driver.findElement(By.xpath("//input[contains(@id,'diagnosisCode')  and @type='text']")).sendKeys(diag);
+		    		//new Select(driver.findElement(By.xpath("//select[contains(@id,'type')]"))).selectByVisibleText(type);
+		    		new Select(driver.findElement(By.xpath("//select[contains(@id,'poaCode')]"))).selectByVisibleText(ind); 
+		    		driver.findElement(By.xpath("//input[contains(@id,'add_Button')  and @type='submit']")).click();
+
+		    		Common.getPageError(trgt);
+		    	}
+		    }
+		    
+		    //add occurance details 
+		    if(occurenceCodeDetail) {
+		    	addListOfOccurences();
+		    }
+		    
+		    //add diagnosis for external cause of injury 
+		    if(externalCauseOfInjury) {
+		    	addExternalCuaseOfInjuryDiagCode();
+		    }
+		    
+		    //add diagnosis for ICD procedure code
+		    if(ICDprocedureCode) {
+		    	addICDprocedureCodeDetail();
+		    }
+		    
+		    if(serviceFacilityProvider) {
+		    	addServiceFcilityProvider();
+		    }
+		    
+		    if(otherDiagnose) {
+		    	addOtherDiagnoses();
+		    }
+		    
+		    if(condition) {
+		    	addConditions();;
+		    }
+		    
+		    if(patientReason) {
+		    	addPatientReason();;
+		    }
 		    
 		    //Add Covered Days/Values if present
 		    sqlStatement="select * from  R_VALUES where TC='"+testCase+"'";
@@ -470,8 +530,10 @@ import org.testng.annotations.Test;
 				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
 			    driver.findElement(By.xpath("//input[contains(@id,'revenueCode')]")).sendKeys(rev);
 			    driver.findElement(By.xpath("//input[contains(@id,'hcpcsProcedureCode')]")).sendKeys(proc);
-			    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
-			    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
+			    if(!f.equals(""))
+			    	driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+			    if(!t.equals(""))
+			    	driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
 			    driver.findElement(By.xpath("//input[contains(@id,'units')]")).sendKeys(units);
 			    new Select(driver.findElement(By.xpath("//select[contains(@id,'unitsOfMeasurment')]"))).selectByVisibleText(units_meas);
 			    driver.findElement(By.xpath("//input[contains(@id,'charges')]")).sendKeys(charges);
@@ -577,11 +639,10 @@ import org.testng.annotations.Test;
 			  //String type=diagRow[2];
 				String ind=diagRow[3];
 				driver.findElement(By.xpath("//input[@id='instExtendedTab:diagnosisOtherDataTable:new_Button']")).click();
-				driver.findElement(By.xpath("//input[@id='instExtendedTab:j_id_id85pc3:diagnosisCode']")).sendKeys(diag);
-			  //new Select(driver.findElement(By.xpath("//select[contains(@id,'type')]"))).selectByVisibleText(type);
+				driver.findElement(By.xpath("//input[contains(@id,'diagnosisCode')  and @type='text']")).sendKeys(diag);
+				//new Select(driver.findElement(By.xpath("//select[contains(@id,'type')]"))).selectByVisibleText(type);
 			    new Select(driver.findElement(By.xpath("//select[contains(@id,'poaCode')]"))).selectByVisibleText(ind); 
-
-				driver.findElement(By.xpath("//input[@id='instExtendedTab:j_id_id85pc3:add_Button']")).click();
+			    driver.findElement(By.xpath("//input[contains(@id,'add_Button')  and @type='submit']")).click();
 			    Common.getPageError(trgt);
 			}
 			}
@@ -604,19 +665,40 @@ import org.testng.annotations.Test;
 //			    Common.getPageError(trgt);
 //		    }
 		    
-		    //Add Covered Days/Values
+			//add patient reason for visit diagnoses 
+		    if(patientResonForVisitDiagnosesBool) {
+		    	addPatientResonForVisitDiagnoses();
+		    }
+		    
+		    //add occurance details 
+		    if(occurenceCodeDetail) {
+		    	addListOfOccurences();
+		    }
+		    //add diagnosis for external cause of injury 
+		    if(externalCauseOfInjury) {
+		    	addExternalCuaseOfInjuryDiagCode();
+		    }
+		    
+		    //add diagnosis for ICD procedure code
+		    if(ICDprocedureCode) {
+		    	addICDprocedureCodeDetail();
+		    }
+			
+			//Add Covered Days/Values
 		    sqlStatement="select * from  R_VALUES where TC='"+testCase+"'";
 		    dataList = Common.getDBTestData(sqlStatement, 3, Common.connection1);
-		    for (int i=0; i<dataList.size();i++) {
-		    	String[] valRow= dataList.get(i);
-		    	String code=valRow[1];
-		    	String val=valRow[2];
+		    if(! (dataList == null) ) {
+		    	for (int i=0; i<dataList.size();i++) {
+		    		String[] valRow= dataList.get(i);
+		    		String code=valRow[1];
+		    		String val=valRow[2];
 		    	
-			    driver.findElement(By.id("instExtendedTab:valueDataTable:new_Button")).click();
-			    new Select(driver.findElement(By.xpath("//select[contains(@id,'valueCode')]"))).selectByVisibleText(code);
-			    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(val);
-				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
-			    Common.getPageError(trgt);
+		    		driver.findElement(By.id("instExtendedTab:valueDataTable:new_Button")).click();
+		    		new Select(driver.findElement(By.xpath("//select[contains(@id,'valueCode')]"))).selectByVisibleText(code);
+		    		driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(val);
+		    		driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+		    		Common.getPageError(trgt);
+		    	}
 		    }
 		    
 			  //Added by VK(04/21/2020): Add List of ICD Procedure Codes under Extended Services tab, from the table r_diag_inst where diag_type= 'ICD'
@@ -653,9 +735,9 @@ import org.testng.annotations.Test;
 				    		driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item' and @name = 'instExtendedTab:occuranceDataTable:new_Button']")).click();
 				    		new Select(driver.findElement(By.xpath("//select[contains(@id,'occuranceCode')]"))).selectByValue(cde_occurrence);
 				    		new Select(driver.findElement(By.xpath("//select[contains(@id,'occuranceType')]"))).selectByValue(typ_occurrence);
-				    		driver.findElement(By.xpath("//input[contains(@id,'instExtendedTab:j_id_id32pc3:from')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+				    		driver.findElement(By.xpath("//input[contains(@id,':from')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
 				    		if(!t.equals("")) 
-				    			driver.findElement(By.xpath("//input[contains(@id,'instExtendedTab:j_id_id32pc3:to')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));		    		
+				    			driver.findElement(By.xpath("//input[contains(@id,':to')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));			    		
 				    		driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
 				    		Common.getPageError(trgt);
 				    	}
@@ -686,8 +768,10 @@ import org.testng.annotations.Test;
 				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
 			    driver.findElement(By.xpath("//input[contains(@id,'revenueCode')]")).sendKeys(rev);
 			    driver.findElement(By.xpath("//input[contains(@id,'hcpcsProcedureCode')]")).sendKeys(proc);
-			    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
-			    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
+			    if(!f.equals(""))
+			    	driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+			    if(!t.equals(""))
+			    	driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
 			    driver.findElement(By.xpath("//input[contains(@id,'units')]")).sendKeys(units);
 			    new Select(driver.findElement(By.xpath("//select[contains(@id,'unitsOfMeasurment')]"))).selectByVisibleText(units_meas);
 			    driver.findElement(By.xpath("//input[contains(@id,'charges')]")).sendKeys(charges);
@@ -1032,8 +1116,10 @@ import org.testng.annotations.Test;
 				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
 			    driver.findElement(By.xpath("//input[contains(@id,'revenueCode')]")).sendKeys(rev);
 			    driver.findElement(By.xpath("//input[contains(@id,'hcpcsProcedureCode')]")).sendKeys(proc);
-			    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
-			    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
+			    if(!f.equals(""))
+			    	driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+			    if(!t.equals(""))
+			    	driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
 			    driver.findElement(By.xpath("//input[contains(@id,'units')]")).sendKeys(units);
 			    new Select(driver.findElement(By.xpath("//select[contains(@id,'unitsOfMeasurment')]"))).selectByVisibleText(units_meas);
 			    driver.findElement(By.xpath("//input[contains(@id,'charges')]")).sendKeys(charges);
@@ -1612,16 +1698,18 @@ import org.testng.annotations.Test;
 		    //Add Covered Days/Values
 		    sqlStatement="select * from  R_VALUES where TC='"+testCase+"'";
 		    dataList = Common.getDBTestData(sqlStatement, 3, Common.connection1);
-		    for (int i=0; i<dataList.size();i++) {
-		    	String[] valRow= dataList.get(i);
-		    	String code=valRow[1];
-		    	String val=valRow[2];
-		    	
-			    driver.findElement(By.id("instExtendedTab:valueDataTable:new_Button")).click();
-			    new Select(driver.findElement(By.xpath("//select[contains(@id,'valueCode')]"))).selectByVisibleText(code);
-			    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(val);
-				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
-			    Common.getPageError(trgt);
+		    if (dataList != null) {
+			    for (int i=0; i<dataList.size();i++) {
+			    	String[] valRow= dataList.get(i);
+			    	String code=valRow[1];
+			    	String val=valRow[2];
+			    	
+				    driver.findElement(By.id("instExtendedTab:valueDataTable:new_Button")).click();
+				    new Select(driver.findElement(By.xpath("//select[contains(@id,'valueCode')]"))).selectByVisibleText(code);
+				    driver.findElement(By.xpath("//input[contains(@id,'amount')]")).sendKeys(val);
+					driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='Add']")).click();
+				    Common.getPageError(trgt);
+			    }
 		    }
 		    
 		    //CoB
@@ -1834,8 +1922,10 @@ import org.testng.annotations.Test;
 				driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
 			    driver.findElement(By.xpath("//input[contains(@id,'revenueCode')]")).sendKeys(rev);
 			    driver.findElement(By.xpath("//input[contains(@id,'hcpcsProcedureCode')]")).sendKeys(proc);
-			    driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
-			    driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
+			    if(!f.equals(""))
+			    	driver.findElement(By.xpath("//input[contains(@id,'fromDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(f)));
+			    if(!t.equals(""))
+			    	driver.findElement(By.xpath("//input[contains(@id,'toDate')]")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(t)));
 			    driver.findElement(By.xpath("//input[contains(@id,'units')]")).sendKeys(units);
 			    new Select(driver.findElement(By.xpath("//select[contains(@id,'unitsOfMeasurment')]"))).selectByVisibleText(units_meas);
 			    driver.findElement(By.xpath("//input[contains(@id,'charges')]")).sendKeys(charges);
@@ -2324,6 +2414,10 @@ import org.testng.annotations.Test;
             physLastName="TESTING";
             physFirstName="OPER";
             physNPI="1922020882";
+            
+            serviceFacilityProvider=false;
+            condition=false;
+            patientReason=false;
 
 			
 		}
@@ -2358,8 +2452,101 @@ import org.testng.annotations.Test;
 		driver.findElement(By.xpath("//input[@id='MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber']")).sendKeys(clmNo);
 		driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:SEARCH")).click();
 		driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
-}
+		}
+		
+		private static void addPatientResonForVisitDiagnoses() {
+			driver.findElement(By.id("instExtendedTab:diagnosisPatientReasonVisitDataTable:new_Button")).click(); // click new item
+			driver.findElement(By.id("instExtendedTab:j_id_id131pc3:diagnosisCode")).sendKeys(patientResonForVisitDiagnoses);// send keys for diag code
+			driver.findElement(By.id("instExtendedTab:j_id_id131pc3:add_Button")).click(); // click add
+			
+		}
+		
+		public static void addListOfOccurences() {
+			
+			for (int i = 0; i < occurenceCode.size(); i++) {
+				
+				driver.findElement(By.id("instExtendedTab:occuranceDataTable:new_Button")).click();
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'instExtendedTab:j_id_id42pc3:occuranceCode')]"))).selectByVisibleText(occurenceCode.get(i));
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'instExtendedTab:j_id_id42pc3:occuranceType')]"))).selectByVisibleText(occurenceType.get(i));
+				driver.findElement(By.xpath("//input[contains(@id,'instExtendedTab:j_id_id42pc3:from') and @type='text']")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(occurencefromDate.get(i))));
+				if(!occurencetoDate.get(i).equals(""))
+					driver.findElement(By.xpath("//input[contains(@id,'instExtendedTab:j_id_id42pc3:to') and @type='text']")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(occurencetoDate.get(i))));
+				driver.findElement(By.xpath("//input[contains(@id,'add_Button') and @type='submit']")).click();
 
+			}
+			
+			
+		}
 
+		public static void addExternalCuaseOfInjuryDiagCode() {
+	
+			for (int i = 0; i < injuryAdmissiones.size(); i++) {
+		
+				driver.findElement(By.id("instExtendedTab:diagnosisExternalCauseInjuryDataTable:new_Button")).click();
+				driver.findElement(By.xpath("//input[contains(@id,'diagnosisCode') and @type='text']")).sendKeys(injuryDiagCodes.get(i));
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'instExtendedTab:j_id_id113pc3:poaCode')]"))).selectByVisibleText(injuryAdmissiones.get(i));
+				driver.findElement(By.xpath("//input[contains(@id,'add_Button') and @type='submit']")).click();
+		
+			}
+		}
+		
+		public static void addICDprocedureCodeDetail() {
+			
+			for (int i = 0; i < ICDprocedureCodes.size(); i++) {
+				
+				driver.findElement(By.id("instExtendedTab:icdProcedureList:new_Button")).click();
+				driver.findElement(By.xpath("//input[contains(@id,'icdProcedureCode') and @type='text']")).sendKeys(ICDprocedureCodes.get(i));
+				driver.findElement(By.xpath("//input[contains(@id,'icdProcedureDate') and @type='text']")).sendKeys(Common.convertSysdatecustom(Integer.parseInt(ICDdates.get(i))));
+				driver.findElement(By.xpath("//input[contains(@id,'add_Button') and @type='submit']")).click();
+				
+			}
+			
+		}
+		
+		public static void addServiceFcilityProvider() {
+			
+			driver.findElement(By.xpath("//input[contains(@id, 'serviceProviderName')]")).sendKeys(srvFacProvName);
+			driver.findElement(By.xpath("//input[contains(@id, 'serviceProviderNpi')]")).sendKeys(srvFacNPI);
+			driver.findElement(By.xpath("//input[contains(@id, 'serviceProviderAddr1')]")).sendKeys(srvFacAdr1);
+			driver.findElement(By.xpath("//input[contains(@id, 'serviceProviderAddr2')]")).sendKeys(srvFacAdr2);
+			driver.findElement(By.xpath("//input[contains(@id, 'serviceProviderCity')]")).sendKeys(srvFacCity);
+		    new Select(driver.findElement(By.xpath("//select[contains(@id,'serviceProviderState')]"))).selectByVisibleText("MA - Massachusetts");
+			driver.findElement(By.xpath("//input[contains(@id, 'serviceProviderZip')]")).sendKeys(srvFacZip);
+
+		}
+		
+		public static void addOtherDiagnoses() {
+			
+			for (int i = 0; i < otherDiagnosesCode.size(); i++) {
+				
+				driver.findElement(By.id("instExtendedTab:diagnosisOtherDataTable:new_Button")).click();
+				driver.findElement(By.xpath("//input[contains(@id,'diagnosisCode') and @type='text']")).sendKeys(otherDiagnosesCode.get(i));
+				new Select(driver.findElement(By.xpath("//select[contains(@id,'instExtendedTab:j_id_id95pc3:poaCode')]"))).selectByVisibleText(otherDiagnosesAdmission.get(i));
+				driver.findElement(By.xpath("//input[contains(@id,'add_Button') and @type='submit']")).click();
+				
+			}			
+		}
+
+		public static void addConditions() {
+			
+			for (int i = 0; i < conditionDescription.size(); i++) {
+				
+				driver.findElement(By.id("instExtendedTab:conditionsList:new_Button")).click();
+			    new Select(driver.findElement(By.xpath("//select[contains(@id,'conditionCode')]"))).selectByValue(conditionDescription.get(i));
+				driver.findElement(By.xpath("//input[contains(@id,'add_Button') and @type='submit']")).click();
+
+			}
+		}
+		
+		public static void addPatientReason() {
+			
+			for (int i = 0; i < patientReasonDiagCode.size(); i++) {
+				
+				driver.findElement(By.id("instExtendedTab:diagnosisPatientReasonVisitDataTable:new_Button")).click();
+				driver.findElement(By.xpath("//input[contains(@id,'instExtendedTab:j_id_id131pc3:diagnosisCode') and @type='text']")).sendKeys(patientReasonDiagCode.get(i));
+				driver.findElement(By.xpath("//input[contains(@id,'add_Button') and @type='submit']")).click();
+
+			}
+		}
 
 }

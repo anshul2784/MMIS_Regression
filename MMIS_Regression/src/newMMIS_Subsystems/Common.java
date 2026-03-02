@@ -803,12 +803,19 @@ public class Common extends Login {
 				        }
 				        if(channel.isClosed()){
 				            System.out.println("exit-status: "+channel.getExitStatus());
+				            channel.disconnect();//added as break statement below was not making this happen at end of code and was getting com.jcraft.jsch.JSchException: Session.connect: java.net.SocketException: Connection reset
+//				            System.out.println("Channel Disconnected early");
+
+						    sess.disconnect();
+//				            System.out.println("Session Disconnected early");
 				            break;
 				          }
-				        try{Thread.sleep(1000);}catch(Exception ee){}
+//				        try{Thread.sleep(1000);}catch(Exception ee){}
 					    // Close this channel and session
 					    channel.disconnect();
+//			            System.out.println("Channel Disconnected late");
 					    sess.disconnect();
+//			            System.out.println("Session Disconnected late");
 				      }
 					}
 				else { //Unix based connection for on-prem environments	

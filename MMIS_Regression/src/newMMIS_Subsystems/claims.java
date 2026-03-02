@@ -930,7 +930,7 @@ public class claims extends Login{
        	//Claim Detail
        	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
        	//Click on detail 1
-       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_detailNumber")).click();
+		driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_detailNumber')]")).click();
        	//Verify no NDC info is present on detail 1
        	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ReferenceQualifCode")).getAttribute("value").equals(""), "Rx number found. It should be absent for detail 1");
        	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ClaimDrugNDC")).getAttribute("value").equals(""), "NDC number found. It should be absent for detail 1");
@@ -943,7 +943,7 @@ public class claims extends Login{
        	log("No NDC information found on Base App for detail 1");
        	
        	//Click on detail 2
-       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_detailNumber")).click();
+       	driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_1:PhysicianDetailBean_ColValue_detailNumber')]")).click();
        	//Verify NDC info is present on detail 2
        	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ReferenceQualifCode")).getAttribute("value").equals(rxNo), "Rx number found. Its should be absent for detail 2 because it was not entered");
        	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ClaimDrugNDC")).getAttribute("value").equals(ndc), "NDC number not found for detail 2.");
@@ -1033,7 +1033,7 @@ public class claims extends Login{
        	//Claim Detail
        	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
        	//Click on detail 1
-       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_detailNumber")).click();
+       	driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_detailNumber')]")).click();
        	//Verify NDC info is present for dtl 1
        	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ReferenceQualifCode")).getAttribute("value").equals(rxNo1), "Rx number not found for detail 1.");
        	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ClaimDrugNDC")).getAttribute("value").equals(ndc1), "NDC number not found for detail 1.");
@@ -1046,7 +1046,7 @@ public class claims extends Login{
        	log("Successfully found NDC information on Base App for detail 1");
        	
        	//Click on detail 2
-       	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_detailNumber")).click();
+       	driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_1:PhysicianDetailBean_ColValue_detailNumber')]")).click();
        	//Verify NDC info is present for dtl 2
        	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ReferenceQualifCode")).getAttribute("value").equals(rxNo2), "Rx number not found for detail 2.");
        	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_ClaimDrugNDC")).getAttribute("value").equals(ndc2), "NDC number not found for detail 2.");
@@ -1447,13 +1447,13 @@ public class claims extends Login{
        	
        	//Check detail 2 is not Denied
        	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 2 is DENIED");
        	log("Detail 2 is not Denied. It is "+clmStatus);
 
        	
        	//Check detail 1 is not Paid
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("PAID")), "Detail 1 is PAID");
        	log("Detail 1 is not Paid. It is "+clmStatus);       	
        	
@@ -1556,13 +1556,13 @@ public class claims extends Login{
        	
        	//Check detail 1 is not Denied
        	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
        	log("Detail 1 is not Denied. It is "+clmStatus);
 
        	
        	//Check detail 2 is not Paid
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("PAID")), "Detail 2 is PAID");
        	log("Detail 2 is not Paid. It is "+clmStatus);       	
        	
@@ -1665,13 +1665,13 @@ public class claims extends Login{
        	
        	//Check detail 1 is not Denied
        	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
        	log("Detail 1 is not Denied. It is "+clmStatus);
 
        	
        	//Check detail 2 is not Paid
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("PAID")), "Detail 2 is PAID");
        	log("Detail 2 is not Paid. It is "+clmStatus);       
        	
@@ -1763,18 +1763,18 @@ public class claims extends Login{
        	
        	//Check detail 1 is not Denied
        	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
        	log("Detail 1 is not Denied. It is "+clmStatus);
 
        	
        	//Check detail 2 is not Denied
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 2 is DENIED");
        	log("Detail 2 is not Denied. It is "+clmStatus);    
        	
        	//Verify detail 2 has modifier 59
-       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_procedureModifierCode1")).getText().equals("59"), "Modifier 59 is not present on detail 2");
+       	Assert.assertTrue(driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_1:PhysicianDetailBean_ColValue_procedureModifierCode1')]")).getText().equals("59"), "Modifier 59 is not present on detail 2");
        	log("Modifier 59 is present on detail 2");
        	
 
@@ -2347,18 +2347,18 @@ public class claims extends Login{
        	
        	//Check detail 1 is not Denied
        	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
        	log("Detail 1 is not Denied. It is "+clmStatus);
 
        	
        	//Check detail 2 is not Denied
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 2 is DENIED");
        	log("Detail 2 is not Denied. It is "+clmStatus);    
        	
        	//Verify detail 2 has modifier 59
-       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_procedureModifierCode1")).getText().equals("59"), "Modifier 59 is not present on detail 2");
+       	Assert.assertTrue(driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_1:PhysicianDetailBean_ColValue_procedureModifierCode1')]")).getText().equals("59"), "Modifier 59 is not present on detail 2");
        	log("Modifier 59 is present on detail 2");
        	
 
@@ -2443,18 +2443,18 @@ public class claims extends Login{
        	
        	//Check detail 1 is not Denied
        	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
        	log("Detail 1 is not Denied. It is "+clmStatus);
 
        	
        	//Check detail 2 is not Denied
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 2 is DENIED");
        	log("Detail 2 is not Denied. It is "+clmStatus);    
        	
        	//Verify detail 1 has modifier 59
-       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_procedureModifierCode1")).getText().equals("59"), "Modifier 59 is not present on detail 1");
+       	Assert.assertTrue(driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_procedureModifierCode1')]")).getText().equals("59"), "Modifier 59 is not present on detail 1");
        	log("Modifier 59 is present on detail 1");
        	
 
@@ -2696,7 +2696,7 @@ public class claims extends Login{
        	
        	//Check detail 1 is not Denied
        	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
        	log("Detail 1 is not Denied. It is "+clmStatus);
        	
@@ -2765,12 +2765,12 @@ public class claims extends Login{
        	
        	//Check detail 1 is not Denied
        	driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
-       	clmStatus=driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+       	clmStatus=driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
        	Assert.assertTrue(!(clmStatus.equals("DENIED")), "Detail 1 is DENIED");
        	log("Detail 1 is not Denied. It is "+clmStatus);
        	
        	//Verify detail 1 has modifier 59
-       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_procedureModifierCode1")).getText().equals("59"), "Modifier 59 is not present on detail 1");
+       	Assert.assertTrue(driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_procedureModifierCode1')]")).getText().equals("59"), "Modifier 59 is not present on detail 1");
        	log("Modifier 59 is present on detail 1");
     }
     
@@ -13590,7 +13590,7 @@ public class claims extends Login{
 	    	String clmNo = advSubmitClaims.clmICN("inst");
 	       	log("ICN: "+clmNo);
 	       	
-		    throw new SkipException("Please check ICD 10 codes Qualifier in the XML");
+		    throw new SkipException("ICN"+clmNo+" is generated. Please check ICD 10 codes Qualifier in the XML");
 
 		}
 					
@@ -13651,7 +13651,7 @@ public class claims extends Login{
 	    	String clmNo = advSubmitClaims.clmICN("inst");
 	       	log("ICN: "+clmNo);
 	       	
-		    throw new SkipException("Please check ICD 10 codes Qualifier in the XML");
+		    throw new SkipException("ICN"+clmNo+" is generated. Please check ICD 10 codes Qualifier in the XML");
 
 		}
 					
@@ -13715,7 +13715,7 @@ public class claims extends Login{
 	    	String clmNo = advSubmitClaims.clmICN("inst");
 	       	log("ICN: "+clmNo);
 	       	
-		    throw new SkipException("Please check ICD 10 codes Qualifier in the XML");
+		    throw new SkipException("Please check ICD 10 codes Qualifier in the XML. ICN: "+clmNo);
 
 		}
 					
@@ -23771,7 +23771,7 @@ public class claims extends Login{
 	 			
 	 			// Check detail 1 is paid
 	 			driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
-	 			clmStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+	 			clmStatus = driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
 	 			System.out.println(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			log(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			Assert.assertTrue(clmStatus.equals("PAID"), "Detail 1 is not paid. It is " + clmStatus);
@@ -24328,14 +24328,14 @@ public class claims extends Login{
 	 			// Check detail 1 is PAID
 	 			driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
 	 			
-	 			clmStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+	 			clmStatus = driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
 	 			System.out.println(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			log(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			
 	 			Assert.assertTrue(clmStatus.equals("PAID"), "Detail 1 is not PAID on ICN "+clmNo+". It is " + clmStatus);
 	 			
 	 			// Check detail 2 is PAID
-	 			clmStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+	 			clmStatus = driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_1:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
 	 			System.out.println(String.format(OUTPUT_FORMAT, "Detail 2 is ", clmStatus));
 	 			log(String.format(OUTPUT_FORMAT, "Detail 2 is ", clmStatus));
 	 			
@@ -25545,7 +25545,7 @@ public class claims extends Login{
 	 			
 	 			// Check detail 1 is paid
 	 			driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
-	 			clmStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+	 			clmStatus = driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
 	 			System.out.println(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			log(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			Assert.assertTrue(clmStatus.equals("PAID"), "Detail 1 on 1st claim is not paid. It is " + clmStatus);
@@ -25622,7 +25622,7 @@ public class claims extends Login{
 	 			// Check detail 1 is paid
 	 			driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
 	 			
-	 			clmStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+	 			clmStatus = driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
 	 			System.out.println(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			log(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			
@@ -25903,7 +25903,7 @@ public class claims extends Login{
 	 			// Check detail 1 is paid
 	 			driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
 	 			
-	 			clmStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+	 			clmStatus = driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
 	 			System.out.println(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			log(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			
@@ -26240,7 +26240,7 @@ public class claims extends Login{
 	 			// Check detail 1 is Denied
 	 			driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
 	 			
-	 			clmStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+	 			clmStatus = driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
 	 			System.out.println(String.format(OUTPUT_FORMAT, "Detail 1 on 2nd Claim is ", clmStatus));
 	 			log(String.format(OUTPUT_FORMAT, "Detail 1 on 2nd Claim is ", clmStatus));
 	 			
@@ -26583,7 +26583,7 @@ public class claims extends Login{
 	 			
 	 			// Check detail 1 is paid
 	 			driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
-	 			clmStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+	 			clmStatus = driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
 	 			System.out.println(String.format(OUTPUT_FORMAT, "Detail 1 on 1st Claim is ", clmStatus));
 	 			log(String.format(OUTPUT_FORMAT, "Detail 1 on 1st Claim is ", clmStatus));
 	 			Assert.assertTrue(clmStatus.equals("PAID"), "Detail 1 on first claim is not Paid. It is " + clmStatus);
@@ -26677,7 +26677,7 @@ public class claims extends Login{
 	 			// Check detail 1 is Denied
 	 			driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
 	 			
-	 			clmStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+	 			clmStatus = driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
 	 			System.out.println(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			log(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			
@@ -26787,7 +26787,7 @@ public class claims extends Login{
 	 			// Check detail 1 is Denied
 	 			driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
 	 			
-	 			clmStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+	 			clmStatus = driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
 	 			System.out.println(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			log(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			
@@ -26898,7 +26898,7 @@ public class claims extends Login{
 	 			// Check detail 1 is Denied
 	 			driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
 	 			
-	 			clmStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+	 			clmStatus = driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
 	 			System.out.println(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			log(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			
@@ -27434,7 +27434,7 @@ public class claims extends Login{
 	 			// Check detail 1 is Denied
 	 			driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimNavigatorPanel:PhysicianClaimNavigator:ITM_PhysicianClaim5")).click();
 	 			
-	 			clmStatus = driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id123_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription")).getText();
+	 			clmStatus = driver.findElement(By.xpath("//*[contains(@id,'MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:_id') and contains(@id,'_0:PhysicianDetailBean_ColValue_claimStatus_claimStatusDescription')]")).getText();
 	 			System.out.println(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			log(String.format(OUTPUT_FORMAT, "Detail 1 is ", clmStatus));
 	 			
