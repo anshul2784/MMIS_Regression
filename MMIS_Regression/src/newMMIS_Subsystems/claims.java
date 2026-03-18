@@ -12957,7 +12957,6 @@ public class claims extends Login{
 		}
 		
 		//////// Mahammad start 2
-//TODO:New claims test cases
 		
 		@Test
 		public void test26929() throws Exception{

@@ -1,3 +1,5 @@
-Screenshots/
 *.class
 bin/
+build/
+Failed-Test/
+*.class
