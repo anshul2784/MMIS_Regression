@@ -42,7 +42,10 @@ import javax.imageio.ImageIO;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
@@ -57,6 +60,8 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+
 @SuppressWarnings("unused")
 
 //Main class starts here 
@@ -66,14 +71,18 @@ public class Login  {
 	public static ChromeOptions options;
 	public static String className = "";
 	public static String tempDirPath=System.getProperty("user.dir")+"\\temp\\";
-	public static String uid, pwd, selectorg, apppath;
+	public static String uid, email, pwd, selectorg, apppath;
 	public static String vgmain, envpath;
 	protected static WebDriver driver;
 	public static boolean LoginSuccess, dbConnect, mipConnect;
 	public static String winHandleCurrent="empty";
 	public static Alert alert;
-	public static String env;
+	public static String env, browser;
 	//The execute query variables needed by each subsystem class
+	
+	public static ChromeOptions chromeOptions;
+	public static EdgeOptions edgeOptions;
+	public static FirefoxOptions firefoxOptions;
 	
     public static String sqlStatement;
     public static ArrayList<String> colValues = new ArrayList<String>();
@@ -84,13 +93,18 @@ public class Login  {
 
 	//create variable for unix directory mod or acc
 	public static String unixDir;
+	protected static String OUTPUT_FORMAT = "%-45s: %s";
+	protected static boolean logmode;
+	protected static boolean debugLogmode;
 		
 	//environment variable is passed from testng*.xml file do define the environment the
 	//application needs to run e.g. MO,UAT
-	@Parameters({ "environment" })
+	@Parameters({ "environment", "selenium.browser" })
 	@BeforeClass
-	public void init(String environment) throws Exception {
+	public void init(String environment, String browser) throws Exception {
 	  this.env = environment;
+	  this.browser = browser;
+
 	  if (env.equals("MO"))
 		  unixDir = "mod";
 	  else if (env.equals("PERF"))
@@ -103,13 +117,157 @@ public class Login  {
 		  unixDir = "acc";
 	  else if (env.equals("AWSMO2"))
 		  unixDir = "tstx";
-	  else if (env.equals("AWSPERF"))
-		  unixDir = "perf";
 	  else if (env.equals("AWSPROD"))
 		  unixDir = "prod";
+	  else if (env.equals("AWSPERF"))
+		  unixDir = "perf";
 	  else
 		  unixDir = "acc";
 	}
+	
+	// *****************************************************      Driver Initialization    ***************************************************** //
+
+	private static WebDriver initializeBrowser(String browserType) throws Exception {
+	    
+	        System.out.println();
+	        System.out.println("#############################################################");
+	        System.out.println("################                             ################");
+	        System.out.println("##########                                         ##########");
+	        System.out.println("#####                                                   #####");
+	        System.out.println(String.format("###%-55s###", "        Initializing " + browserType + " browser capabilities"));
+	    
+	    if (browserType.equalsIgnoreCase("chrome")) {
+	        driver = initializeChrome();
+	    } 
+	    else if (browserType.equalsIgnoreCase("firefox")) {
+	    	driver = initializeFirefox();
+	    } 
+	    else if (browserType.equalsIgnoreCase("edge")) {
+	    	driver = initializeEdge();
+	    } 
+	    else {
+	        throw new RuntimeException("Unsupported browser: " + browserType);
+	    }
+	    
+	        System.out.println("#####                                                   #####");
+	        System.out.println("##########                                         ##########");
+	        System.out.println("################                             ################");
+	        System.out.println("#############################################################");
+	        System.out.println();
+	        
+	    return driver;
+	}
+
+	//Initialize Chrome browser
+	private static WebDriver initializeChrome() throws Exception {
+
+		WebDriverManager.chromedriver().setup();
+	    
+	    HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+	    chromePrefs.put("profile.default_content_settings.popups", 0);
+	    chromePrefs.put("download.default_directory", tempDirPath);
+	    chromePrefs.put("download.prompt_for_download", false); //download without asking
+	    chromePrefs.put("download.directory_upgrade", true);
+	    chromePrefs.put("safebrowsing.enabled", false);
+	    chromePrefs.put("profile.managed_default_content_settings.downloads", 1);
+	    //chromePrefs.put("download.extensions_to_open", "application/xml");
+	    
+	    chromeOptions = new ChromeOptions();
+	    chromeOptions.setExperimentalOption("prefs", chromePrefs);
+	    chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"}); //removes the "enable-automation" switch from Chrome
+	    chromeOptions.addArguments("--ignore-certificate-errors");
+	    chromeOptions.addArguments("--disable-notifications"); //prevents notification popups from appearing
+	    chromeOptions.addArguments("disable-popup-blocking");
+	    chromeOptions.addArguments("disable-extensions");
+	    chromeOptions.addArguments("safebrowsing-disable-extension-blacklist");
+	    chromeOptions.addArguments("--safebrowsing-disable-download-protection"); //don't warn about potentially dangerous downloads
+	    chromeOptions.addArguments("--remote-allow-origins=*");
+	    chromeOptions.addArguments("--disable-features=LocalNetworkAccessChecks");
+	    chromeOptions.addArguments("--start-maximized");
+
+	    
+	    return driver = new ChromeDriver(chromeOptions);
+	}
+	
+	//Initialize Edge browser
+	private static WebDriver initializeEdge() throws Exception {
+		   
+		WebDriverManager.edgedriver().setup();
+		
+		HashMap<String, Object> edgePrefs = new HashMap<String, Object>();
+		edgePrefs.put("profile.default_content_settings.popups", 0);
+		edgePrefs.put("download.default_directory", tempDirPath);
+		edgePrefs.put("download.prompt_for_download", false);
+		edgePrefs.put("safebrowsing.enabled", false);
+		edgePrefs.put("download.directory_upgrade", true);
+		edgePrefs.put("profile.managed_default_content_settings.downloads", 1);
+		    
+		edgePrefs.put("download.extensions_to_open", "application/xml,text/xml");
+		edgePrefs.put("profile.managed_default_content_settings.default", 1);
+		edgePrefs.put("safebrowsing.block_potentially_dangerous_downloads", false);
+		edgePrefs.put("safebrowsing.block_malware_downloads", false);
+		edgePrefs.put("safebrowsing.block_uncommon_downloads", false);
+		edgePrefs.put("safebrowsing.block_suspicious_downloads", false);
+		  
+		//Disable address/password saving
+	    edgePrefs.put("profile.password_manager_enabled", false);
+	    edgePrefs.put("autofill.profile_enabled", false);
+	    edgePrefs.put("autofill.credit_card_enabled", false);
+	    
+		edgeOptions = new EdgeOptions();
+		edgeOptions.setExperimentalOption("excludeSwitches", new String[] { "enable-automation" });
+		edgeOptions.setExperimentalOption("useAutomationExtension", false);
+
+		edgeOptions.addArguments("--disable-blink-features=AutomationControlled");
+		edgeOptions.addArguments("--disable-infobars");
+		edgeOptions.addArguments("--ignore-certificate-errors");
+		edgeOptions.addArguments("--disable-notifications");
+		edgeOptions.addArguments("disable-popup-blocking");
+		edgeOptions.addArguments("--remote-allow-origins=*");
+		edgeOptions.addArguments("--safebrowsing-disable-download-protection");
+		edgeOptions.addArguments("--disable-features=IsolatedDownloads");
+
+		edgeOptions.setExperimentalOption("prefs", edgePrefs);
+
+		driver = new EdgeDriver(edgeOptions);
+		Map<String, Object> params= new HashMap<>();
+		params.put("behavior", "allow");
+		params.put("downloadPath", tempDirPath);
+		((EdgeDriver) driver).executeCdpCommand("Page.setDownloadBehavior", params);
+		
+		driver.manage().window().maximize();
+		
+		return driver;
+	}
+
+	//Initialize Firefox browser
+	private static WebDriver initializeFirefox() throws Exception {
+
+		WebDriverManager.firefoxdriver().setup();
+	    
+	    FirefoxProfile firefoxProfile = new FirefoxProfile();
+	    firefoxProfile.setPreference("webdriver.firefox.port", 2);
+	    firefoxProfile.setPreference("browser.download.folderList", 2);
+	    firefoxProfile.setPreference("browser.download.manager.showWhenStarting", false);
+	    firefoxProfile.setPreference("browser.download.dir", tempDirPath);
+	    firefoxProfile.setPreference("browser.helperApps.alwaysAsk.force", false);
+	    firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", 
+	        "text/xml, text/html, text/csv, text/x-rtf, text/rtf, text/plain, application/xml, " +
+	        "application/pdf, application/x-msdos-program, application/vnd.ms-excel, application/msword");
+	    firefoxProfile.setPreference("pdfjs.disabled", true); //PDF files will be downloaded instead of opening
+	    
+	    
+	    firefoxOptions = new FirefoxOptions();
+	    firefoxOptions.setBinary("C:\\Users\\MMohsunov\\AppData\\Local\\Mozilla Firefox\\firefox.exe"); //set up firefox driver since WebDriverManager could not find automatically
+	    firefoxOptions.setProfile(firefoxProfile);
+	    
+	    driver = new FirefoxDriver(firefoxOptions);
+	    driver.manage().window().maximize();
+	    
+		return driver;
+	}
+
+	// *****************************************************   Driver Initialization Finished   ***************************************************** //
 	
 	@Test
 	public static void testDBconnect() throws Exception {
@@ -131,13 +289,15 @@ public class Login  {
 	@Test
 	public static void testLoginBase() throws Exception {
 
-//		setFireFoxProfile();
+		if(env.equals("AWSUAT") || env.equals("AWSMO") || env.equals("AWSMO2")) {
+			uid="bgeneric";
+		}
 		
 		//Fetch VG Main URL
 		sqlStatement = "select * from s_login where environment ='VGMAIN'";
 		colNames.add("APPPATH");
 		colValues=Common.executeQuery1(sqlStatement, colNames);
-		vgmain = colValues.get(0);
+		vgmain = colValues.get(0);		
 		
 		//Fetch the id password for BASE app in this environment
 		sqlStatement = "select * from s_login where environment ='"+env+"' and application ='BASE'";
@@ -146,83 +306,94 @@ public class Login  {
 		colNames.add("PASSWORD");
 		colValues=Common.executeQuery1(sqlStatement, colNames);
 		envpath = colValues.get(0);
-		uid = colValues.get(1);
+		email = colValues.get(1);
 		pwd = colValues.get(2);
 
 		System.out.println("****************************" +env+" BASE"
 				+ "****************************");
 
         //setting chrome profile for download xml without user interaction
-		System.setProperty("webdriver.chrome.driver","C:\\Users\\agandhi20\\chromedriver new\\chromedriver.exe");
-		options = new ChromeOptions(); 
-		options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"}); 
-		options.addArguments("--ignore-certificate-errors"); //for disabling SSL warnings
-		options.addArguments("--disable-notifications");
 		
-		Map<String, Object> prefs = new HashMap<String, Object>();
+		/*Map<String, Object> prefs = new HashMap<String, Object>();
 		prefs.put("credentials_enable_service", false);
 		prefs.put("profile.password_manager_enabled", false); //For disabling do you want to save this password
 		prefs.put("safebrowsing.enabled", true); //For MA21 file download-no popup
 		prefs.put("autofill.profile_enabled", false); //For disabling save address popup
 		prefs.put("download.default_directory", tempDirPath); //For auto download to tempDirPath
+		//prefs.put("download.default_directory", "C:\\Users\\MMohsunov\\eclipse-workspace\\SmokeChrome\\temp_Reports"); //For auto download to tempDirPath
 		prefs.put("plugins.plugins_disabled", new String[] { "Chrome PDF Viewer" }); //For not opening PDF files in a new chrome tab/chrome viewer
-		prefs.put("plugins.always_open_pdf_externally", true); //Downloads the pdf file on launching the respective file link
+        prefs.put("plugins.always_open_pdf_externally", true); //Downloads the pdf file on launching the respective file link
+	    prefs.put("download.directory_upgrade", true);
+	    prefs.put("plugins.always_open_pdf_externally", true);
+
 		options.setExperimentalOption("prefs", prefs);
 		
-		System.out.println("Chrome is set with profile settings...");
+		System.out.println("Chrome is set with profile settings...");*/
 
-//		//Create an instance of selenium webdriver
 //		driver = new FirefoxDriver(firefoxProfile);
 //		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 //		driver.manage().window().maximize();
-		
+		//driver = new ChromeDriver(options); 
+	
 		//Create an instance of chrome webdriver
-		driver = new ChromeDriver(options); 
+        initializeBrowser(browser);
+
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS); //Added by Anshul for page load issues on 04/26/2024
 		driver.manage().window().maximize();
 		
 		//Logon to Base
-		driver.get(vgmain);
-//		driver.findElement(By.xpath("//button[text()='Legacy Log In']")).click();
-		driver.findElement(By.id("acceptDisclaimerBtn")).click();
-//		driver.get("https://sso-st.hhs.state.ma.us/oam/server/obrareq.cgi?encquery%3Dmai%2FjdRKajfcAPkVxN%2BPN61%2F%2Fl2eVDZVGOhDZVd%2BWE1DKyBdaAPBDOxFaR17mH%2FBAlMt5k%2BeM73ixO5QJbntdtN7MNg2Yb1hkF9wGIHHH6pDOjy3STneDXe%2FT6QHIe3dLdzG9XeZoFo9PIcv1ItafJBETQpYHymnzM06nT8QWa75HuwDfwhElP6LvNMqkPWRl6Ziv6c2S5EnIGybp6IZeGc9W%2BdUdSjaE9cjW7OtRX%2FrBBJRQ70o8mEuHxcSrYV1buytvUQTvRu%2F82N9P1jRSdMXXEQQhZvx%2FnSH2E5cvo0%3D%20agentid%3Dmmiswebgate%20ver%3D1%20crmethod%3D2");
-		driver.findElement(By.name("username")).clear();
-	    driver.findElement(By.name("username")).sendKeys(uid);
-	    driver.findElement(By.name("password")).clear();
-	    driver.findElement(By.name("password")).sendKeys(pwd);
-	    //driver.findElement(By.name("submit")).click();
-//	    driver.findElement(By.xpath("//input[@value='Login']")).click();
-	    driver.findElement(By.xpath("//*[@id='loginForm']/button")).click();
-	    //For userid(s) present in multiple orgs
-		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-		if(driver.findElements(By.xpath("//select[@name='aims2Location']")).size()>0) {
-			new Select(driver.findElement(By.xpath("//select[@name='aims2Location']"))).selectByVisibleText("EOHHS");
-			driver.findElement(By.xpath("//*[@class='btn btn-block btn-primary']")).click();
-		}
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-	    driver.get(envpath); //This is done because at this point we get a "New Medicaid System" link, which opens application in a new tab, so to avoid this we send the envpath again
-		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);		
-		//Check if you got the login limit exceeded error
-		if (driver.findElements(By.cssSelector("h1.header")).size()==0) {
-			if (env.equals("UAT"))
-				driver.get("https://mmis-uat.ehs.state.ma.us/newMMIS/Home.jsf");
-			else
-				driver.get("https://mmis-modeloffice.ehs.state.ma.us/newMMIS/Home.jsf"); //MO URL
-		}
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-	    String PostLoginText = driver.findElement(By.cssSelector("h1.header")).getText();
+		driver.get(vgmain); Thread.sleep(5000);
 
-	    if (!(PostLoginText.equals("MMIS Home")))
-	    	throw new SkipException("Skipping further tests because user not logged into Base successfully");
+		if(driver.findElements(By.xpath("(//button[text()='Log In'])[2]")).size()>0)
+			driver.findElement(By.xpath("(//button[text()='Log In'])[2]")).click(); Thread.sleep(2000);
+			
+		driver.findElement(By.xpath("//*[text()='Business Log In']")).click();  Thread.sleep(2000);
+		driver.findElement(By.xpath("//*[text()='Proceed to Login']")).click(); Thread.sleep(3000);
+
+		driver.findElement(By.id("signInName")).clear();
+		driver.findElement(By.id("signInName")).sendKeys(email);
+		
+		driver.findElement(By.name("Password")).clear();
+		driver.findElement(By.name("Password")).sendKeys(pwd); Thread.sleep(2000);
+		driver.findElement(By.xpath("//button[text()='Log in']")).click();
+		Thread.sleep(2000);
+
+		driver.findElement(By.xpath("//span[@class='multiselect__single']")).click();
+		driver.findElement(By.xpath("//span[text()='EOHHS - 0000999']")).click();
+		driver.findElement(By.xpath("//button[text()='Proceed']")).click();
+		Thread.sleep(2000);
+		
+		int loginTry=0;
+		do {
+			driver.get(envpath); 
+			
+			++loginTry;
+			if(loginTry==5)
+				break;
+		} while ( driver.findElements(By.xpath("//*[@title='MassHealth Member and Provider Services']")).size()==0);
+		
+		if(loginTry==5)
+			throw new SkipException("Login issue:\nCould not open url: "+envpath+" after trying 5 times.");
+			
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		String PostLoginText = driver.findElement(By.cssSelector("h1.header")).getText();
+
+		if (!(PostLoginText.equals("MMIS Home")))
+			throw new SkipException("Skipping further tests because user not logged into Base successfully");
 	}
-	
 	
 	
 	@Test
 	public static void testLoginPortal() throws Exception {
 
 //		setFireFoxProfile();
+		
+		if(env.equals("AWSUAT")) {
+			uid="mnarala4";
+		}else if(env.equals("AWSMO") || env.equals("AWSMO2")) {
+			uid="mnarala1";
+		}
 		
 		//Get portal logon info
 		sqlStatement = "select * from s_login where environment ='"+env+"' and application ='PORTAL'";
@@ -231,7 +402,7 @@ public class Login  {
 		colNames.add("PASSWORD");
 		colValues=Common.executeQuery1(sqlStatement, colNames);
 		envpath = colValues.get(0);
-		uid = colValues.get(1);
+		email = colValues.get(1);
 		pwd = colValues.get(2);
 		
 		System.out.println("****************************" +env+" PORTAL"
@@ -244,21 +415,12 @@ public class Login  {
 		
 		//only uncomment if you are trying to skip logging into base
 	    //setting chrome profile for download xml without user interaction
-		System.setProperty("webdriver.chrome.driver","C:\\Users\\agandhi20\\chromedriver new\\chromedriver.exe");
+		System.setProperty("webdriver.chrome.driver","C:\\Users\\MMohsunov\\eclipse-workspace\\MMIS_Regression_25\\chromedriver\\chromedriver.exe");
 		options = new ChromeOptions(); 
 		options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"}); 
 		options.addArguments("--ignore-certificate-errors"); //for disabling SSL warnings
 		options.addArguments("--disable-notifications");
-		
-		Map<String, Object> prefs = new HashMap<String, Object>();
-		prefs.put("credentials_enable_service", false);
-		prefs.put("profile.password_manager_enabled", false); //For disabling do you want to save this password
-		prefs.put("safebrowsing.enabled", true); //For MA21 file download-no popup
-		prefs.put("autofill.profile_enabled", false); //For disabling save address popup
-		prefs.put("download.default_directory", tempDirPath); //For auto download to tempDirPath
-		prefs.put("plugins.plugins_disabled", new String[] { "Chrome PDF Viewer" }); //For not opening PDF files in a new chrome tab/chrome viewer
-		prefs.put("plugins.always_open_pdf_externally", true); //Downloads the pdf file on launching the respective file link
-		options.setExperimentalOption("prefs", prefs);
+		options.addArguments("--disable-features=LocalNetworkAccessChecks");
 		
 		//Create an instance of chrome webdriver
 		driver = new ChromeDriver(options); 
@@ -266,19 +428,98 @@ public class Login  {
 		driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS); //Added by Anshul for page load issues on 04/26/2024
 		driver.manage().window().maximize();
 		
-		//Logon to portal
 		driver.get(vgmain);
-		driver.findElement(By.id("acceptDisclaimerBtn")).click();
-		driver.findElement(By.name("username")).clear();
-	    driver.findElement(By.name("username")).sendKeys(uid);
-	    driver.findElement(By.name("password")).clear();
-	    driver.findElement(By.name("password")).sendKeys(pwd);
-	    driver.findElement(By.xpath("//*[@id='loginForm']/button")).click();
-	    driver.get(envpath); //This and below step is done because at this point we get a "Medicaid Provider Portal" link, which opens application in a new tab, so to avoid this we send the envpath again
-		driver.findElement(By.linkText("LOGIN")).click(); //Additional step needed to login to portal
-		if (!(driver.findElement(By.xpath("/html/body/div/div[1]/div[2]/div/div/span")).getText().equals("Welcome "+uid)))
-	    	throw new SkipException("Skipping further tests because user not logged into portal successfully");
+		Thread.sleep(2000);
+			
+		driver.findElement(By.xpath("(//button[text()='Log In'])[2]")).click(); Thread.sleep(2000);
+		driver.findElement(By.xpath("//*[text()='Business Log In']")).click();  Thread.sleep(2000);
+		driver.findElement(By.xpath("//*[text()='Proceed to Login']")).click(); Thread.sleep(5000);
+
+		driver.findElement(By.xpath("//*[@id='localAccountForm']/div[3]/div[1]/input")).clear(); Thread.sleep(1000);
+		driver.findElement(By.xpath("//*[@id='localAccountForm']/div[3]/div[1]/input")).sendKeys(email);
+		
+		driver.findElement(By.id("password")).clear(); Thread.sleep(1000);
+		driver.findElement(By.id("password")).sendKeys(pwd);
+		driver.findElement(By.xpath("//button[text()='Log in']")).click();
+
+		if(driver.findElements(By.xpath("//span[@class='multiselect__single']")).size()>0) {
+			driver.findElement(By.xpath("//span[@class='multiselect__single']")).click();
+			driver.findElement(By.xpath("//span[text()='EOHHS - 0000999']")).click();
+			driver.findElement(By.xpath("//button[text()='Proceed']")).click();
+			Thread.sleep(2000);
+		}
+			
+		driver.get(envpath); //This and below step is done because at this point we get a "Medicaid Provider Portal" link, which opens application in a new tab, so to avoid this we send the envpath again
+		Thread.sleep(1000);
+			
+		if(driver.findElements(By.xpath("//*[contains(text(),'LOGIN')]")).size() > 0) 
+			driver.findElement(By.xpath("//*[contains(text(),'LOGIN')]")).click(); Thread.sleep(1000);
+			
+		while (driver.findElements(By.xpath("//*[text()='MassHealth Provider Online Service Center (POSC)']")).size()==0) {
+			Thread.sleep(5000);
+			driver.get(vgmain);
+			driver.get(envpath); 
+			if(driver.findElements(By.xpath("//*[contains(text(),'LOGIN')]")).size() > 0) 
+				driver.findElement(By.xpath("//*[contains(text(),'LOGIN')]")).click(); Thread.sleep(5000);
+			System.out.println("Login Again to POSC");
+			
+			if(driver.findElements(By.xpath("//*[text()='Business Log In']")).size()>0) {
+				driver.findElement(By.xpath("//*[text()='Business Log In']")).click();  Thread.sleep(2000);
+				driver.findElement(By.xpath("//*[text()='Proceed to Login']")).click(); Thread.sleep(2000);
+			}
+			if(driver.findElements(By.name("Email")).size()>0) {
+				driver.findElement(By.name("Email")).clear();
+				driver.findElement(By.name("Email")).sendKeys(email);
+			
+				driver.findElement(By.id("password")).clear(); Thread.sleep(1000);
+				driver.findElement(By.id("password")).sendKeys(pwd);
+				driver.findElement(By.xpath("//button[text()='Log in']")).click();
+			}
+		}
+			
+		if (!(driver.findElements(By.xpath("//*[text()='Welcome "+uid+"']")).size() > 0) )
+				throw new SkipException("Skipping further tests because user not logged into Portal successfully");
+		
 	}
+	
+	public static void loginAgain() throws InterruptedException {
+		//close the current driver
+		driver.close();
+		Thread.sleep(3000);
+		
+		//initialize driver again
+		driver = new ChromeDriver(options);
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		
+		System.out.println("Trying to logon again");
+		driver.get(vgmain);
+		driver.findElement(By.xpath("//button[text()='Business Log In']")).click();
+		driver.findElement(By.xpath("//button[text()='Proceed']")).click();
+
+		driver.findElement(By.name("Email")).clear();
+		driver.findElement(By.name("Email")).sendKeys(email);
+		
+		driver.findElement(By.name("Password")).clear();
+		driver.findElement(By.name("Password")).sendKeys(pwd);
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//button[text()='Log in']")).click();
+		Thread.sleep(3000);
+
+		if(driver.findElements(By.xpath("//select[@name='aims2Location']")).size()>0) {
+			new Select(driver.findElement(By.xpath("//select[@name='aims2Location']"))).selectByVisibleText("EOHHS");
+			driver.findElement(By.xpath("//button[text()='Complete Log In']")).click();
+			Thread.sleep(2000);
+		}
+
+		driver.get(envpath); //This is done because at this point we get a "New Medicaid System" link, which opens application in a new tab, so to avoid this we send the envpath again
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);		
+
+		if(driver.findElements(By.xpath("//a[contains(text(),'LOGIN') or contains(text(),'Login')]")).size() > 0) 
+			driver.findElement(By.xpath("//a[contains(text(),'LOGIN') or contains(text(),'Login')]")).click();
+	
+	}
+	
 	
 	@Test
 	public static void closeLogs() throws IOException {

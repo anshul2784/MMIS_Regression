@@ -14,13 +14,50 @@
 	<classpathentry kind="lib" path="lib/saxon-8.7.jar"/>
 	<classpathentry kind="lib" path="lib/SaxonLiaison.jar"/>
 	<classpathentry kind="lib" path="lib/selenium-java-client-driver.jar"/>
-	<classpathentry kind="lib" path="lib/selenium-server-standalone-2.49.1.jar"/>
 	<classpathentry kind="lib" path="lib/testng-6.4.jar"/>
 	<classpathentry kind="lib" path="lib/velocity-dep-1.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-api-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-api-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-chrome-driver-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-chrome-driver-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-chromium-driver-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-chromium-driver-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-devtools-v85-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-devtools-v85-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-devtools-v110-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-devtools-v110-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-devtools-v111-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-devtools-v111-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-devtools-v112-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-devtools-v112-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-edge-driver-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-edge-driver-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-firefox-driver-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-firefox-driver-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-http-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-http-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-ie-driver-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-ie-driver-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-java-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-java-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-json-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-json-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-manager-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-manager-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-remote-driver-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-remote-driver-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-safari-driver-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-safari-driver-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-support-4.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/selenium-support-4.9.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/agandhi20/Git/MMIS_Regression/MMIS_Regression/lib/webdrivermanager-6.3.4-fat.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

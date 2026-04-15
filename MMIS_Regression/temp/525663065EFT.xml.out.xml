@@ -1,9 +1,0 @@
-<EligibilityResponse txnElapsedTime="0.33"><Response result_type="W"
-id_medicaid="100238270051"
-id_other="525663065"
-id_source="DTA"
-><FaultDetail code="2002"
-description="Potential duplicate member id                                              "
-/><FaultDetail code="2333"
-description="Case/Aid Cat/Dep NUM combo already exists on DB for a different Member ID  "
-/></Response></EligibilityResponse>

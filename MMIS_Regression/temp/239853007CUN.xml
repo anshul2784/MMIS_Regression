@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><EligibilityRequest
-xmlns="http://xmlns.hhs.ma.gov/HHS/serviceobjects/versions/1.0/EligibilityServices"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-<transactionsource id_medicaid=" " id_other="239853007" id_source="DSS"/>
-<demographic cde_citizen="C" cde_lang_written="ENG" cde_race="WHITE" cde_sex="F" dte_birth="1953-04-13" nam_first="A3DAESLEFJ" nam_last="MAZDAZ" nam_mid_init=" " num_primary_ssn="125091027" res_adr_city="BOSTON" res_adr_state="MA" res_adr_street_1="403 COMMONWEATH AV" res_adr_street_2=" " res_adr_zip_code="02115"/><case cde_case_status="1" hoh_nam_first="A3DAESLEFJ" hoh_nam_init=" " hoh_nam_last="MAZDAZ" num_case="920832481"/>
-<eligibility amt_gross_income="14198.22" cde_cat="05" cde_elig_status="1" cde_line="03" cde_office="600" cde_open_reason="01" cde_region="01" dte_appl="2025-04-13" dte_begin_elig="2025-04-13" family_size="07" />
-</EligibilityRequest>

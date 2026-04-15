@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><EligibilityRequest
-xmlns="http://xmlns.hhs.ma.gov/HHS/serviceobjects/versions/1.0/EligibilityServices"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-<transactionsource id_medicaid=" " id_other="802342035" id_source="MHO"/>
-<demographic cde_citizen="C" cde_lang_written="ENG" cde_race="WHITE" cde_ethnicity="AMER" cde_sex="F" dte_birth="2025-01-14" nam_first="HWIKREAL" nam_last="PETERS" nam_mid_init=" " res_adr_city="FOXBORO" res_adr_state="MA" res_adr_street_1="15 FULLER RD" res_adr_street_2=" " res_adr_zip_code="02035"/><case cde_case_status="1" hoh_nam_first="HWIKREAL" hoh_nam_init=" " hoh_nam_last="BUGS" num_case="381150263"/>
-<eligibility amt_gross_income="14198.22" cde_cat="08" cde_elig_status="1" cde_line="00" cde_office="600" cde_open_reason="01" cde_close_reason="00" cde_region="01" dte_appl="2025-01-14" dte_begin_elig="2024-12-10" dte_end_elig="2024-12-12" family_size="07" />
-</EligibilityRequest>

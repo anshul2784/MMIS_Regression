@@ -4,7 +4,7 @@
 
  <parameter name="selenium.host" value="localhost"></parameter>
  <parameter name="selenium.port" value="4444"></parameter>
- <parameter name="selenium.browser" value="*firefox"></parameter>
+ <parameter name="selenium.browser" value="chrome"></parameter>
  <parameter name="selenium.url" value="www.google.com"></parameter>
  <parameter name="environment" value="AWSMO"></parameter>
  <listeners>
@@ -1006,65 +1006,7 @@
         <methods>
 								
 				<include name="test31143edit"/>
-			<include name="test31143"/>
-			<include name="test31142"/>
-			<include name="test27388"/>
-			<include name="test27389"/>
-			<include name="test27390"/>
-			<include name="test27391"/>
-			<include name="test27393"/>
-			<include name="test27398"/>
-			<include name="test27438"/>
-			<include name="test26912"/>
-			<include name="test26913"/>
-			<include name="test26915"/>
-			<include name="test26916"/>
-			<include name="test27403"/>
-			<include name="test27404"/>
-			<include name="test27405"/>
-			<include name="test31183"/>
-			<include name="test31185"/>
-			<include name="test31197"/>
-			<include name="test31187"/>
-			<include name="test31199"/>
-			<include name="test31181"/>
-			<include name="test31189"/>
-			<include name="test31193"/>
-			<include name="test31195"/>
-			<include name="test31201"/>
-			<exclude name="test31203"/> //Do Not do this TC as of now
-			<include name="test27381"/>
-			<include name="test27397"/>
-			<include name="test27399"/>
-			<include name="test27434"/>
-			<include name="test27436"/>
-			<include name="test27408"/>
-			<include name="test27394"/>
-			<include name="test27409"/>
-			<include name="test27400"/>		
-			<exclude name="test27411a"/> //Renuka asked to cancel
-			<exclude name="test27411b"/> //27411a is cancelled
-			<exclude name="test27411c"/> //27411a is cancelled
-			<include name="test27440"/>
-			<include name="test32253"/>
-			<include name="test32254a"/>
-			<include name="test32254b"/>
-			<include name="test32256a"/>
-			<include name="test32256b"/>
-			<include name="test32259"/>
-			<include name="test32263a"/>
-			<include name="test32263b"/>
-			<include name="test32263c"/>
-			<include name="test32265"/>
-			<include name="test32267"/>
-			<include name="test32268"/>
-			<include name="test32269"/>
-			<include name="test32270"/>
-			<include name="test32271"/>
-		    <include name="test32273"/>
-			<include name="test32274"/>
-			<include name="test32279"/>
-			<include name="test32284"/>
+			
 					
 					
 			

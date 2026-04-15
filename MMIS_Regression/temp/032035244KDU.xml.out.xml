@@ -1,7 +1,0 @@
-<EligibilityResponse txnElapsedTime="0.40"><Response result_type="W"
-id_medicaid="100206040816"
-id_other="032035244"
-id_source="DSS"
-><FaultDetail code="2346"
-description="Agency is not authorized to submit data in this field: cde_citizen         "
-/></Response></EligibilityResponse>

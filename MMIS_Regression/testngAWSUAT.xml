@@ -200,6 +200,7 @@
       </class> 
     </classes>
   </test> --> 
+
   
    <!--   <test name="EVS test" preserve-order="true">
     <classes>
@@ -1000,27 +1001,6 @@
     </classes>
   </test> -->
   
-  <test name="COB Claims Test" preserve-order="true">
-    <classes>
-      <class name="newMMIS_Subsystems.claims">
-        <methods>
-			//COB TCs
-								
-					<include name="test38612"/> 					
-					
-				
-					<include name="test31802"/>
-				
-					<include name="test34306"/>		
-					
-					
-					
-			
-        </methods>
-      </class> 
-    </classes>
-  </test> 
-  
   <!-- <test name="TPL test" preserve-order="true">
     <classes>
       <class name="newMMIS_Subsystems.TPL">
@@ -1069,8 +1049,6 @@
       </class> 
     </classes>
   </test>  -->
-
-
   
          <!--  <test name="Member Day2 test" preserve-order="true">
     <classes>
@@ -1191,6 +1169,17 @@
     </classes>
   </test> -->
 
+<test name="EPSDT test" preserve-order="true">
+    <classes>
+      <class name="newMMIS_Subsystems.EPSDT">
+        <methods>
+
+      	    <include name="test22378"/>
+      
+        </methods>
+      </class> 
+    </classes>
+  </test>
  
 //after data refresh, make sure PID 110000314 has program elig 
    <!--    <test name="Provider test" preserve-order="true">
@@ -1319,7 +1308,6 @@
   
  
   
-
  <!-- <test name="Referrals test" preserve-order="true">
     <classes>
       <class name="newMMIS_Subsystems.Referrals">

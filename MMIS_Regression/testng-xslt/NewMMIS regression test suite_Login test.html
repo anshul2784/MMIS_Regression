@@ -18,10 +18,10 @@
                <b>Login test</b>
             </td>
             <td style="background-color: #FFBBBB; padding: 3px 3px 3px 0;" align="center">
-               <div style="width: 50px;">0</div>
+               <div style="width: 50px;">1</div>
             </td>
             <td style="background-color: lightgreen; padding: 3px 3px 3px 0;" align="center">
-               <div style="width: 50px;">2</div>
+               <div style="width: 50px;">1</div>
             </td>
             <td style="background-color: #FFFFBB; padding: 3px 3px 3px 0;" align="center">
                <div style="width: 50px;">0</div>
@@ -31,10 +31,10 @@
             </td>
             <td align="center"
                 style="font-weight: bold; background-color: #eaf0f7; padding: 3px 3px 3px 0;">
-               <div style="width: 50px;">100%</div>
+               <div style="width: 50px;">50%</div>
             </td>
             <td style="background-color: #eaf0f7; padding: 3px 3px 3px 0;" align="center"
-                nowrap="true">7s
+                nowrap="true">33s
                
             </td>
          </tr>
@@ -92,13 +92,103 @@
                <td nowrap="true">Duration</td>
                <td>Exception</td>
             </tr>
+            <tr id="newMMIS_Subsystems.Login_testLoginBase_byStatus_failed_FAIL1_row"
+                class="testMethodStatusFAIL">
+               <td width="100%" class="firstMethodCell">
+                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testLoginBase_byStatus_failed_FAIL1_details')">testLoginBase()</a>
+               </td>
+               <td nowrap="true">12:11:53</td>
+               <td nowrap="true" align="right">31s
+                  
+               </td>
+               <td nowrap="true">
+                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testLoginBase_byStatus_failed_FAIL1_exception')">java.lang.NoSuchMethodError: 
+                     'com.google.common.collect.ImmutableMap com.google.common.collect.ImmutableMap.of(java.lang.Object, java.lang.Object, java.lang.Object,
+                     java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object,
+                     java.lang.Object, java.lang.Object)'
+                     
+                  </a>
+                   
+                  
+               </td>
+            </tr>
+            <tr>
+               <td colspan="4" class="detailsBox">
+                  <div id="newMMIS_Subsystems.Login_testLoginBase_byStatus_failed_FAIL1_details"
+                       class="testMethodDetails">
+                     <div>
+                        <b>Name: </b>testLoginBase
+                     </div>
+                     <div>
+                        <b>Signature: </b>testLoginBase()[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]
+                     </div>
+                     <div>
+                        <b>Start time: </b>12:11:53
+                     </div>
+                     <div>
+                        <b>End time: </b>12:12:25
+                     </div>
+                     <div>
+                        <b>Duration: </b>31s
+                        
+                     </div>
+                  </div>
+               </td>
+            </tr>
+            <tr>
+               <td colspan="4" class="detailsBox">
+                  <div id="newMMIS_Subsystems.Login_testLoginBase_byStatus_failed_FAIL1_exception"
+                       class="testMethodDetails">
+                     <pre style="padding: 5px; margin: 0;">java.lang.NoSuchMethodError: 'com.google.common.collect.ImmutableMap com.google.common.collect.ImmutableMap.of(java.lang.Object,
+                        java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object,
+                        java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)'
+                        	at org.openqa.selenium.chrome.AddHasCasting.getAdditionalCommands(AddHasCasting.java:38)
+                        	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.getExtraCommands(ChromeDriver.java:116)
+                        	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.&lt;init&gt;(ChromeDriver.java:111)
+                        	at org.openqa.selenium.chrome.ChromeDriver.generateExecutor(ChromeDriver.java:101)
+                        	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:88)
+                        	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:84)
+                        	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:73)
+                        	at newMMIS_Subsystems.Login.initializeChrome(Unknown Source)
+                        	at newMMIS_Subsystems.Login.initializeBrowser(Unknown Source)
+                        	at newMMIS_Subsystems.Login.testLoginBase(Unknown Source)
+                        	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+                        	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+                        	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+                        	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+                        	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+                        	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+                        	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+                        	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+                        	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+                        	at org.testng.TestRunner.run(TestRunner.java:624)
+                        	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+                        	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+                        	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+                        	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+                        	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+                        	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+                        	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+                        	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+                        	at org.testng.TestNG.run(TestNG.java:1048)
+                        	at org.testng.TestNG.privateMain(TestNG.java:1355)
+                        	at org.testng.TestNG.main(TestNG.java:1324)
+                     </pre>
+                  </div>
+               </td>
+            </tr>
             <tr id="newMMIS_Subsystems.Login_init_byStatus_passed_PASS1_row"
                 class="testMethodStatusPASS testMethodStatusCONF">
                <td width="100%" class="firstMethodCell">
-                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_init_byStatus_passed_PASS1_details')">init(AWSPERF)</a>
+                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_init_byStatus_passed_PASS1_details')">init(AWSMO
+                     
+                     ,
+                     
+                     chrome)
+                  </a>
                </td>
-               <td nowrap="true">16:11:50</td>
-               <td nowrap="true" align="right">9 ms
+               <td nowrap="true">12:11:52</td>
+               <td nowrap="true" align="right">11 ms
                   
                </td>
                <td nowrap="true">
@@ -114,23 +204,27 @@
                         <b>Name: </b>init
                      </div>
                      <div>
-                        <b>Signature: </b>init(java.lang.String)[pri:0, instance:newMMIS_Subsystems.Login@70be0a2b]
+                        <b>Signature: </b>init(java.lang.String, java.lang.String)[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]
                      </div>
                      <div>
                         <b>Parameters: </b>
                         
-                        AWSPERF
+                        AWSMO
+                        
+                        ,
+                        
+                        chrome
                         
                         
                      </div>
                      <div>
-                        <b>Start time: </b>16:11:50
+                        <b>Start time: </b>12:11:52
                      </div>
                      <div>
-                        <b>End time: </b>16:11:50
+                        <b>End time: </b>12:11:52
                      </div>
                      <div>
-                        <b>Duration: </b>9 ms
+                        <b>Duration: </b>11 ms
                         
                      </div>
                   </div>
@@ -142,7 +236,7 @@
                <td width="100%" class="firstMethodCell">
                   <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testDBconnect_byStatus_passed_PASS2_details')">testDBconnect()</a>
                </td>
-               <td nowrap="true">16:11:50</td>
+               <td nowrap="true">12:11:52</td>
                <td nowrap="true" align="right">1s
                   
                </td>
@@ -159,54 +253,16 @@
                         <b>Name: </b>testDBconnect
                      </div>
                      <div>
-                        <b>Signature: </b>testDBconnect()[pri:0, instance:newMMIS_Subsystems.Login@70be0a2b]
+                        <b>Signature: </b>testDBconnect()[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]
                      </div>
                      <div>
-                        <b>Start time: </b>16:11:50
+                        <b>Start time: </b>12:11:52
                      </div>
                      <div>
-                        <b>End time: </b>16:11:51
+                        <b>End time: </b>12:11:53
                      </div>
                      <div>
                         <b>Duration: </b>1s
-                        
-                     </div>
-                  </div>
-               </td>
-            </tr>
-            <tr></tr>
-            <tr id="newMMIS_Subsystems.Login_testLoginBase_byStatus_passed_PASS3_row"
-                class="testMethodStatusPASS">
-               <td width="100%" class="firstMethodCell">
-                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testLoginBase_byStatus_passed_PASS3_details')">testLoginBase()</a>
-               </td>
-               <td nowrap="true">16:11:51</td>
-               <td nowrap="true" align="right">5s
-                  
-               </td>
-               <td nowrap="true">
-                   
-                  
-               </td>
-            </tr>
-            <tr>
-               <td colspan="4" class="detailsBox">
-                  <div id="newMMIS_Subsystems.Login_testLoginBase_byStatus_passed_PASS3_details"
-                       class="testMethodDetails">
-                     <div>
-                        <b>Name: </b>testLoginBase
-                     </div>
-                     <div>
-                        <b>Signature: </b>testLoginBase()[pri:0, instance:newMMIS_Subsystems.Login@70be0a2b]
-                     </div>
-                     <div>
-                        <b>Start time: </b>16:11:51
-                     </div>
-                     <div>
-                        <b>End time: </b>16:11:57
-                     </div>
-                     <div>
-                        <b>Duration: </b>5s
                         
                      </div>
                   </div>
@@ -231,10 +287,15 @@
             <tr id="newMMIS_Subsystems.Login_init_byClass_PASS1_row"
                 class="testMethodStatusPASS testMethodStatusCONF">
                <td width="100%" class="firstMethodCell">
-                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_init_byClass_PASS1_details')">init(AWSPERF)</a>
+                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_init_byClass_PASS1_details')">init(AWSMO
+                     
+                     ,
+                     
+                     chrome)
+                  </a>
                </td>
-               <td nowrap="true">16:11:50</td>
-               <td nowrap="true" align="right">9 ms
+               <td nowrap="true">12:11:52</td>
+               <td nowrap="true" align="right">11 ms
                   
                </td>
                <td nowrap="true">
@@ -250,23 +311,27 @@
                         <b>Name: </b>init
                      </div>
                      <div>
-                        <b>Signature: </b>init(java.lang.String)[pri:0, instance:newMMIS_Subsystems.Login@70be0a2b]
+                        <b>Signature: </b>init(java.lang.String, java.lang.String)[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]
                      </div>
                      <div>
                         <b>Parameters: </b>
                         
-                        AWSPERF
+                        AWSMO
+                        
+                        ,
+                        
+                        chrome
                         
                         
                      </div>
                      <div>
-                        <b>Start time: </b>16:11:50
+                        <b>Start time: </b>12:11:52
                      </div>
                      <div>
-                        <b>End time: </b>16:11:50
+                        <b>End time: </b>12:11:52
                      </div>
                      <div>
-                        <b>Duration: </b>9 ms
+                        <b>Duration: </b>11 ms
                         
                      </div>
                   </div>
@@ -278,7 +343,7 @@
                <td width="100%" class="firstMethodCell">
                   <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testDBconnect_byClass_PASS2_details')">testDBconnect()</a>
                </td>
-               <td nowrap="true">16:11:50</td>
+               <td nowrap="true">12:11:52</td>
                <td nowrap="true" align="right">1s
                   
                </td>
@@ -295,13 +360,13 @@
                         <b>Name: </b>testDBconnect
                      </div>
                      <div>
-                        <b>Signature: </b>testDBconnect()[pri:0, instance:newMMIS_Subsystems.Login@70be0a2b]
+                        <b>Signature: </b>testDBconnect()[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]
                      </div>
                      <div>
-                        <b>Start time: </b>16:11:50
+                        <b>Start time: </b>12:11:52
                      </div>
                      <div>
-                        <b>End time: </b>16:11:51
+                        <b>End time: </b>12:11:53
                      </div>
                      <div>
                         <b>Duration: </b>1s
@@ -311,44 +376,91 @@
                </td>
             </tr>
             <tr></tr>
-            <tr id="newMMIS_Subsystems.Login_testLoginBase_byClass_PASS3_row"
-                class="testMethodStatusPASS">
+            <tr id="newMMIS_Subsystems.Login_testLoginBase_byClass_FAIL3_row"
+                class="testMethodStatusFAIL">
                <td width="100%" class="firstMethodCell">
-                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testLoginBase_byClass_PASS3_details')">testLoginBase()</a>
+                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testLoginBase_byClass_FAIL3_details')">testLoginBase()</a>
                </td>
-               <td nowrap="true">16:11:51</td>
-               <td nowrap="true" align="right">5s
+               <td nowrap="true">12:11:53</td>
+               <td nowrap="true" align="right">31s
                   
                </td>
                <td nowrap="true">
+                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testLoginBase_byClass_FAIL3_exception')">java.lang.NoSuchMethodError: 
+                     'com.google.common.collect.ImmutableMap com.google.common.collect.ImmutableMap.of(java.lang.Object, java.lang.Object, java.lang.Object,
+                     java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object,
+                     java.lang.Object, java.lang.Object)'
+                     
+                  </a>
                    
                   
                </td>
             </tr>
             <tr>
                <td colspan="4" class="detailsBox">
-                  <div id="newMMIS_Subsystems.Login_testLoginBase_byClass_PASS3_details"
+                  <div id="newMMIS_Subsystems.Login_testLoginBase_byClass_FAIL3_details"
                        class="testMethodDetails">
                      <div>
                         <b>Name: </b>testLoginBase
                      </div>
                      <div>
-                        <b>Signature: </b>testLoginBase()[pri:0, instance:newMMIS_Subsystems.Login@70be0a2b]
+                        <b>Signature: </b>testLoginBase()[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]
                      </div>
                      <div>
-                        <b>Start time: </b>16:11:51
+                        <b>Start time: </b>12:11:53
                      </div>
                      <div>
-                        <b>End time: </b>16:11:57
+                        <b>End time: </b>12:12:25
                      </div>
                      <div>
-                        <b>Duration: </b>5s
+                        <b>Duration: </b>31s
                         
                      </div>
                   </div>
                </td>
             </tr>
-            <tr></tr>
+            <tr>
+               <td colspan="4" class="detailsBox">
+                  <div id="newMMIS_Subsystems.Login_testLoginBase_byClass_FAIL3_exception"
+                       class="testMethodDetails">
+                     <pre style="padding: 5px; margin: 0;">java.lang.NoSuchMethodError: 'com.google.common.collect.ImmutableMap com.google.common.collect.ImmutableMap.of(java.lang.Object,
+                        java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object,
+                        java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)'
+                        	at org.openqa.selenium.chrome.AddHasCasting.getAdditionalCommands(AddHasCasting.java:38)
+                        	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.getExtraCommands(ChromeDriver.java:116)
+                        	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.&lt;init&gt;(ChromeDriver.java:111)
+                        	at org.openqa.selenium.chrome.ChromeDriver.generateExecutor(ChromeDriver.java:101)
+                        	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:88)
+                        	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:84)
+                        	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:73)
+                        	at newMMIS_Subsystems.Login.initializeChrome(Unknown Source)
+                        	at newMMIS_Subsystems.Login.initializeBrowser(Unknown Source)
+                        	at newMMIS_Subsystems.Login.testLoginBase(Unknown Source)
+                        	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+                        	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+                        	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+                        	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+                        	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+                        	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+                        	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+                        	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+                        	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+                        	at org.testng.TestRunner.run(TestRunner.java:624)
+                        	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+                        	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+                        	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+                        	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+                        	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+                        	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+                        	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+                        	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+                        	at org.testng.TestNG.run(TestNG.java:1048)
+                        	at org.testng.TestNG.privateMain(TestNG.java:1355)
+                        	at org.testng.TestNG.main(TestNG.java:1324)
+                     </pre>
+                  </div>
+               </td>
+            </tr>
          </table>
          <br></br>
       </div>
