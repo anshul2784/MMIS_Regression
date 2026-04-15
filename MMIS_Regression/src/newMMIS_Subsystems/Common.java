@@ -18,7 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.ElementNotVisibleException;
+//import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -872,21 +872,26 @@ public class Common extends Login {
 			return outputText;
 	    }
 	    
-	    public static void connectUNIXsftp(String copyFrom, String copyTo) throws Exception{
+	    @SuppressWarnings("static-access")
+		public static void connectUNIXsftp(String copyFrom, String copyTo) throws Exception{
 
-	    	
-			String hostname;
-			if (env.equals("MO"))
-				hostname = "10.196.210.9";
-			else if ((env.equals("UAT")))
-				hostname = "10.196.210.71";
-			else if ((env.equals("PERF")))
-				hostname = "10.196.210.73";
-			else
-				throw new SkipException("You are not conducting this test in MO or UAT, so skipping this report test case because current environment is not running cybermation");
+	    	String hostname, username, password;
+            hostname=getHostname(env);
+			
+            String ediLoginSql = "select nam_user, password from automation.v_edi_login where days_to_reset_pwd > 1 and hostname = '"+hostname+"'";
+            colNames.add("nam_user");
+            colNames.add("password");
+            
+            colValues = executeQuery1(ediLoginSql, colNames);
 
-			String username = "angandhi";
-			String password = "EAston.1";
+            if (!colValues.get(0).equals("null")) {
+                           username = colValues.get(0);
+                           password = decodePwd(colValues.get(1));
+            } else {
+                           System.out.println("No data returned from DB for UNIX Host authorization");
+                           log("No data returned from DB for UNIX Host authorization");
+                           throw new SkipException("No data returned from DB for UNIX Host authorization");
+            }
 
 			try
 			{	
@@ -911,6 +916,7 @@ public class Common extends Login {
                 e.printStackTrace();
             }
 	    }
+
 	    
 	    public static String getHostname(String env) {
             if (env.equals("MO"))

@@ -370,7 +370,7 @@ public class TPL extends Login{
     				   " where r.sak_recip = b.sak_recip  and h.sak_pol_hold = r.sak_policy_ownr and b.ind_active = 'Y' and b.num_ssn <> ' ' and r.sak_tpl_resource = xref.sak_tpl_resource and xref.dte_end = 22991231 and b.nam_mid_init = ' '"+
     				   " and exists (select r1.sak_recip from t_tpl_resource r1 where r1.sak_recip = r.sak_recip group by r1.sak_recip having count(r1.sak_recip) = 1 )"+
     				   " and exists (select r2.sak_policy_ownr from t_tpl_resource r2 where r2.sak_policy_ownr = r.sak_policy_ownr group by r2.sak_policy_ownr having count(r2.sak_policy_ownr) > 5 )"+
-    				   " and b.num_ssn not in ('011848497', '033866952', '011888601', '028532656', '028534685', '028489467', '028496483', '028706596', '029054208', '028712203', '028678192')"+ //Excluding these SSNs as they have multiple members with same ssn. Creating problems for script.
+    				   " and b.num_ssn not in ('011848497', '033866952', '011888601', '028532656', '028534685', '028489467', '028496483', '028706596', '029054208', '028712203', '028678192', '028895448', '028620857')"+ //Excluding these SSNs as they have multiple members with same ssn. Creating problems for script.
     				   " and b.sak_recip > dbms_random.value * 6300000 " +
     				   " and rownum < 2";
     	colNames.add("ID_MEDICAID"); //0

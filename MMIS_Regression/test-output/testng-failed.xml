@@ -2,44 +2,51 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite configfailurepolicy="continue" name="Failed suite [NewMMIS regression test suite]">
   <parameter name="selenium.port" value="4444"/>
-  <parameter name="environment" value="AWSPERF"/>
+  <parameter name="environment" value="AWSMO"/>
   <parameter name="selenium.host" value="localhost"/>
-  <parameter name="selenium.browser" value="*firefox"/>
+  <parameter name="selenium.browser" value="chrome"/>
   <parameter name="selenium.url" value="www.google.com"/>
   <listeners>
     <listener class-name="org.uncommons.reportng.HTMLReporter"/>
   </listeners>
-  <test name="Member test(failed)">
+  <test name="Login test(failed)">
     <classes>
-      <class name="newMMIS_Subsystems.Member">
+      <class name="newMMIS_Subsystems.Login">
         <methods>
-          <include name="test32960a"/>
-          <include name="test23408"/>
-          <include name="test32954"/>
-          <include name="test32953"/>
-          <include name="test23407"/>
-          <include name="test32959a"/>
-          <include name="test22530"/>
-          <include name="test22541"/>
-          <include name="test26278"/>
+          <include name="init"/>
+          <include name="init"/>
+          <include name="testLoginBase"/>
+        </methods>
+      </class> <!-- newMMIS_Subsystems.Login -->
+      <class name="newMMIS_Subsystems.claims">
+        <methods>
+          <include name="claimsStartup"/>
+          <include name="startup"/>
           <include name="init"/>
           <include name="LoginCheck"/>
-          <include name="test22538"/>
-          <include name="test22553_23372"/>
-          <include name="test23381"/>
-          <include name="test23392"/>
-          <include name="test28552"/>
-          <include name="test26277"/>
-          <include name="memberStartup"/>
-          <include name="test22554a_23403"/>
+          <include name="teardown"/>
         </methods>
-      </class> <!-- newMMIS_Subsystems.Member -->
+      </class> <!-- newMMIS_Subsystems.claims -->
+    </classes>
+  </test> <!-- Login test(failed) -->
+  <test name="COB Claims Test(failed)">
+    <classes>
       <class name="newMMIS_Subsystems.Login">
         <methods>
           <include name="init"/>
           <include name="init"/>
         </methods>
       </class> <!-- newMMIS_Subsystems.Login -->
+      <class name="newMMIS_Subsystems.claims">
+        <methods>
+          <include name="test31143edit"/>
+          <include name="claimsStartup"/>
+          <include name="startup"/>
+          <include name="init"/>
+          <include name="LoginCheck"/>
+          <include name="teardown"/>
+        </methods>
+      </class> <!-- newMMIS_Subsystems.claims -->
     </classes>
-  </test> <!-- Member test(failed) -->
+  </test> <!-- COB Claims Test(failed) -->
 </suite> <!-- Failed suite [NewMMIS regression test suite] -->

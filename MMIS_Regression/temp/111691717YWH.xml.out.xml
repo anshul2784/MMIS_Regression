@@ -1,7 +1,0 @@
-<EligibilityResponse txnElapsedTime="0.31"><Response result_type="W"
-id_medicaid="100238270241"
-id_other="111691717"
-id_source="MHO"
-><FaultDetail code="2241"
-description="Patient pay effective date cannot be greater than 6 months into the future."
-/></Response></EligibilityResponse>

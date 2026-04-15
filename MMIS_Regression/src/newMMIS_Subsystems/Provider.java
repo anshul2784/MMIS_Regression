@@ -521,8 +521,8 @@ public class Provider extends Login{
 		driver.findElement(By.xpath("//input[contains(@id,'providerAddressEmail')]")).clear();
 		driver.findElement(By.xpath("//input[contains(@id,'providerAddressEmail')]")).sendKeys(email);
 		//Add wait to solve captcha manually
-		System.out.println("Solve captcha now. Waiting 40 seconds");
-		Thread.sleep(40000);
+		System.out.println("Solve captcha now. Waiting 60 seconds");
+		Thread.sleep(60000);
 		driver.findElement(By.xpath("//input[@class='buttonCommand' and @alt='Submit']")).click();
 		portalATN = driver.findElement(By.xpath("//*[contains(@id,'atn1')]")).getText();
 		log(portalATN);
@@ -886,8 +886,8 @@ public class Provider extends Login{
 		driver.findElement(By.xpath("//input[contains(@id,'nonProviderEmail')]")).sendKeys(email);
 		new Select(driver.findElement(By.xpath("//select[contains(@id,'relEntityType')]"))).selectByVisibleText("Billing Intermediary");
 		//Add wait to solve captcha manually
-		System.out.println("Solve captcha now. Waiting 40 seconds");
-		Thread.sleep(40000);
+		System.out.println("Solve captcha now. Waiting 60 seconds");
+		Thread.sleep(60000);
 		driver.findElement(By.xpath("//input[@class='buttonCommand' and @alt='Submit']")).click();
 		
 		//Doing Business As (DBA) Address
@@ -2641,8 +2641,8 @@ public class Provider extends Login{
 		driver.findElement(By.xpath("//input[contains(@id,'providerAddressEmail')]")).clear();
 		driver.findElement(By.xpath("//input[contains(@id,'providerAddressEmail')]")).sendKeys(email);
 		//Add wait to solve captcha manually
-		System.out.println("Solve captcha now. Waiting 40 seconds");
-		Thread.sleep(40000);
+		System.out.println("Solve captcha now. Waiting 60 seconds");
+		Thread.sleep(60000);
 		driver.findElement(By.xpath("//input[@class='buttonCommand' and @alt='Submit']")).click();
 		String atnNo = driver.findElement(By.xpath("//*[contains(@id,'atn1')]")).getText();
 		log("ATN no. is: "+atnNo);

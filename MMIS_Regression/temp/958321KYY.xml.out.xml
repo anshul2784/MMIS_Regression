@@ -1,7 +1,0 @@
-<EligibilityResponse txnElapsedTime="0.35"><Response result_type="W"
-id_medicaid="100051650461"
-id_other="958321"
-id_source="HCF"
-><FaultDetail code="2346"
-description="Agency is not authorized to submit data in this field: cde_citizen         "
-/></Response></EligibilityResponse>

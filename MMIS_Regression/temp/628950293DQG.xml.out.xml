@@ -1,7 +1,0 @@
-<EligibilityResponse txnElapsedTime="0.31"><Response result_type="W"
-id_medicaid="100238270092"
-id_other="628950293"
-id_source="DTA"
-><FaultDetail code="2428"
-description="Agency updating cde_race is lower in the hierarchy level                   "
-/></Response></EligibilityResponse>

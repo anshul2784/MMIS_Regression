@@ -1,7 +1,0 @@
-<EligibilityResponse txnElapsedTime="0.45"><Response result_type="W"
-id_medicaid="100048812315"
-id_other="946246857"
-id_source="MHO"
-><FaultDetail code="2317"
-description="Warning Member ID is invalid, use Member ID on response file               "
-/></Response></EligibilityResponse>
