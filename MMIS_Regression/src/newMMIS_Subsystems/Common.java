@@ -75,7 +75,7 @@ public class Common extends Login {
 		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 		if (!(driver.findElements(By.id("MMISForm:MMISHeader:header_value_home")).size()>0) || driver.findElements(By.xpath("//a[contains(@href, 'EHSProviderPortal/jsp/logout.jsp')]")).size()>0) {
 			System.out.println("Logging into Base application again because could not find an active Base window");
-			driver.quit();
+			driver.close();
 			//Login to the Base application. This will also set the timer to 30 seconds
 			testLoginBase();
 		}
@@ -98,7 +98,7 @@ public class Common extends Login {
 			driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 			if ((driver.findElements(By.id("MMISForm:MMISHeader:header_value_home")).size()>0) || !(driver.findElements(By.linkText("Logout")).size()>0)) {
 				System.out.println("Logging into Portal again because could not find an active Portal window");
-				driver.quit();
+				driver.close();
 				//Login to the portal. This will also set the timer to 30 seconds
 				testLoginPortal();
 			}
@@ -217,6 +217,14 @@ public class Common extends Login {
 		cal.add( Calendar.DATE, i );    
 		return (sdf.format(cal.getTime()).toString());
 	}
+
+	// Get system date +/- days in YYYYMMDD format
+	public static String convertSysDateCustomYYYYMMDD(int i) {
+		   SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		   Calendar cal = Calendar.getInstance();
+		   cal.add(Calendar.DATE, i);
+		   return sdf.format(cal.getTime());
+	}
 	
 	//Get given date +/- days in MM/DD/YYYY format
 	public static String convertGivendatecustom(String inputStrDt, int i) throws Exception {
@@ -235,6 +243,15 @@ public class Common extends Login {
 		SimpleDateFormat sdf2= new SimpleDateFormat("yyyyMMdd");
 		
 		Date date=sdf2.parse(dbDate);
+		return sdf1.format(date).toString();
+	}
+	
+	//Get database date from yyyyMMdd format to yyyy-MM-dd format
+	public static String convertDbDateWithHypen(String dbDate) throws Exception {
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
+
+		Date date = sdf2.parse(dbDate);
 		return sdf1.format(date).toString();
 	}
 	
@@ -477,7 +494,7 @@ public class Common extends Login {
 		public static void portalLogin() throws Exception {
 			//Logout of NewMMIS application
 			driver.findElement(By.linkText("Logout")).click();
-			driver.quit();
+			driver.close();
 			
 			//Login Back to Portal
 			testLoginPortal();
@@ -487,7 +504,7 @@ public class Common extends Login {
 		public static void portalLogout() throws Exception {
 			//Logout of NewMMIS application
 			driver.findElement(By.linkText("Logout")).click();
-			driver.quit();
+			driver.close();
 			
 			//Login Back to NewMMIS
 			testLoginBase();
@@ -872,7 +889,7 @@ public class Common extends Login {
 			return outputText;
 	    }
 	    
-	    public static void connectUNIXsftp(String copyFrom, String copyTo) throws Exception{
+	   /* public static void connectUNIXsftp(String copyFrom, String copyTo) throws Exception{
 
 	    	
 			String hostname;
@@ -887,6 +904,49 @@ public class Common extends Login {
 
 			String username = "angandhi";
 			String password = "EAston.1";
+
+			try
+			{	
+				JSch jsch=new JSch();
+				jsch.setConfig("StrictHostKeyChecking", "no");
+			      com.jcraft.jsch.Session session=jsch.getSession(username, hostname);
+			      session.setPassword(password);
+			      session.connect();
+			      com.jcraft.jsch.Channel channel = session.openChannel("sftp");
+                  channel.connect();
+                  ChannelSftp sftpChannel = (ChannelSftp) channel; 
+                  sftpChannel.put(copyFrom, copyTo);
+
+                  sftpChannel.exit();
+                  session.disconnect();
+                  System.out.println("Successfully copied the file "+copyFrom+" to "+copyTo);
+			}
+			        			    
+			catch (JSchException e) {
+                e.printStackTrace();  
+            } catch (SftpException e) {
+                e.printStackTrace();
+            }
+	    }*/
+	    public static void connectUNIXsftp(String copyFrom, String copyTo) throws Exception{
+
+	    	String hostname, username, password;
+            hostname=getHostname(env);
+			
+            String ediLoginSql = "select nam_user, password from automation.v_edi_login where days_to_reset_pwd > 1 and hostname = '"+hostname+"'";
+            colNames.add("nam_user");
+            colNames.add("password");
+            
+            colValues = executeQuery1(ediLoginSql, colNames);
+
+            if (!colValues.get(0).equals("null")) {
+                           username = colValues.get(0);
+                           password = decodePwd(colValues.get(1));
+            } else {
+                           System.out.println("No data returned from DB for UNIX Host authorization");
+                           log("No data returned from DB for UNIX Host authorization");
+                           throw new SkipException("No data returned from DB for UNIX Host authorization");
+            }
 
 			try
 			{	
@@ -1376,6 +1436,35 @@ public class Common extends Login {
 			Date date=sdf2.parse(regularDate);
 			return sdf1.format(date).toString();
 		}
+	    
+
+	    /**
+	     * Converts a date string from yyyyMMdd format to yyyy-MM-dd format.
+	     *
+	     * @param inputDateString The date string in "yyyyMMdd" format (e.g., "20240311").
+	     * @return The reformatted date string in "yyyy-MM-dd" format (e.g., "2024-03-11"), 
+	     *         or an error message if parsing fails.
+	     */
+	    public static String convertDateFormat(String inputDateString) {
+	        // Define the input and output date formats
+	        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMdd");
+	        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+	        try {
+	            // Parse the input string into a Date object
+	            Date date = inputFormat.parse(inputDateString);
+
+	            // Format the Date object into the new pattern
+	            String reformattedStr = outputFormat.format(date);
+	            
+	            return reformattedStr;
+
+	        } catch (ParseException e) {
+	            // Handle the error if the input string is not in the expected format
+	            e.printStackTrace();
+	            return "Error: Invalid date format";
+	        }
+	    }
 	    
 	    public static void screenShot(String name) throws IOException {
             File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);

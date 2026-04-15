@@ -6,9 +6,10 @@
  <parameter name="selenium.port" value="4444"></parameter>
  <parameter name="selenium.browser" value="*firefox"></parameter>
  <parameter name="selenium.url" value="www.google.com"></parameter>
- <parameter name="environment" value="AWSUAT"></parameter>
+ <parameter name="environment" value="AWSMO"></parameter>
  <listeners>
 	<listener class-name="org.uncommons.reportng.HTMLReporter"/>
+	<listener class-name="org.uncommons.reportng.JUnitXMLReporter"/>
  </listeners> 
  
    <test name="Login test" preserve-order="true">
@@ -23,11 +24,64 @@
   </test> 
   
   //Change display to 100% in windows settings before performing these tests
-    <!--     <test name="Member test" preserve-order="true">
+    <test name="Member test" preserve-order="true">
     <classes>
       <class name="newMMIS_Subsystems.Member">
         <methods>
-        <include name="test22528"/>
+        
+			// Sandeep Batch Test Cases
+			
+			<include name="test51515a"/>
+			<!-- <include name="test51514a"/>
+			 <include name="test43903"/>
+			 <include name="test22381"/> -->		
+	<!--  
+	 <include name="test23381"/>   
+	  <include name="test22550"/>
+		<include name="test22551"/>
+		<include name="test22552"/>
+		<include name="test22553_23372"/>
+		<include name="test23365"/>
+		<include name="test23373"/>
+		<include name="test23375a"/>
+		<include name="test23376a"/>
+		<include name="test23381"/>
+		<include name="test23382"/>
+		<include name="test23388a"/>
+		<include name="test23472a"/>
+		<include name="test24488"/>
+		<include name="test26277"/>
+		<include name="test26278"/>
+		<include name="test28552"/>
+		<include name="test28553"/>
+		<include name="test28554"/>
+		<include name="test32913a"/>
+		<include name="test32914a"/>
+		<include name="test32937"/>
+		<include name="test32939"/>
+		<include name="test32940"/>
+		<include name="test32941"/>
+		<include name="test32942"/>
+		<include name="test32943"/>
+		<include name="test32944"/>
+		<include name="test32945"/>
+		<include name="test32946"/>
+		<include name="test32947"/>
+		<include name="test32948"/>
+		<include name="test32950"/>
+		<include name="test32951"/>
+		<include name="test32952"/>
+		<include name="test32953"/>
+		<include name="test32954"/>
+		<include name="test32955a"/>
+		<include name="test32956a"/>
+		<include name="test32959a"/>
+		<include name="test32960a"/>
+		<include name="testMMQnegative"/>
+		<include name="testMMQpositive"/>
+
+			
+         <include name="test22528"/>
       	    <include name="test22529"/> 
       	    <include name="test22530"/> 
       	    <include name="test22531"/> 
@@ -196,10 +250,13 @@
             <include name="test47518"/> 
             <include name="test47368"/> ask anshul emailed the tc. see that if can be used
   
+  			
+			// Sandeep Batch Test Cases -->
+			<!-- <include name="test43894"/> -->
         </methods> 
       </class> 
     </classes>
-  </test> --> 
+  </test> 
   
    <!--   <test name="EVS test" preserve-order="true">
     <classes>
@@ -1000,18 +1057,18 @@
     </classes>
   </test> -->
   
-  <test name="COB Claims Test" preserve-order="true">
+ <!-- <test name="COB Claims Test" preserve-order="true">
     <classes>
       <class name="newMMIS_Subsystems.claims">
         <methods>
 			//COB TCs
 								
-					<include name="test38612"/> 					
+					 <include name="test38612"/> 					
 					
 				
 					<include name="test31802"/>
 				
-					<include name="test34306"/>		
+					<include name="test34306"/> 		
 					
 					
 					
@@ -1019,7 +1076,7 @@
         </methods>
       </class> 
     </classes>
-  </test> 
+  </test> -->
   
   <!-- <test name="TPL test" preserve-order="true">
     <classes>
@@ -1086,6 +1143,7 @@
       	    <include name="test32914b"/> //run this next day after ELGJD099 has run on sunday/or ad-hoc
       	    <include name="test32955b"/> 
       	    <include name="test32956b"/>
+      	    <inlcude name=="test51514b"/>
         </methods>
       </class> 
     </classes>
@@ -1193,11 +1251,13 @@
 
  
 //after data refresh, make sure PID 110000314 has program elig 
-   <!--    <test name="Provider test" preserve-order="true">
+   <!--  <test name="Provider test" preserve-order="true">
     <classes>
       <class name="newMMIS_Subsystems.Provider">
         <methods>
-        	<include name="test22467"/>
+        <include name="test51514"/>
+          <include name="test51514"/> 
+         	<include name="test22467"/>
         	<exclude name="test22928a"/>
       	    <include name="test23135a"/>
       	    <include name="test22461a"/>
@@ -1218,7 +1278,7 @@
       	    <include name="test23108"/>
       	    <include name="test23110a"/>
       	    <include name="test23113"/>
-      	    <include name="test23115a"/>
+      	    <include name="test2311ca"/>
       	    <include name="test23116"/>
       	    <include name="test23117"/>
       	    <include name="test23118"/>
@@ -1311,7 +1371,7 @@
       	    day 3
       	    <exclude name="test23135b"/> //Needs 22463 which is not running due to captcha
       	    run weekly
-      	    <include name="test23115b"/>
+      	    <include name="test23115b"/> 
         </methods>
       </class> 
     </classes>

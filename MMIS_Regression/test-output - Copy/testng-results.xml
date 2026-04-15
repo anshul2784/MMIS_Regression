@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results total="5" passed="3" failed="2" skipped="0">
+  <reporter-output>
+    <line>
+      <![CDATA[1.C:\Users\gt133844\git\MMIS_Regression\MMIS_Regression\ScreenShots\_17_Mar_2026__07_35_25AM_192.168.1.155_TC 23388b.png]]>
+    </line>
+    <line>
+      <![CDATA[2.C:\Users\gt133844\git\MMIS_Regression\MMIS_Regression\ScreenShots\_17_Mar_2026__07_35_29AM_192.168.1.155_TC 23376b.png]]>
+    </line>
+  </reporter-output>
+  <suite started-at="2026-03-17T14:34:42Z" name="NewMMIS regression test suite" finished-at="2026-03-17T14:35:29Z" duration-ms="47429">
+    <groups>
+    </groups>
+    <test started-at="2026-03-17T14:34:42Z" name="Login test" finished-at="2026-03-17T14:34:49Z" duration-ms="6994">
+      <class name="newMMIS_Subsystems.Login">
+        <test-method is-config="true" signature="init(java.lang.String)[pri:0, instance:newMMIS_Subsystems.Login@5b38c1ec]" started-at="2026-03-17T07:34:42Z" name="init" finished-at="2026-03-17T07:34:42Z" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[AWSUAT]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- init -->
+        <test-method signature="testDBconnect()[pri:0, instance:newMMIS_Subsystems.Login@5b38c1ec]" started-at="2026-03-17T07:34:42Z" name="testDBconnect" finished-at="2026-03-17T07:34:43Z" duration-ms="996" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testDBconnect -->
+        <test-method signature="testLoginBase()[pri:0, instance:newMMIS_Subsystems.Login@5b38c1ec]" started-at="2026-03-17T07:34:43Z" name="testLoginBase" finished-at="2026-03-17T07:34:49Z" duration-ms="5981" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLoginBase -->
+      </class> <!-- newMMIS_Subsystems.Login -->
+    </test> <!-- Login test -->
+    <test started-at="2026-03-17T14:34:49Z" name="Member Day3 test" finished-at="2026-03-17T14:35:29Z" duration-ms="40376">
+      <class name="newMMIS_Subsystems.MemberDay3">
+        <test-method is-config="true" signature="memberDay2Startup()[pri:0, instance:newMMIS_Subsystems.MemberDay3@6b09fb41]" started-at="2026-03-17T07:34:49Z" name="memberDay2Startup" finished-at="2026-03-17T07:34:49Z" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- memberDay2Startup -->
+        <test-method is-config="true" signature="LoginCheck()[pri:0, instance:newMMIS_Subsystems.MemberDay3@6b09fb41]" started-at="2026-03-17T07:34:49Z" name="LoginCheck" finished-at="2026-03-17T07:34:51Z" duration-ms="2594" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- LoginCheck -->
+        <test-method is-config="true" signature="init(java.lang.String)[pri:0, instance:newMMIS_Subsystems.MemberDay3@6b09fb41]" started-at="2026-03-17T07:34:49Z" name="init" finished-at="2026-03-17T07:34:49Z" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[AWSUAT]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- init -->
+        <test-method signature="test23388b()[pri:0, instance:newMMIS_Subsystems.MemberDay3@6b09fb41]" started-at="2026-03-17T07:34:51Z" name="test23388b" finished-at="2026-03-17T07:35:24Z" duration-ms="33237" status="FAIL">
+          <exception class="org.openqa.selenium.NoSuchElementException">
+            <message>
+              <![CDATA[no such element: Unable to locate element: {"method":"id","selector":"MMISForm:MMISBodyContent:MemberIDPanel:IDCardList_0:IDCardBean_ColValue_issueDate"}
+  (Session info: chrome=145.0.7632.160)
+  (Driver info: chromedriver=144.0.7559.109 (6a8d5e49388fcc8a7d56d2a275e4ef424eb10960-refs/branch-heads/7559@{#4008}),platform=Windows NT 10.0.26100 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 30.48 seconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html
+Build info: version: '2.49.1', revision: '7203e46', time: '2016-01-21 17:35:35'
+System info: host: 'GWT-DFGS3G4', ip: '192.168.1.155', os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '21.0.10'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities [{mobileEmulationEnabled=false, timeouts={implicit=0, pageLoad=300000, script=30000}, hasTouchScreen=false, platform=XP, acceptSslCerts=false, goog:chromeOptions={debuggerAddress=localhost:55136}, webauthn:extension:credBlob=true, acceptInsecureCerts=false, fedcm:accounts=true, webStorageEnabled=true, browserName=chrome, takesScreenshot=true, javascriptEnabled=true, setWindowRect=true, webauthn:extension:largeBlob=true, unexpectedAlertBehaviour=ignore, rotatable=false, networkConnectionEnabled=false, chrome={chromedriverVersion=144.0.7559.109 (6a8d5e49388fcc8a7d56d2a275e4ef424eb10960-refs/branch-heads/7559@{#4008}), userDataDir=C:\Users\gt133844\AppData\Local\Temp\scoped_dir15156_1363062053}, takesHeapSnapshot=true, goog:processID=5080, pageLoadStrategy=normal, strictFileInteractability=false, databaseEnabled=false, handlesAlerts=true, version=145.0.7632.160, browserConnectionEnabled=false, proxy={}, nativeEvents=true, webauthn:extension:minPinLength=true, webauthn:extension:prf=true, locationContextEnabled=true, cssSelectorsEnabled=true, webauthn:virtualAuthenticators=true}]
+Session ID: f94ed4c2463e282de44169764d2c5031
+*** Element info: {Using=id, value=MMISForm:MMISBodyContent:MemberIDPanel:IDCardList_0:IDCardBean_ColValue_issueDate}]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[org.openqa.selenium.NoSuchElementException: no such element: Unable to locate element: {"method":"id","selector":"MMISForm:MMISBodyContent:MemberIDPanel:IDCardList_0:IDCardBean_ColValue_issueDate"}
+  (Session info: chrome=145.0.7632.160)
+  (Driver info: chromedriver=144.0.7559.109 (6a8d5e49388fcc8a7d56d2a275e4ef424eb10960-refs/branch-heads/7559@{#4008}),platform=Windows NT 10.0.26100 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 30.48 seconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html
+Build info: version: '2.49.1', revision: '7203e46', time: '2016-01-21 17:35:35'
+System info: host: 'GWT-DFGS3G4', ip: '192.168.1.155', os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '21.0.10'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities [{mobileEmulationEnabled=false, timeouts={implicit=0, pageLoad=300000, script=30000}, hasTouchScreen=false, platform=XP, acceptSslCerts=false, goog:chromeOptions={debuggerAddress=localhost:55136}, webauthn:extension:credBlob=true, acceptInsecureCerts=false, fedcm:accounts=true, webStorageEnabled=true, browserName=chrome, takesScreenshot=true, javascriptEnabled=true, setWindowRect=true, webauthn:extension:largeBlob=true, unexpectedAlertBehaviour=ignore, rotatable=false, networkConnectionEnabled=false, chrome={chromedriverVersion=144.0.7559.109 (6a8d5e49388fcc8a7d56d2a275e4ef424eb10960-refs/branch-heads/7559@{#4008}), userDataDir=C:\Users\gt133844\AppData\Local\Temp\scoped_dir15156_1363062053}, takesHeapSnapshot=true, goog:processID=5080, pageLoadStrategy=normal, strictFileInteractability=false, databaseEnabled=false, handlesAlerts=true, version=145.0.7632.160, browserConnectionEnabled=false, proxy={}, nativeEvents=true, webauthn:extension:minPinLength=true, webauthn:extension:prf=true, locationContextEnabled=true, cssSelectorsEnabled=true, webauthn:virtualAuthenticators=true}]
+Session ID: f94ed4c2463e282de44169764d2c5031
+*** Element info: {Using=id, value=MMISForm:MMISBodyContent:MemberIDPanel:IDCardList_0:IDCardBean_ColValue_issueDate}
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:486)
+	at org.openqa.selenium.remote.ErrorHandler.createThrowable(ErrorHandler.java:206)
+	at org.openqa.selenium.remote.ErrorHandler.throwIfResponseFailed(ErrorHandler.java:158)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:678)
+	at org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:363)
+	at org.openqa.selenium.remote.RemoteWebDriver.findElementById(RemoteWebDriver.java:413)
+	at org.openqa.selenium.By$ById.findElement(By.java:218)
+	at org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:355)
+	at newMMIS_Subsystems.MemberDay3.test23388b(MemberDay3.java:57)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:115)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:293)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:91)
+]]>
+            </full-stacktrace>
+          </exception> <!-- org.openqa.selenium.NoSuchElementException -->
+          <reporter-output>
+            <line>
+              <![CDATA[1.C:\Users\gt133844\git\MMIS_Regression\MMIS_Regression\ScreenShots\_17_Mar_2026__07_35_25AM_192.168.1.155_TC 23388b.png]]>
+            </line>
+          </reporter-output>
+        </test-method> <!-- test23388b -->
+        <test-method is-config="true" signature="LoginCheck()[pri:0, instance:newMMIS_Subsystems.MemberDay3@6b09fb41]" started-at="2026-03-17T07:35:25Z" name="LoginCheck" finished-at="2026-03-17T07:35:27Z" duration-ms="2264" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- LoginCheck -->
+        <test-method signature="test23376b()[pri:0, instance:newMMIS_Subsystems.MemberDay3@6b09fb41]" started-at="2026-03-17T07:35:27Z" name="test23376b" finished-at="2026-03-17T07:35:29Z" duration-ms="1363" status="FAIL">
+          <exception class="java.lang.StringIndexOutOfBoundsException">
+            <message>
+              <![CDATA[Range [-1, 0) out of bounds for length 0]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.lang.StringIndexOutOfBoundsException: Range [-1, 0) out of bounds for length 0
+	at java.base/jdk.internal.util.Preconditions$1.apply(Preconditions.java:55)
+	at java.base/jdk.internal.util.Preconditions$1.apply(Preconditions.java:52)
+	at java.base/jdk.internal.util.Preconditions$4.apply(Preconditions.java:213)
+	at java.base/jdk.internal.util.Preconditions$4.apply(Preconditions.java:210)
+	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:98)
+	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckFromToIndex(Preconditions.java:112)
+	at java.base/jdk.internal.util.Preconditions.checkFromToIndex(Preconditions.java:349)
+	at java.base/java.lang.String.checkBoundsBeginEnd(String.java:4855)
+	at java.base/java.lang.String.substring(String.java:2823)
+	at newMMIS_Subsystems.Common.removeNewline(Common.java:1340)
+	at newMMIS_Subsystems.Common.connectUNIX(Common.java:866)
+	at newMMIS_Subsystems.MemberDay3.test23376b(MemberDay3.java:126)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:85)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:639)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:816)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1124)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:108)
+	at org.testng.TestRunner.privateRun(TestRunner.java:774)
+	at org.testng.TestRunner.run(TestRunner.java:624)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:359)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:354)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:312)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:261)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1215)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1140)
+	at org.testng.TestNG.run(TestNG.java:1048)
+	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:115)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:293)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:91)
+]]>
+            </full-stacktrace>
+          </exception> <!-- java.lang.StringIndexOutOfBoundsException -->
+          <reporter-output>
+            <line>
+              <![CDATA[2.C:\Users\gt133844\git\MMIS_Regression\MMIS_Regression\ScreenShots\_17_Mar_2026__07_35_29AM_192.168.1.155_TC 23376b.png]]>
+            </line>
+          </reporter-output>
+        </test-method> <!-- test23376b -->
+      </class> <!-- newMMIS_Subsystems.MemberDay3 -->
+    </test> <!-- Member Day3 test -->
+    <test started-at="2026-03-17T14:35:29Z" name="Close Logs test" finished-at="2026-03-17T14:35:29Z" duration-ms="5">
+      <class name="newMMIS_Subsystems.Login">
+        <test-method is-config="true" signature="init(java.lang.String)[pri:0, instance:newMMIS_Subsystems.Login@6f43c82]" started-at="2026-03-17T07:35:29Z" name="init" finished-at="2026-03-17T07:35:29Z" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[AWSUAT]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- init -->
+        <test-method signature="closeLogs()[pri:0, instance:newMMIS_Subsystems.Login@6f43c82]" started-at="2026-03-17T07:35:29Z" name="closeLogs" finished-at="2026-03-17T07:35:29Z" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- closeLogs -->
+      </class> <!-- newMMIS_Subsystems.Login -->
+    </test> <!-- Close Logs test -->
+  </suite> <!-- NewMMIS regression test suite -->
+</testng-results>

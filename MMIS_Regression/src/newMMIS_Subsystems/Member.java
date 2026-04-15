@@ -1,5 +1,7 @@
 package newMMIS_Subsystems;
 
+import static org.testng.Assert.assertNotEquals;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -19386,6 +19389,634 @@ public static String getCustomMemebr2(String xml) throws Exception {
 //             validateTPL(finalString,MemIdFromDB);
 
 		
+	}
+	
+	//MGDJD961
+    @Test
+	public void test43894() throws Exception {
+
+		TestNGCustom.TCNo = "43894";
+		log("//TC test43894");
+
+		
+		String command, error;
+
+		// Get Desired Filename
+		command = "ls -ltr /customer/dsma/" + unixDir + "/logs/mgdjd961.*.* | tail -1";
+		error = "There was no mgdjd961*.* log file found";
+
+		String fileName = Common.connectUNIX(command, error);
+		fileName = fileName.substring(fileName.indexOf("/"), fileName.length());
+
+		fileName = Common.chkCompress(fileName);
+		log(" The log filename for job mgdjd961 is : " + fileName);
+
+		// Verify job completed, log file is created
+		command = "grep '/customer/dsma/" + unixDir.toLowerCase() + "/job/MGDJD961 completed "
+				+ Common.convertSysdatecustom(-1).substring(0, Common.convertSysdatecustom(-1).length() - 4)
+				+ Common.convertSysdatecustom(-1).substring(Common.convertSysdatecustom(-1).length() - 2) + "' "
+				+ fileName;
+		error = "The selected log file " + fileName + " is not correct/or did not have the job completed message ";
+		String output = Common.connectUNIX(command, error);
+		log(output);
+
+		log(fileName + "(log) validation completed successfully");
+		
+	}
+
+	@Test
+	public void test51514a() throws Exception {
+
+		TestNGCustom.TCNo = "51514";
+		log("//TC test51514a");
+
+		sqlStatement = "select b.id_medicaid, b.nam_last, b.nam_first, b.nam_mid_init, b.dte_birth from t_re_base b where "
+				+ "b.ind_active = 'Y' and b.dte_death = 0 and "
+				+ "b.dte_birth < to_char(add_months(sysdate,-12*22), 'YYYYMMDD') and "
+				+ "b.dte_birth > to_char(add_months(sysdate,-12*64), 'YYYYMMDD') and "
+				+ "not exists (select 1 from T_re_miep p where p.sak_recip=b.sak_recip) and "
+				+ "b.nam_mid_init <> ' ' and rownum < 2";
+
+		colNames.add("ID_MEDICAID");
+		colNames.add("NAM_LAST");
+		colNames.add("NAM_FIRST");
+		colNames.add("NAM_MID_INIT");
+		colNames.add("DTE_BIRTH");
+
+		colValues = Common.executeQuery(sqlStatement, colNames);
+
+		String medicaid = colValues.get(0);
+		System.out.println("medicaid : " + medicaid);
+		log("medicaid : " + medicaid);
+
+		String lastName = colValues.get(1);
+		System.out.println("lastName : " + lastName);
+		log("lastName : " + lastName);
+
+		String firstName = colValues.get(2);
+		System.out.println("firstName : " + firstName);
+		log("firstName : " + firstName);
+
+		String nameMidInit = colValues.get(3);
+		System.out.println("nameMidInit : " + nameMidInit);
+		log("nameMidInit : " + nameMidInit);
+
+		// getINCR num from db
+		String incNum = Common.generateRandomTaxID();
+
+		String effDTpreRel = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-120));
+		System.out.println("effDTpreRel: " + effDTpreRel);
+		log("effDTpreRel: " + effDTpreRel);
+
+		String endDTpreRel = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-90));
+		System.out.println("endDTpreRel: " + endDTpreRel);
+		log("endDTpreRel: " + endDTpreRel);
+
+		String effDTincr = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-240));
+		System.out.println("effDTincr: " + effDTincr);
+		log("effDTincr: " + effDTincr);
+
+		String endDTincr = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-90));
+		System.out.println("endDTincr: " + endDTincr);
+		log("endDTincr: " + endDTincr);
+
+		String inputFile = medicaid + "|" + firstName + "|" + lastName + "|" + nameMidInit + "|" + "N" + "|"
+				+ effDTpreRel + "|" + endDTpreRel + "|" + incNum + "|" + "N" + "|" + effDTincr + "|" + endDTincr
+				+ "\n";
+
+		log("Input file: " + inputFile);
+		
+		// get unique number fromr_day2 table
+		sqlStatement = "select ID from r_day2 where TC = " + TestNGCustom.TCNo + " and DES='unique number'";
+		colNames.add("ID");
+
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+
+		String todaysRunId = colValues.get(0);
+		System.out.println("todaysRunId : " + todaysRunId);
+		log("todaysRunId : " + todaysRunId);
+
+		String uploadFile = tempDirPath + "EMS-FORM-MIEP-UPDT-D-" + Common.convertSysDateCustomYYYYMMDD(0)
+				+ todaysRunId + ".DAT.PGP";
+		
+		PrintWriter out = new PrintWriter(uploadFile);
+		out.print(inputFile);
+		out.close();
+
+		String copyTo = "/customer/dsma/" + unixDir + "/data01";
+		Common.connectUNIXsftp(uploadFile, copyTo);
+		log("Successfully transferred file to unix $DATADIR");
+
+		// change permission
+		String command, error;
+		String uploadFileName = uploadFile.substring(uploadFile.lastIndexOf("\\") + 1, uploadFile.length());
+		System.out.println("input file name: " + uploadFileName);
+		log("input file name: " + uploadFileName);
+
+		command = "chmod 777 /customer/dsma/" + unixDir + "/data01/" + uploadFileName;
+		error = "Could not change permission to 777";
+		String resp = Common.connectUNIX(command, error);
+		log("Successfully changed permission to 777 for file: " + uploadFileName);
+
+		// r_day2 - MIP
+		Common.insertData_day2(TestNGCustom.TCNo, medicaid, "Medicaid Number",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, incNum, "INCR Number",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, effDTpreRel, "Effective Pre Release Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, endDTpreRel, "Pre Release End Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, effDTincr, "Effective Incr Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, endDTincr, "Incr End Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		
+
+		// update number and insert back to DB --> tomorrow's id
+		todaysRunId = String.valueOf(Integer.parseInt(todaysRunId) + 1);
+		Common.insertData_day2(TestNGCustom.TCNo, todaysRunId, "unique number",
+				Common.convertDatetoInt(Common.convertSysdate()));
+	}
+
+	@Test
+	public void test51515a() throws Exception {
+
+		TestNGCustom.TCNo = "51515a";
+		log("//TC test51515a");
+		// get data from R_day2 and update it
+		// update it
+		sqlStatement = "select b.id_medicaid, p.nam_last, p.nam_first, p.nam_mid_init, \n"
+			       + "p.dte_effective_pre_rel, p.dte_end_pre_rel, p.dte_effective_incr, p.dte_end_incr, p.num_incr "
+			       + "from t_re_miep p "
+			       + "INNER JOIN t_re_base b on p.sak_recip = b.sak_recip "
+			       + "where p.sak_recip IN ( "
+			       + "select p1.sak_recip from t_re_miep p1 group by p1.sak_recip having count(p1.sak_recip) = 1 "
+			       + ") and p.ind_incr_flag = 'Y' and p.ind_pre_rel_flag = 'Y'";
+
+		colNames.add("ID_MEDICAID");
+		colNames.add("NAM_LAST");
+		colNames.add("NAM_FIRST");
+		// incdeu middle name --> we have only initials
+		colNames.add("NAM_MID_INIT");
+		// incr number
+		colNames.add("DTE_EFFECTIVE_PRE_REL");
+		colNames.add("DTE_END_PRE_REL");
+		colNames.add("DTE_EFFECTIVE_INCR");
+		colNames.add("DTE_END_INCR");
+		colNames.add("NUM_INCR");
+		// Get the dates
+
+		System.out.println(sqlStatement);
+		colValues = Common.executeQuery(sqlStatement, colNames);
+
+		String medicaid = colValues.get(0);
+		System.out.println("medicaid : " + medicaid);
+		log("medicaid : " + medicaid);
+
+		String lastName = colValues.get(1);
+		System.out.println("lastName : " + lastName);
+		log("lastName : " + lastName);
+
+		String firstName = colValues.get(2);
+		System.out.println("firstName : " + firstName);
+		log("firstName : " + firstName);
+
+		String nameMidInit = colValues.get(3);
+		System.out.println("nameMidInit : " + nameMidInit);
+		log("nameMidInit : " + nameMidInit);		
+		
+		/*String effDTpreRel = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-120));
+		System.out.println("effDTpreRel: " + effDTpreRel);
+		log("effDTpreRel: " + effDTpreRel);*/
+
+		String effDtPreRel = Common.convertDbDateWithHypen(colValues.get(4));
+		System.out.println("effDTpreRel: " + effDtPreRel);
+		log("effDTpreRel: " + effDtPreRel);
+
+		String endDtPreRel =  Common.convertDbDateWithHypen(colValues.get(5));
+		System.out.println("endDTpreRel: " + endDtPreRel);
+		log("endDTpreRel: " + endDtPreRel);
+
+		String effDtHcre =  Common.convertDbDateWithHypen(colValues.get(6));
+		System.out.println("effDTincr: " + effDtHcre);
+		log("effDTincr: " + effDtHcre);
+
+		String endDtHcre =  Common.convertDbDateWithHypen(colValues.get(7));
+		System.out.println("endDTincr: " + endDtHcre);
+		log("endDTincr: " + endDtHcre);
+		
+
+		// getINCR num from db
+		String incNum =  Common.convertDbDateWithHypen(colValues.get(8));
+		System.out.println("incNum: " + incNum);
+		log("incNum: " + incNum);
+
+		//Date build
+		String customEffDTpreRel = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-120));
+		System.out.println("effDTpreRel: " + customEffDTpreRel);
+		log("effDTpreRel: " + customEffDTpreRel);
+		
+		String customEndDTpreRel = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-90));
+		System.out.println("customEndDTpreRel: " + customEndDTpreRel);
+		log("customEndDTpreRel: " + customEndDTpreRel);
+
+		String customEffDTincr = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-240));
+		System.out.println("customEffDTincr: " + customEffDTincr);
+		log("customEffDTincr: " + customEffDTincr);
+
+		String customEndDTincr = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-90));
+		System.out.println("customEndDTincr: " + customEndDTincr);
+		log("customEndDTincr: " + customEndDTincr);
+		
+		if(effDtPreRel.equals(customEffDTpreRel)) {
+			throw new SkipException ("Custom Changed date (customEffDTpreRel) is same as db date, try again with new member");
+		}
+		if(endDtPreRel.equals(customEndDTpreRel)) {
+			throw new SkipException ("Custom Changed date (customEndDTpreRel) is same as db date, try again with new member");
+		}
+		if(effDtHcre.equals(customEffDTincr)) {
+			throw new SkipException ("Custom Changed date (customEffDTincr) is same as db date, try again with new member");
+		}
+		if(endDtHcre.equals(customEndDTincr)) {
+			throw new SkipException ("Custom Changed date (customEndDTincr) is same as db date, try again with new member");
+		}			
+		
+		String inputFile = medicaid + "|" + firstName + "|" + lastName + "|" + nameMidInit + "|" + "N" + "|"
+				+ customEffDTpreRel + "|" + customEndDTpreRel + "|" + incNum + "|" + "N" + "|" + customEffDTincr + "|" + customEndDTincr + "\n";
+
+		System.out.println("Input file : " + inputFile);
+		log("Input file : " + inputFile);
+
+		// get unique number fromr_day2 table
+		sqlStatement = "select ID from r_day2 where TC = " + TestNGCustom.TCNo + " and DES='unique number'";
+
+		colNames.add("ID");
+
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+
+		String todaysRunId = colValues.get(0); //"153001";
+		System.out.println("todaysRunId : " + todaysRunId);
+		log("todaysRunId : " + todaysRunId);
+
+		String uploadFileName = tempDirPath + "EMS-FORM-MIEP-UPDT-D-" + Common.convertSysDateCustomYYYYMMDD(0)
+				+ todaysRunId + ".DAT.PGP";
+		
+		// update number and insert back to DB --> tomorrow's id
+		todaysRunId = String.valueOf(Integer.parseInt(todaysRunId) + 1);
+		Common.insertData_day2(TestNGCustom.TCNo, todaysRunId, "unique number",
+				Common.convertDatetoInt(Common.convertSysdate()));
+
+		// add this 143001 to r_day2 at the ned of the test case
+		PrintWriter out = new PrintWriter(uploadFileName);
+
+		out.println(inputFile);
+		out.close();
+
+		String copyTo = "/customer/dsma/" + unixDir + "/data01";
+		Common.connectUNIXsftp(uploadFileName, copyTo);
+		log("Successfully transferred file to unix $DATADIR");
+
+		// change permission String command, error; String uploadFileName =
+		uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1, uploadFileName.length());
+		System.out.println("input file name: " + uploadFileName);
+		log("input file name: " + uploadFileName);
+
+		String command, error;
+		command = "chmod 777 /customer/dsma/" + unixDir + "/data01/" + uploadFileName;
+		error = "Could not change permission to 777";
+		String resp = Common.connectUNIX(command, error);
+		log("Successfully changed permission to 777 for file: " + uploadFileName);
+		
+
+
+		// r_day2 - MIP
+		
+		// All custommmmm Dates -120,-90,-240,-90
+		// Question should I update the description to include cutome in below lines?
+		Common.insertData_day2(TestNGCustom.TCNo, medicaid, "Medicaid Number",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, incNum, "INCR Number",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, customEffDTpreRel, "Effective Pre Release Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, customEndDTpreRel, "Pre Release End Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, customEffDTincr, "Effective Incr Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, customEndDTincr, "Incr End Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		// Store the intial dates - all four dates - prefix as initialDates
+	}
+
+	@Test
+	public void test43903() throws Exception {
+
+		TestNGCustom.TCNo = "43903";
+		log("//TC test43903");
+
+		sqlStatement = "select p.id_provider, l.cde_service_loc, l.sak_pmp_ser_loc from t_pmp_svc_loc l, t_pr_prov p, t_pub_hlth_pgm h where "
+				+ "l.dte_end = 22991231 and " + "l.sak_prov = p.sak_prov and "
+				+ "l.sak_pub_hlth = h.sak_pub_hlth and h.cde_pgm_health = 'MBAS' and "
+				+ "not exists (select 1 from t_pmp_perform_hist hi where hi.sak_pmp_ser_loc = l.sak_pmp_ser_loc) "
+				+ "and rownum < 2";
+
+		colNames.add("ID_PROVIDER");
+		colNames.add("CDE_SERVICE_LOC");
+		colNames.add("SAK_PMP_SER_LOC");
+
+		colValues = Common.executeQuery(sqlStatement, colNames);
+
+		String ID_PROVIDER = colValues.get(0);
+		System.out.println("ID_PROVIDER: " + ID_PROVIDER);
+		log("ID_PROVIDER: " + ID_PROVIDER);
+
+		String CDE_SERVICE_LOC = colValues.get(1);
+		System.out.println("CDE_SERVICE_LOC: " + CDE_SERVICE_LOC);
+		log("CDE_SERVICE_LOC: " + CDE_SERVICE_LOC);
+
+		String SAK_PMP_SER_LOC = colValues.get(2);
+		System.out.println("SAK_PMP_SER_LOC: " + SAK_PMP_SER_LOC);
+		log("SAK_PMP_SER_LOC: " + SAK_PMP_SER_LOC);
+
+		String previousYear = Common.convertSysDateCustomYYYYMMDD(-366);
+		String nextYear = Common.convertSysDateCustomYYYYMMDD(+366);
+		String inputFile = ID_PROVIDER + CDE_SERVICE_LOC + "023" + "Pay For Performance             " + previousYear
+				+ nextYear;
+
+		log("Input file: " + inputFile);
+
+		String uploadFile = tempDirPath + "perfhist." + Common.convertDatetoInt(Common.convertSysdate());
+		PrintWriter out = new PrintWriter(uploadFile);
+		out.println(inputFile);
+		out.close();
+
+		String copyTo = "/customer/dsma/" + unixDir + "/data01";
+		Common.connectUNIXsftp(uploadFile, copyTo);
+		log("Successfully transferred file to unix $DATADIR");
+
+		// change permission
+		String command, error;
+		String uploadFileName = uploadFile.substring(uploadFile.lastIndexOf("\\") + 1, uploadFile.length());
+		System.out.println("input file name: " + uploadFileName);
+		log("input file name: " + uploadFileName);
+
+		command = "chmod 777 /customer/dsma/" + unixDir + "/data01/" + uploadFileName;
+		error = "Could not change permission to 777";
+		String resp = Common.connectUNIX(command, error);
+		log("Successfully changed permission to 777 for file: " + uploadFileName);
+
+		// r_day2 - MIP - SAk will ahve vlaue with provider
+		// store the dates in day2 -366 & ++366
+		Common.insertData_day2(TestNGCustom.TCNo, SAK_PMP_SER_LOC, "Sak Pmp Service Loc",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, previousYear, "Previous year date (-366)",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, nextYear, "Next year date (+366)",
+				Common.convertDatetoInt(Common.convertSysdate()));
+	}
+
+	/**
+	 * 51527 - Incr end date as 2299/12/31 Test Case Last revised: N/A
+	 * Send a MIEP file with record having missing incarceration end date.
+	 *
+	 * Expected Results: Last revised: N/A	The records should be inserted in T_RE_MIEP table with incarceration end date as 2299/12/31 and should be displayed under the justice involvement panel.
+	 * Environment:	AWS MO
+	 * 
+	 * Note: Dont insert INCR end date, for day1. It will done by script for day2 run
+	 * @throws Exception
+	 */
+	@Test
+	public void test51527a() throws Exception {
+
+		TestNGCustom.TCNo = "51527";
+		log("//TC test51527a");
+
+		sqlStatement = "select b.id_medicaid, b.nam_last, b.nam_first, b.nam_mid_init from t_re_base b where "
+				+ "b.ind_active = 'Y' and b.dte_death = 0 and "
+				+ "b.dte_birth < to_char(add_months(sysdate,-12*22), 'YYYYMMDD') and "
+				+ "b.dte_birth > to_char(add_months(sysdate,-12*64), 'YYYYMMDD') and "
+				+ "not exists (select 1 from T_re_miep p where p.sak_recip=b.sak_recip) and "
+				+ "b.nam_mid_init <> ' ' and rownum < 2";
+
+		colNames.add("ID_MEDICAID");
+		colNames.add("NAM_LAST");
+		colNames.add("NAM_FIRST");
+		colNames.add("NAM_MID_INIT");
+
+		colValues = Common.executeQuery(sqlStatement, colNames);
+
+		String medicaid = colValues.get(0);
+		System.out.println("medicaid : " + medicaid);
+		log("medicaid : " + medicaid);
+
+		String lastName = colValues.get(1);
+		System.out.println("lastName : " + lastName);
+		log("lastName : " + lastName);
+
+		String firstName = colValues.get(2);
+		System.out.println("firstName : " + firstName);
+		log("firstName : " + firstName);
+
+		String nameMidInit = colValues.get(3);
+		System.out.println("nameMidInit : " + nameMidInit);
+		log("nameMidInit : " + nameMidInit);
+
+		// getINCR num from db
+		String incNum = Common.generateRandomTaxID();
+
+		String effDTpreRel = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-120));
+		System.out.println("effDTpreRel: " + effDTpreRel);
+		log("effDTpreRel: " + effDTpreRel);
+
+		String endDTpreRel = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-90));
+		System.out.println("endDTpreRel: " + endDTpreRel);
+		log("endDTpreRel: " + endDTpreRel);
+
+		String effDTincr = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-240));
+		System.out.println("effDTincr: " + effDTincr);
+		log("effDTincr: " + effDTincr);
+
+		// Note: done insert INCR end date, it will done by script
+
+		String inputFile = medicaid + "|" + firstName + "|" + lastName + "|" + nameMidInit + "|" + "N" + "|"
+				+ effDTpreRel + "|" + endDTpreRel + "|" + incNum + "|" + "N" + "|" + effDTincr + "|";
+
+		log("Input file: " + inputFile);
+		
+		// get unique number fromr_day2 table
+		sqlStatement = "select ID from r_day2 where TC = " + TestNGCustom.TCNo + " and DES='unique number'";
+		colNames.add("ID");
+
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+
+		String todaysRunId = colValues.get(0);
+		System.out.println("todaysRunId : " + todaysRunId);
+		log("todaysRunId : " + todaysRunId);
+
+		String uploadFile = tempDirPath + "EMS-MDM-MIEP-UPDT-D-" + Common.convertSysDateCustomYYYYMMDD(0)
+				+ todaysRunId + ".DAT.PGP";
+		
+		PrintWriter out = new PrintWriter(uploadFile);
+		out.print(inputFile);
+		out.close();
+
+		String copyTo = "/customer/dsma/" + unixDir + "/data01";
+		Common.connectUNIXsftp(uploadFile, copyTo);
+		log("Successfully transferred file to unix $DATADIR");
+
+		// change permission
+		String command, error;
+		String uploadFileName = uploadFile.substring(uploadFile.lastIndexOf("\\") + 1, uploadFile.length());
+		System.out.println("input file name: " + uploadFileName);
+		log("input file name: " + uploadFileName);
+
+		command = "chmod 777 /customer/dsma/" + unixDir + "/data01/" + uploadFileName;
+		error = "Could not change permission to 777";
+		String resp = Common.connectUNIX(command, error);
+		log("Successfully changed permission to 777 for file: " + uploadFileName);
+
+		// r_day2 - MIP
+		Common.insertData_day2(TestNGCustom.TCNo, medicaid, "Medicaid Number",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, incNum, "INCR Number",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, effDTpreRel, "Effective Pre Release Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, endDTpreRel, "Pre Release End Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, effDTincr, "Effective Incr Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		// Note: done insert INCR end date, it will done by script
+
+		// update number and insert back to DB --> tomorrow's id
+		todaysRunId = String.valueOf(Integer.parseInt(todaysRunId) + 1);
+		Common.insertData_day2(TestNGCustom.TCNo, todaysRunId, "unique number",
+				Common.convertDatetoInt(Common.convertSysdate()));
+	}
+
+	/**
+	 * 
+	 * 51529 - Incr data and no pre-rel data Test Case Last revised: 12/30/2025
+////	 * 1. Send a MIEP file with record having incarceration flag, incarceration effective date & end date and no pre-release data.
+//	 * 2. Update the same record with pre-release flag and dates only.
+//
+//	 * Expected Results"
+//	 * 1. The records should be inserted in T_RE_MIEP table and should be displayed under the justice involvement panel for incarceration date and flag fields only.
+//	 * 2. The pre-release dates and flag should be inserted in T_RE_MIEP table and should be displayed under the justice involvement panel. Incarceration fields should be blank. Verify a_t_re_miep.
+//	 * 
+	 * Environment:	AWS MO
+	 * 
+	 * Note: Dont insert INCR end date, for day1. It will done by script for day2 run
+	 * @throws Exception
+	 */
+	@Test
+	public void test51529a() throws Exception {
+
+		TestNGCustom.TCNo = "51529";
+		log("//TC test51529a");
+
+		sqlStatement = "select b.id_medicaid, b.nam_last, b.nam_first, b.nam_mid_init from t_re_base b where "
+				+ "b.ind_active = 'Y' and b.dte_death = 0 and "
+				+ "b.dte_birth < to_char(add_months(sysdate,-12*22), 'YYYYMMDD') and "
+				+ "b.dte_birth > to_char(add_months(sysdate,-12*64), 'YYYYMMDD') and "
+				+ "not exists (select 1 from T_re_miep p where p.sak_recip=b.sak_recip) and "
+				+ "b.nam_mid_init <> ' ' and rownum < 2";
+
+		colNames.add("ID_MEDICAID");
+		colNames.add("NAM_LAST");
+		colNames.add("NAM_FIRST");
+		colNames.add("NAM_MID_INIT");
+
+		colValues = Common.executeQuery(sqlStatement, colNames);
+
+		String medicaid = colValues.get(0);
+		System.out.println("medicaid : " + medicaid);
+		log("medicaid : " + medicaid);
+
+		String lastName = colValues.get(1);
+		System.out.println("lastName : " + lastName);
+		log("lastName : " + lastName);
+
+		String firstName = colValues.get(2);
+		System.out.println("firstName : " + firstName);
+		log("firstName : " + firstName);
+
+		String nameMidInit = colValues.get(3);
+		System.out.println("nameMidInit : " + nameMidInit);
+		log("nameMidInit : " + nameMidInit);
+
+		// getINCR num from db
+		String incNum = Common.generateRandomTaxID();
+
+		String effDTpreRel = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-120));
+		System.out.println("effDTpreRel: " + effDTpreRel);
+		log("effDTpreRel: " + effDTpreRel);
+
+		String endDTpreRel = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-90));
+		System.out.println("endDTpreRel: " + endDTpreRel);
+		log("endDTpreRel: " + endDTpreRel);
+
+		String effDTincr = Common.convertDate_yyyyHIFENmmHIFENdd(Common.convertSysdatecustom(-240));
+		System.out.println("effDTincr: " + effDTincr);
+		log("effDTincr: " + effDTincr);
+
+		// Note: done insert INCR end date, it will done by script
+
+		String inputFile = medicaid + "|" + firstName + "|" + lastName + "|" + nameMidInit + "|" + "N" + "|"
+				+ effDTpreRel + "|" + endDTpreRel + "|" + incNum + "|" + "N" + "|" + effDTincr + "|";
+
+		log("Input file: " + inputFile);
+		
+		// get unique number fromr_day2 table
+		sqlStatement = "select ID from r_day2 where TC = " + TestNGCustom.TCNo + " and DES='unique number'";
+		colNames.add("ID");
+
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+
+		String todaysRunId = colValues.get(0);
+		System.out.println("todaysRunId : " + todaysRunId);
+		log("todaysRunId : " + todaysRunId);
+
+		String uploadFile = tempDirPath + "EMS-MDM-MIEP-UPDT-D-" + Common.convertSysDateCustomYYYYMMDD(0)
+				+ todaysRunId + ".DAT.PGP";
+		
+		PrintWriter out = new PrintWriter(uploadFile);
+		out.print(inputFile);
+		out.close();
+
+		String copyTo = "/customer/dsma/" + unixDir + "/data01";
+		Common.connectUNIXsftp(uploadFile, copyTo);
+		log("Successfully transferred file to unix $DATADIR");
+
+		// change permission
+		String command, error;
+		String uploadFileName = uploadFile.substring(uploadFile.lastIndexOf("\\") + 1, uploadFile.length());
+		System.out.println("input file name: " + uploadFileName);
+		log("input file name: " + uploadFileName);
+
+		command = "chmod 777 /customer/dsma/" + unixDir + "/data01/" + uploadFileName;
+		error = "Could not change permission to 777";
+		String resp = Common.connectUNIX(command, error);
+		log("Successfully changed permission to 777 for file: " + uploadFileName);
+
+		// r_day2 - MIP
+		Common.insertData_day2(TestNGCustom.TCNo, medicaid, "Medicaid Number",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, incNum, "INCR Number",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, effDTpreRel, "Effective Pre Release Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, endDTpreRel, "Pre Release End Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		Common.insertData_day2(TestNGCustom.TCNo, effDTincr, "Effective Incr Date",
+				Common.convertDatetoInt(Common.convertSysdate()));
+		// Note: done insert INCR end date, it will done by script
+
+		// update number and insert back to DB --> tomorrow's id
+		todaysRunId = String.valueOf(Integer.parseInt(todaysRunId) + 1);
+		Common.insertData_day2(TestNGCustom.TCNo, todaysRunId, "unique number",
+				Common.convertDatetoInt(Common.convertSysdate()));
 	}
 	
 	 public String testCreateMember_CNS(String agency, String printType, String communicationPref, String cellPhoneNumber, String email) throws Exception{

@@ -2,7 +2,7 @@
 ********************************************************************************************
 ********************************************************************************************
 NAME:						NewMMIS REGRESSION TEST SUITE
-Created By: 				Anshul Gandhi, Priya Kantamneni
+Created By: 				Anshul Gandhi, Priya Kantamneni, 
 Created Date: 				05/08/2013
 Modified Date & Comments:	
 
@@ -63,6 +63,7 @@ import org.testng.annotations.Test;
 @Listeners({ newMMIS_Subsystems.TestNGCustom.class })
 public class Login  {
 	//public static FirefoxProfile firefoxProfile;
+	public static String email;
 	public static ChromeOptions options;
 	public static String className = "";
 	public static String tempDirPath=System.getProperty("user.dir")+"\\temp\\";
@@ -128,7 +129,8 @@ public class Login  {
 		dbConnect=Common.connectDB(env);
 	}
 	
-	@Test
+	
+	/*@Test
 	public static void testLoginBase() throws Exception {
 
 //		setFireFoxProfile();
@@ -153,7 +155,9 @@ public class Login  {
 				+ "****************************");
 
         //setting chrome profile for download xml without user interaction
-		System.setProperty("webdriver.chrome.driver","C:\\Users\\agandhi20\\chromedriver new\\chromedriver.exe");
+		//System.setProperty("webdriver.chrome.driver","C:\\Users\\agandhi20\\chromedriver new\\chromedriver.exe");
+		
+		System.setProperty("webdriver.chrome.driver","C:\\Users\\gt133844\\git\\MMIS_Regression\\MMIS_Regression\\chromedriver\\chromedriver.exe");
 		options = new ChromeOptions(); 
 		options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"}); 
 		options.addArguments("--ignore-certificate-errors"); //for disabling SSL warnings
@@ -202,7 +206,7 @@ public class Login  {
 		}
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	    driver.get(envpath); //This is done because at this point we get a "New Medicaid System" link, which opens application in a new tab, so to avoid this we send the envpath again
-		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);		
+		// driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);		
 		//Check if you got the login limit exceeded error
 		if (driver.findElements(By.cssSelector("h1.header")).size()==0) {
 			if (env.equals("UAT"))
@@ -210,16 +214,248 @@ public class Login  {
 			else
 				driver.get("https://mmis-modeloffice.ehs.state.ma.us/newMMIS/Home.jsf"); //MO URL
 		}
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		//driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	    String PostLoginText = driver.findElement(By.cssSelector("h1.header")).getText();
 
 	    if (!(PostLoginText.equals("MMIS Home")))
 	    	throw new SkipException("Skipping further tests because user not logged into Base successfully");
+	}*/
+	
+	/*@Test
+	public static void testLoginBase() throws Exception {
+
+		if(env.equals("AWSUAT") || env.equals("AWSMO") || env.equals("AWSMO2")) {
+			uid="bgeneric";
+		}
+		
+		//Fetch VG Main URL
+		sqlStatement = "select * from s_login where environment ='VGMAIN'";
+		colNames.add("APPPATH");
+		colValues=Common.executeQuery1(sqlStatement, colNames);
+		vgmain = colValues.get(0);		
+		
+		//Fetch the id password for BASE app in this environment
+		sqlStatement = "select * from s_login where environment ='"+env+"' and application ='BASE'";
+		colNames.add("APPPATH");
+		colNames.add("USERID");
+		colNames.add("PASSWORD");
+		colValues=Common.executeQuery1(sqlStatement, colNames);
+		envpath = colValues.get(0);
+		email = colValues.get(1);
+		pwd = colValues.get(2);
+
+		System.out.println("****************************" +env+" BASE"
+				+ "****************************");
+
+		
+        //setting chrome profile for download xml without user interaction
+		System.setProperty("webdriver.chrome.driver","C:\\Users\\gt133844\\git\\MMIS_Regression\\MMIS_Regression\\chromedriver\\chromedriver.exe");
+		options = new ChromeOptions(); 
+		options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"}); 
+		options.addArguments("--ignore-certificate-errors"); //for disabling SSL warnings
+		options.addArguments("--disable-notifications");
+		options.addArguments("--disable-features=LocalNetworkAccessChecks");
+
+		Map<String, Object> prefs = new HashMap<String, Object>();
+		
+		prefs.put("credentials_enable_service", false);
+		prefs.put("profile.password_manager_enabled", false); //For disabling do you want to save this password
+		prefs.put("safebrowsing.enabled", true); //For MA21 file download-no popup
+		prefs.put("autofill.profile_enabled", false); //For disabling save address popup
+		prefs.put("download.default_directory", tempDirPath); //For auto download to tempDirPath
+		prefs.put("plugins.plugins_disabled", new String[] { "Chrome PDF Viewer" }); //For not opening PDF files in a new chrome tab/chrome viewer
+	    prefs.put("plugins.always_open_pdf_externally", true); //Downloads the pdf file on launching the respective file link
+		options.setExperimentalOption("prefs", prefs);
+		
+		System.out.println("Chrome is set with profile settings...");
+
+//		driver = new FirefoxDriver(firefoxProfile);
+//		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+//		driver.manage().window().maximize();
+		
+		//Create an instance of chrome webdriver
+		driver = new ChromeDriver(options); 
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS); //Added by Anshul for page load issues on 04/26/2024
+		driver.manage().window().maximize();
+		
+		//Logon to Base
+		driver.get(vgmain);
+		Thread.sleep(2000);
+
+		while(driver.findElements(By.xpath("//h2[text()='Requested URL cannot be found']")).size()>0) {
+			driver.close();
+			Thread.sleep(2000);
+
+			driver = new ChromeDriver(options);
+
+			driver.get(vgmain);
+		}
+		driver.findElement(By.xpath("//button[text()='Business Log In']")).click();
+		driver.findElement(By.xpath("//button[text()='Proceed']")).click(); Thread.sleep(1000);
+
+		driver.findElement(By.name("Email")).clear();
+		driver.findElement(By.name("Email")).sendKeys(email);
+		
+		driver.findElement(By.name("Password")).clear();
+		driver.findElement(By.name("Password")).sendKeys(pwd);
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//button[text()='Log in']")).click();
+		Thread.sleep(3000);
+
+		if(driver.findElements(By.xpath("//select[@name='aims2Location']")).size()>0) {
+			new Select(driver.findElement(By.xpath("//select[@name='aims2Location']"))).selectByVisibleText("EOHHS");
+			driver.findElement(By.xpath("//button[text()='Complete Log In']")).click();
+			Thread.sleep(2000);
+		}
+		Thread.sleep(3000);
+
+		driver.get(envpath); //This is done because at this point we get a "New Medicaid System" link, which opens application in a new tab, so to avoid this we send the envpath again
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);		
+		
+		//Check if you got the login limit exceeded error
+		while (driver.findElements(By.cssSelector("h1.header")).size()==0 && driver.findElements(By.xpath("//button[@class='MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium sc-iGgWBj jgbQCM font-16 button-spacing css-1hw9j7s']")).size()>0) 
+			loginAgain();
+		
+		if(driver.findElements(By.cssSelector("h1.header")).size()==0 && driver.findElements(By.xpath("//button[@class='MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium sc-iGgWBj jgbQCM font-16 button-spacing css-1hw9j7s']")).size()==0)
+			throw new SkipException("Skipping further tests because user not logged into Base successfully");
+			
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		String PostLoginText = driver.findElement(By.cssSelector("h1.header")).getText();
+
+		if (!(PostLoginText.equals("MMIS Home")))
+			throw new SkipException("Skipping further tests because user not logged into Base successfully");
+	}*/
+
+	@Test
+	public static void testLoginBase() throws Exception {
+
+		if (env.equals("AWSUAT") || env.equals("AWSMO") || env.equals("AWSMO2")) {
+			uid = "bgeneric";
+		}
+
+		// Fetch VG Main URL
+		sqlStatement = "select * from s_login where environment ='VGMAIN'";
+		colNames.add("APPPATH");
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+		vgmain = colValues.get(0);
+
+		// Fetch the id password for BASE app in this environment
+		sqlStatement = "select * from s_login where environment ='" + env + "' and application ='BASE'";
+		colNames.add("APPPATH");
+		colNames.add("USERID");
+		colNames.add("PASSWORD");
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+		envpath = colValues.get(0);
+		email = colValues.get(1);
+		pwd = colValues.get(2);
+
+		System.out.println("****************************" + env + " BASE" + "****************************");
+
+		// setting chrome profile for download xml without user interaction
+		System.setProperty("webdriver.chrome.driver","C:\\Users\\gt133844\\git\\MMIS_Regression\\MMIS_Regression\\chromedriver\\chromedriver.exe");
+		options = new ChromeOptions();
+		options.setExperimentalOption("excludeSwitches", new String[] { "enable-automation" });
+		options.addArguments("--ignore-certificate-errors"); // for disabling SSL warnings
+		options.addArguments("--disable-notifications");
+		options.addArguments("--disable-features=LocalNetworkAccessChecks");
+
+		/*
+		 * Map<String, Object> prefs = new HashMap<String, Object>();
+		 * 
+		 * prefs.put("credentials_enable_service", false);
+		 * prefs.put("profile.password_manager_enabled", false); //For disabling do you
+		 * want to save this password prefs.put("safebrowsing.enabled", true); //For
+		 * MA21 file download-no popup prefs.put("autofill.profile_enabled", false);
+		 * //For disabling save address popup prefs.put("download.default_directory",
+		 * tempDirPath); //For auto download to tempDirPath
+		 * prefs.put("plugins.plugins_disabled", new String[] { "Chrome PDF Viewer" });
+		 * //For not opening PDF files in a new chrome tab/chrome viewer
+		 * prefs.put("plugins.always_open_pdf_externally", true); //Downloads the pdf
+		 * file on launching the respective file link
+		 * prefs.put("download.directory_upgrade", true);
+		 * prefs.put("plugins.always_open_pdf_externally", true);
+		 * options.setExperimentalOption("prefs", prefs);
+		 */
+
+		Map<String, Object> prefs = new HashMap<String, Object>();
+		prefs.put("credentials_enable_service", false);
+		prefs.put("profile.password_manager_enabled", false); // For disabling do you want to save this password
+		prefs.put("safebrowsing.enabled", true); // For MA21 file download-no popup
+		prefs.put("autofill.profile_enabled", false); // For disabling save address popup
+		prefs.put("download.default_directory", tempDirPath); // For auto download to tempDirPath
+		// prefs.put("download.default_directory",
+		// "C:\\Users\\MMohsunov\\eclipse-workspace\\SmokeChrome\\temp_Reports"); //For
+		// auto download to tempDirPath
+		prefs.put("plugins.plugins_disabled", new String[] { "Chrome PDF Viewer" }); // For not opening PDF files in a
+																						// new chrome tab/chrome viewer
+		prefs.put("plugins.always_open_pdf_externally", true); // Downloads the pdf file on launching the respective
+																// file link
+		prefs.put("download.directory_upgrade", true);
+		prefs.put("plugins.always_open_pdf_externally", true);
+
+		options.setExperimentalOption("prefs", prefs);
+
+		System.out.println("Chrome is set with profile settings...");
+
+//		driver = new FirefoxDriver(firefoxProfile);
+//		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+//		driver.manage().window().maximize();
+
+		// Create an instance of chrome webdriver
+		driver = new ChromeDriver(options);
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS); // Added by Anshul for page load issues on
+																			// 04/26/2024
+		driver.manage().window().maximize();
+
+		// Logon to Base
+		driver.get(vgmain);
+		Thread.sleep(5000);
+
+		driver.findElement(By.xpath("(//button[text()='Log In'])[2]")).click();
+		Thread.sleep(2000);
+		driver.findElement(By.xpath("//*[text()='Business Log In']")).click();
+		Thread.sleep(2000);
+		driver.findElement(By.xpath("//*[text()='Proceed to Login']")).click();
+		Thread.sleep(2000);
+
+		driver.findElement(By.name("Email")).clear();
+		driver.findElement(By.name("Email")).sendKeys(email);
+
+		driver.findElement(By.name("Password")).clear();
+		driver.findElement(By.name("Password")).sendKeys(pwd);
+		Thread.sleep(2000);
+		driver.findElement(By.xpath("//button[text()='Log in']")).click();
+		Thread.sleep(2000);
+
+		driver.findElement(By.xpath("//span[@class='multiselect__single']")).click();
+		driver.findElement(By.xpath("//span[text()='EOHHS - 0000999']")).click();
+		driver.findElement(By.xpath("//button[text()='Proceed']")).click();
+		Thread.sleep(2000);
+
+		int loginTry = 0;
+		do {
+			driver.get(envpath);
+
+			++loginTry;
+			if (loginTry == 5)
+				break;
+		} while (driver.findElements(By.xpath("//*[@title='MassHealth Member and Provider Services']")).size() == 0);
+
+		if (loginTry == 5)
+			throw new SkipException("Login issue:\nCould not open url: " + envpath + " after trying 5 times.");
+
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		String PostLoginText = driver.findElement(By.cssSelector("h1.header")).getText();
+
+		if (!(PostLoginText.equals("MMIS Home")))
+			throw new SkipException("Skipping further tests because user not logged into Base successfully");
 	}
 	
 	
 	
-	@Test
+	/*@Test
 	public static void testLoginPortal() throws Exception {
 
 //		setFireFoxProfile();
@@ -244,7 +480,8 @@ public class Login  {
 		
 		//only uncomment if you are trying to skip logging into base
 	    //setting chrome profile for download xml without user interaction
-		System.setProperty("webdriver.chrome.driver","C:\\Users\\agandhi20\\chromedriver new\\chromedriver.exe");
+		//C:\Users\gt133844\git\MMIS_Regression\MMIS_Regression\chromedriver
+		System.setProperty("webdriver.chrome.driver","C:\\Users\\gt133844\\git\\MMIS_Regression\\MMIS_Regression\\chromedriver\\chromedriver.exe");
 		options = new ChromeOptions(); 
 		options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"}); 
 		options.addArguments("--ignore-certificate-errors"); //for disabling SSL warnings
@@ -278,6 +515,117 @@ public class Login  {
 		driver.findElement(By.linkText("LOGIN")).click(); //Additional step needed to login to portal
 		if (!(driver.findElement(By.xpath("/html/body/div/div[1]/div[2]/div/div/span")).getText().equals("Welcome "+uid)))
 	    	throw new SkipException("Skipping further tests because user not logged into portal successfully");
+	}*/
+
+	@Test
+	public static void testLoginPortal() throws Exception {
+
+//		setFireFoxProfile();
+
+		if (env.equals("AWSUAT")) {
+			uid = "mnarala4";
+		} else if (env.equals("AWSMO") || env.equals("AWSMO2")) {
+			uid = "mnarala1";
+		}
+
+		// Get portal logon info
+		sqlStatement = "select * from s_login where environment ='" + env + "' and application ='PORTAL'";
+		colNames.add("APPPATH");
+		colNames.add("USERID");
+		colNames.add("PASSWORD");
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+		envpath = colValues.get(0);
+		email = colValues.get(1);
+		pwd = colValues.get(2);
+
+		System.out.println("****************************" + env + " PORTAL" + "****************************");
+
+//		//Create an instance of selenium webdriver
+//		driver = new FirefoxDriver(firefoxProfile);
+//		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+//		driver.manage().window().maximize();
+
+		// only uncomment if you are trying to skip logging into base
+		// setting chrome profile for download xml without user interaction
+		System.setProperty("webdriver.chrome.driver","C:\\Users\\gt133844\\git\\MMIS_Regression\\MMIS_Regression\\chromedriver\\chromedriver.exe");
+		options = new ChromeOptions();
+		options.setExperimentalOption("excludeSwitches", new String[] { "enable-automation" });
+		options.addArguments("--ignore-certificate-errors"); // for disabling SSL warnings
+		options.addArguments("--disable-notifications");
+		options.addArguments("--disable-features=LocalNetworkAccessChecks");
+
+		// Create an instance of chrome webdriver
+		driver = new ChromeDriver(options);
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS); // Added by Anshul for page load issues on
+																			// 04/26/2024
+		driver.manage().window().maximize();
+
+		driver.get(vgmain);
+		Thread.sleep(2000);
+
+		driver.findElement(By.xpath("(//button[text()='Log In'])[2]")).click();
+		Thread.sleep(2000);
+		driver.findElement(By.xpath("//*[text()='Business Log In']")).click();
+		Thread.sleep(2000);
+		driver.findElement(By.xpath("//*[text()='Proceed to Login']")).click();
+		Thread.sleep(5000);
+
+		driver.findElement(By.xpath("//*[@id='localAccountForm']/div[3]/div[1]/input")).clear();
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//*[@id='localAccountForm']/div[3]/div[1]/input")).sendKeys(email);
+
+		driver.findElement(By.id("password")).clear();
+		Thread.sleep(1000);
+		driver.findElement(By.id("password")).sendKeys(pwd);
+		driver.findElement(By.xpath("//button[text()='Log in']")).click();
+
+		if (driver.findElements(By.xpath("//span[@class='multiselect__single']")).size() > 0) {
+			driver.findElement(By.xpath("//span[@class='multiselect__single']")).click();
+			driver.findElement(By.xpath("//span[text()='EOHHS - 0000999']")).click();
+			driver.findElement(By.xpath("//button[text()='Proceed']")).click();
+			Thread.sleep(2000);
+		}
+
+		driver.get(envpath); // This and below step is done because at this point we get a "Medicaid Provider
+								// Portal" link, which opens application in a new tab, so to avoid this we send
+								// the envpath again
+		Thread.sleep(1000);
+
+		if (driver.findElements(By.xpath("//*[contains(text(),'LOGIN')]")).size() > 0)
+			driver.findElement(By.xpath("//*[contains(text(),'LOGIN')]")).click();
+		Thread.sleep(1000);
+
+		while (driver.findElements(By.xpath("//*[text()='MassHealth Provider Online Service Center (POSC)']"))
+				.size() == 0) {
+			Thread.sleep(5000);
+			driver.get(vgmain);
+			driver.get(envpath);
+			if (driver.findElements(By.xpath("//*[contains(text(),'LOGIN')]")).size() > 0)
+				driver.findElement(By.xpath("//*[contains(text(),'LOGIN')]")).click();
+			Thread.sleep(5000);
+			System.out.println("Login Again to POSC");
+
+			if (driver.findElements(By.xpath("//*[text()='Business Log In']")).size() > 0) {
+				driver.findElement(By.xpath("//*[text()='Business Log In']")).click();
+				Thread.sleep(2000);
+				driver.findElement(By.xpath("//*[text()='Proceed to Login']")).click();
+				Thread.sleep(2000);
+			}
+			if (driver.findElements(By.name("Email")).size() > 0) {
+				driver.findElement(By.name("Email")).clear();
+				driver.findElement(By.name("Email")).sendKeys(email);
+
+				driver.findElement(By.id("password")).clear();
+				Thread.sleep(1000);
+				driver.findElement(By.id("password")).sendKeys(pwd);
+				driver.findElement(By.xpath("//button[text()='Log in']")).click();
+			}
+		}
+
+		if (!(driver.findElements(By.xpath("//*[text()='Welcome " + uid + "']")).size() > 0))
+			throw new SkipException("Skipping further tests because user not logged into Portal successfully");
+
 	}
 	
 	@Test
@@ -289,6 +637,45 @@ public class Login  {
 				+ "****************************"); 
 		out.close();
 
+	}
+	
+	
+	public static void loginAgain() throws InterruptedException {
+		//close the current driver
+		driver.close();
+		Thread.sleep(3000);
+		
+		//initialize driver again
+		driver = new ChromeDriver(options);
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		
+		System.out.println("Trying to logon again");
+		driver.get(vgmain);
+		driver.findElement(By.xpath("//button[text()='Business Log In']")).click();
+		driver.findElement(By.xpath("//button[text()='Proceed']")).click();
+
+		driver.findElement(By.name("Email")).clear();
+		driver.findElement(By.name("Email")).sendKeys(email);
+		
+		driver.findElement(By.name("Password")).clear();
+		driver.findElement(By.name("Password")).sendKeys(pwd);
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//button[text()='Log in']")).click();
+		Thread.sleep(3000);
+
+		if(driver.findElements(By.xpath("//select[@name='aims2Location']")).size()>0) {
+			new Select(driver.findElement(By.xpath("//select[@name='aims2Location']"))).selectByVisibleText("EOHHS");
+			driver.findElement(By.xpath("//button[text()='Complete Log In']")).click();
+			Thread.sleep(2000);
+		}
+
+		driver.get(envpath); //This is done because at this point we get a "New Medicaid System" link, which opens application in a new tab, so to avoid this we send the envpath again
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);		
+
+		if(driver.findElements(By.xpath("//a[contains(text(),'LOGIN') or contains(text(),'Login')]")).size() > 0) 
+			driver.findElement(By.xpath("//a[contains(text(),'LOGIN') or contains(text(),'Login')]")).click();
+	
 	}
 	
 	public static void testCheckDBLoginSuccessful() throws  IOException, AWTException {

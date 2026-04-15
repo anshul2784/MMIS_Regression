@@ -2,6 +2,7 @@ package newMMIS_Subsystems;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -864,5 +865,260 @@ public class MemberDay2 extends Login{
 		
 		log("Successfully validated that DAILY MA21 ERROR COUNT REPORT has Original Member, Case number and Warning Message");
     }
+
+	@Test
+	public void test51514b() throws Exception {
+		TestNGCustom.TCNo = "51514";
+		log("//TC 51514b");
+		ArrayList<String> descriptions = new ArrayList<String>();
+		descriptions.add("");
+		
+		// get day1 values from r_day2 table
+		String[] day1Descriptions = { "Medicaid Number", "INCR number", "Effective Pre Release Date",
+				"Pre Release End Date", "Effective Incr Date", "Incr End Date" };
+		String[] day1Values = new String[day1Descriptions.length];
+		for (int i = 0; i < day1Descriptions.length; i++) {
+			sqlStatement = "select * from r_day2 where TC = '" + TestNGCustom.TCNo + "' and DES='" + day1Descriptions[i]
+					+ "'";
+			colNames.add("ID");
+			colValues = Common.executeQuery1(sqlStatement, colNames);
+			day1Values[i] = colValues.get(0);
+			log(day1Descriptions[i] + " is: " + day1Values[i]);
+		}
+		
+		// Set day1 values in variable
+		String medNum = day1Values[0];
+		String incrNUM = day1Values[1];
+		String effDTpreRel = day1Values[2];
+		String endDTpreRel = day1Values[3];
+		String effDTincr = day1Values[4];
+		String endDTincr = day1Values[5];
+		
+		// Assert data is inserted in t_re_miep table
+		sqlStatement = "select p.num_incr, p.dte_effective_pre_rel, p.dte_end_pre_rel, p.dte_effective_incr, p.dte_end_incr "
+				+ "from t_re_miep p, t_re_base b where "
+				+ "b.nam_mid_init <> '' and b.sak_recip = p.sak_recip and b.id_medicaid = " + medNum;
+		colNames = new ArrayList<String>();
+		colNames.add("NUM_INCR");
+		colNames.add("DTE_EFFECTIVE_PRE_REL");
+		colNames.add("DTE_END_PRE_REL");
+		colNames.add("DTE_EFFECTIVE_INCR");
+		colNames.add("DTE_END_INCR");
+		
+		colValues = Common.executeQuery(sqlStatement, colNames);
+		/*String[] dbValues = new String[colValues.size()];
+		for (int i = 0; i < colValues.size(); i++) {
+			dbValues[i] = colValues.get(i);
+		}*/
+		
+		//Set dbvalues in variable
+		String db_incrNUM = colValues.get(0);
+		String db_effDTpreRel = colValues.get(1);
+		String db_endDTpreRel = colValues.get(2);
+		String db_effDTincr = colValues.get(3);
+		String db_endDTincr = colValues.get(4);
+		
+		// Logger statements
+		log("Incr Number is: " + db_incrNUM);
+		System.out.println("Effective Pre Release Date from DB: " + db_effDTpreRel);
+		log("DB effDTpreRel: " + db_effDTpreRel);
+		System.out.println("Effective Pre Release End Date from DB: " + db_endDTpreRel);
+		log("db_endDTpreRel: " + db_endDTpreRel);
+		System.out.println("Effective Incr Date from DB: " + db_effDTincr);
+		log("db_effDTincr: " + db_effDTincr);
+		System.out.println("Effective Incr End Date From DB: " + db_endDTincr);
+		log("db_endDTincr: " + db_endDTincr);
+		
+		// Asserts statements
+		Assert.assertTrue(db_incrNUM.equals(incrNUM),
+				"Incr Number inserted from file is not " + incrNUM + ". It is " + db_incrNUM);
+		Assert.assertTrue(db_effDTpreRel.equals(effDTpreRel),
+				"Effective Pre Release Date inserted from file is not " + effDTpreRel + ". It is " + db_effDTpreRel);
+		Assert.assertTrue(db_endDTpreRel.equals(endDTpreRel),
+				"Effective Pre Release end Date inserted from file is not " + endDTpreRel + ". It is "
+						+ db_endDTpreRel);
+		Assert.assertTrue(db_effDTincr.equals(effDTincr),
+				"Effective Incr Date inserted from file is not " + effDTincr + ". It is " + db_effDTincr);
+		Assert.assertTrue(db_endDTincr.equals(endDTincr),
+				"Effective Incr End Date inserted from file is not " + endDTincr + ". It is " + db_endDTincr);
+		
+		log("Successfully verified that data inserted correctly by batch into t_re_miep table");
+	}
+	
+	@Test
+	public void test51515b() throws Exception {
+		TestNGCustom.TCNo = "51515";
+		log("//TC 51515b");
+		ArrayList<String> descriptions = new ArrayList<String>();
+		descriptions.add("");
+		
+		// get day1 values from r_day2 table
+		String[] day1Descriptions = { "Medicaid Number", "INCR number", "Effective Pre Release Date",
+				"Pre Release End Date", "Effective Incr Date", "Incr End Date" };
+		String[] day1Values = new String[day1Descriptions.length];
+		for (int i = 0; i < day1Descriptions.length; i++) {
+			sqlStatement = "select * from r_day2 where TC = '" + TestNGCustom.TCNo + "' and DES='" + day1Descriptions[i]
+					+ "'";
+			colNames.add("ID");
+			colValues = Common.executeQuery1(sqlStatement, colNames);
+			day1Values[i] = colValues.get(0);
+			log(day1Descriptions[i] + " is: " + day1Values[i]);
+		}
+		
+		// Set day1 values in variable
+		String medNum = day1Values[0];
+		String incrNUM = day1Values[1];
+		String effDTpreRel = day1Values[2];
+		String endDTpreRel = day1Values[3];
+		String effDTincr = day1Values[4];
+		String endDTincr = day1Values[5];
+		
+		// Assert data is inserted in t_re_miep table
+		sqlStatement = "select p.num_incr, p.dte_effective_pre_rel, p.dte_end_pre_rel, p.dte_effective_incr, p.dte_end_incr "
+				+ "from t_re_miep p, t_re_base b where "
+				+ " b.sak_recip = p.sak_recip and b.id_medicaid = " + medNum  +" and p.num_incr = " + incrNUM;
+		
+		colNames = new ArrayList<String>();
+		colNames.add("NUM_INCR");
+		colNames.add("DTE_EFFECTIVE_PRE_REL");
+		colNames.add("DTE_END_PRE_REL");
+		colNames.add("DTE_EFFECTIVE_INCR");
+		colNames.add("DTE_END_INCR");
+		
+		colValues = Common.executeQuery(sqlStatement, colNames);
+		/*String[] dbValues = new String[colValues.size()];
+		for (int i = 0; i < colValues.size(); i++) {
+			dbValues[i] = colValues.get(i);
+		}*/
+		
+		//Set dbvalues in variable
+		String db_incrNUM = colValues.get(0);
+		String db_effDTpreRel = colValues.get(1);
+		String db_endDTpreRel = colValues.get(2);
+		String db_effDTincr = colValues.get(3);
+		String db_endDTincr = colValues.get(4);
+		
+		// Logger statements
+		log("Incr Number is: " + db_incrNUM);
+		System.out.println("Effective Pre Release Date from DB: " + db_effDTpreRel);
+		log("DB effDTpreRel: " + db_effDTpreRel);
+		System.out.println("Effective Pre Release End Date from DB: " + db_endDTpreRel);
+		log("db_endDTpreRel: " + db_endDTpreRel);
+		System.out.println("Effective Incr Date from DB: " + db_effDTincr);
+		log("db_effDTincr: " + db_effDTincr);
+		System.out.println("Effective Incr End Date From DB: " + db_endDTincr);
+		log("db_endDTincr: " + db_endDTincr);
+		
+		// Asserts statements
+		Assert.assertTrue(db_incrNUM.equals(incrNUM),
+				"Incr Number from file is not " + incrNUM + ". It is " + db_incrNUM);
+		Assert.assertTrue(db_effDTpreRel.equals(effDTpreRel),
+				"Effective Pre Release Date updated from file is not " + effDTpreRel + ". It is " + db_effDTpreRel);
+		Assert.assertTrue(db_endDTpreRel.equals(endDTpreRel),
+				"Effective Pre Release end Date updated from file is not " + endDTpreRel + ". It is "
+						+ db_endDTpreRel);
+		Assert.assertTrue(db_effDTincr.equals(effDTincr),
+				"Effective Incr Date updated from file is not " + effDTincr + ". It is " + db_effDTincr);
+		Assert.assertTrue(db_endDTincr.equals(endDTincr),
+				"Effective Incr End Date updated from file is not " + endDTincr + ". It is " + db_endDTincr);
+		
+		log("Successfully verified that data updated correctly by batch into t_re_miep table");
+	}
+    
+	@Test
+	public void test51514b_back() throws Exception {
+		TestNGCustom.TCNo = "51514";
+		log("//TC 51514b");
+		
+	    ArrayList<String> descriptions = new ArrayList<String>();
+	    descriptions.add("");
+		// get the member for incarceration, inserted on day 1
+		
+		sqlStatement = "select * from r_day2 where TC = '" + TestNGCustom.TCNo + "' and DES='Medicaid Number'";
+		colNames.add("ID");
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+		String medNum = colValues.get(0);
+		log("Medicaid Number is: " + medNum);
+
+		// get the incarceration number, inserted on day 1
+		sqlStatement = "select * from r_day2 where TC = '" + TestNGCustom.TCNo + "' and DES='INCR number'";
+		colNames.add("ID");
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+		String incrNUM = colValues.get(0);
+		log("Incarceration number is: " + incrNUM);
+
+		// get the Effective Pre release Date, inserted on day 1
+		sqlStatement = "select * from r_day2 where TC = '" + TestNGCustom.TCNo + "' and DES='Effective Pre Release Date'";
+		colNames.add("ID");
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+		String effDTpreRel = colValues.get(0);
+		log("Effective Pre Release Date is: " + effDTpreRel);
+
+		// get the Pre Release End Date, inserted on day 1
+		sqlStatement = "select * from r_day2 where TC = '" + TestNGCustom.TCNo + "' and DES='Pre Release End Date'";
+		colNames.add("ID");
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+		String endDTpreRel = colValues.get(0);
+		log("Pre Release End Date is: " + endDTpreRel);
+
+		// get the Effective Incr Date, inserted on day 1
+		sqlStatement = "select * from r_day2 where TC = '" + TestNGCustom.TCNo + "' and DES='Effective Incr Date'";
+		colNames.add("ID");
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+		String effDTincr = colValues.get(0);
+		log("Effective Incr Date is" + effDTincr);
+
+		// get the Incr End Date, inserted on da: y 1
+		sqlStatement = "select * from r_day2 where TC = '" + TestNGCustom.TCNo + "' and DES='Incr End Date'";
+		colNames.add("ID");
+		colValues = Common.executeQuery1(sqlStatement, colNames);
+		String endDTincr = colValues.get(0);
+		log("Incr End Date is: " + endDTincr);
+
+		// Assert data is inserted in t_re_miep table
+		sqlStatement = "select p.num_incr, p.dte_effective_pre_rel,p.dte_end_pre_rel, p.dte_effective_incr, p.dte_end_incr"
+				+ " from t_re_miep p, t_re_base b where "
+				+ "b.nam_mid_init <> ' ' and b.sak_recip = p.sak_recip and b.id_medicaid = " + medNum;
+		colNames.add("NUM_INCR");
+		colNames.add("DTE_EFFECTIVE_PRE_REL");
+		colNames.add("DTE_END_PRE_REL");
+		colNames.add("DTE_EFFECTIVE_INCR");
+		colNames.add("DTE_END_INCR");
+
+		colValues = Common.executeQuery(sqlStatement, colNames);
+		String db_incrNUM = colValues.get(0);
+		log("Incr Number is: " + db_incrNUM);
+
+		String db_effDTpreRel = colValues.get(1);
+		System.out.println("Effective Pre Release Date from DB: " + db_effDTpreRel);
+		log("DB effDTpreRel: " + db_effDTpreRel);
+
+		String db_endDTpreRel = colValues.get(2);
+		System.out.println("Effective Pre Release End Date from DB: " + db_endDTpreRel);
+		log("db_endDTpreRel: " + db_endDTpreRel);
+
+		String db_effDTincr = colValues.get(3);
+		System.out.println("Effective Incr Date from DB: " + db_effDTincr);
+		log("db_effDTincr: " + db_effDTincr);
+
+		String db_endDTincr = colValues.get(4);
+		System.out.println("Effective Incr End Date From DB: " + db_endDTincr);
+		log("db_endDTincr: " + db_endDTincr);
+
+		Assert.assertTrue(db_incrNUM.equals(incrNUM),
+				"Incr Number inserted from file is not " + incrNUM + ". It is " + db_incrNUM);
+		Assert.assertTrue(db_effDTpreRel.equals(effDTpreRel),
+				"Effective Pre Release Date inserted from file is not " + effDTpreRel + ". It is " + db_effDTpreRel);
+		Assert.assertTrue(db_endDTpreRel.equals(endDTpreRel),
+				"Effective Pre Release end Date inserted from file is not " + endDTpreRel + ". It is "
+						+ db_endDTpreRel);
+		Assert.assertTrue(db_effDTincr.equals(effDTincr),
+				"Effective Incr Date inserted from file is not " + effDTincr + ". It is " + db_effDTincr);
+		Assert.assertTrue(db_endDTincr.equals(endDTincr),
+				"Effective Incr End Date inserted from file is not " + endDTincr + ". It is " + db_endDTincr);
+
+		log("Successfully verified that data inserted correcctly by batch into t_re_miep table");
+	}
+
     
 }

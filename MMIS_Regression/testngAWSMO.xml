@@ -23,7 +23,7 @@
   </test> 
   
   //Change display to 100% in windows settings before performing these tests
-    <!--     <test name="Member test" preserve-order="true">
+        <test name="Member test" preserve-order="true">
     <classes>
       <class name="newMMIS_Subsystems.Member">
         <methods>
@@ -199,7 +199,7 @@
         </methods> 
       </class> 
     </classes>
-  </test> --> 
+  </test>
   
    <!--   <test name="EVS test" preserve-order="true">
     <classes>
@@ -1000,7 +1000,7 @@
     </classes>
   </test> -->
   
-  <test name="COB Claims Test" preserve-order="true">
+  <!-- <test name="COB Claims Test" preserve-order="true">
     <classes>
       <class name="newMMIS_Subsystems.claims">
         <methods>
@@ -1071,7 +1071,7 @@
         </methods>
       </class> 
     </classes>
-  </test> 
+  </test> -->
   
   <!-- <test name="TPL test" preserve-order="true">
     <classes>
