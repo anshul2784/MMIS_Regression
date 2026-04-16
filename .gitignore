@@ -1,4 +1,12 @@
-Screenshots/
+# Compiled Java files
+*.class
 
-temp/
+# IDE and build directories
+bin/
+build/
+
+# Test artifacts
+Failed-Test/
 test-output/
+Screenshots/
+temp/
