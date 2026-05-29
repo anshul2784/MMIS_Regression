@@ -1395,7 +1395,6 @@ public class Common extends Login {
 			  //String sqlStatmentToUpdate = "update r_proc set FDOS = ?,  TDOS = ? where tc = '25992'; commit;";
 			
 			 
-			// TODO Auto-generated method stub
 			Statement statement = null;
 			ResultSet resultset = null;
 			statement = connection1.createStatement();

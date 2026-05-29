@@ -1,1 +1,10 @@
+# Compiled Java files
+*.class
+# IDE and build directories
+bin/
+build/
+# Test artifacts
+Failed-Test/
 Screenshots/
+test-output/
+temp/
