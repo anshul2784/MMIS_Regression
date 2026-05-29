@@ -34,7 +34,7 @@
                <div style="width: 50px;">50%</div>
             </td>
             <td style="background-color: #eaf0f7; padding: 3px 3px 3px 0;" align="center"
-                nowrap="true">33s
+                nowrap="true">3s
                
             </td>
          </tr>
@@ -97,15 +97,13 @@
                <td width="100%" class="firstMethodCell">
                   <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testLoginBase_byStatus_failed_FAIL1_details')">testLoginBase()</a>
                </td>
-               <td nowrap="true">12:11:53</td>
-               <td nowrap="true" align="right">31s
+               <td nowrap="true">12:08:08</td>
+               <td nowrap="true" align="right">1s
                   
                </td>
                <td nowrap="true">
-                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testLoginBase_byStatus_failed_FAIL1_exception')">java.lang.NoSuchMethodError: 
-                     'com.google.common.collect.ImmutableMap com.google.common.collect.ImmutableMap.of(java.lang.Object, java.lang.Object, java.lang.Object,
-                     java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object,
-                     java.lang.Object, java.lang.Object)'
+                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testLoginBase_byStatus_failed_FAIL1_exception')">java.lang.NoClassDefFoundError: 
+                     org/asynchttpclient/DefaultAsyncHttpClientConfig$Builder
                      
                   </a>
                    
@@ -123,13 +121,13 @@
                         <b>Signature: </b>testLoginBase()[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]
                      </div>
                      <div>
-                        <b>Start time: </b>12:11:53
+                        <b>Start time: </b>12:08:08
                      </div>
                      <div>
-                        <b>End time: </b>12:12:25
+                        <b>End time: </b>12:08:09
                      </div>
                      <div>
-                        <b>Duration: </b>31s
+                        <b>Duration: </b>1s
                         
                      </div>
                   </div>
@@ -139,17 +137,20 @@
                <td colspan="4" class="detailsBox">
                   <div id="newMMIS_Subsystems.Login_testLoginBase_byStatus_failed_FAIL1_exception"
                        class="testMethodDetails">
-                     <pre style="padding: 5px; margin: 0;">java.lang.NoSuchMethodError: 'com.google.common.collect.ImmutableMap com.google.common.collect.ImmutableMap.of(java.lang.Object,
-                        java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object,
-                        java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)'
-                        	at org.openqa.selenium.chrome.AddHasCasting.getAdditionalCommands(AddHasCasting.java:38)
-                        	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.getExtraCommands(ChromeDriver.java:116)
-                        	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.&lt;init&gt;(ChromeDriver.java:111)
-                        	at org.openqa.selenium.chrome.ChromeDriver.generateExecutor(ChromeDriver.java:101)
-                        	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:88)
-                        	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:84)
-                        	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:73)
-                        	at newMMIS_Subsystems.Login.initializeChrome(Unknown Source)
+                     <pre style="padding: 5px; margin: 0;">java.lang.NoClassDefFoundError: org/asynchttpclient/DefaultAsyncHttpClientConfig$Builder
+                        	at org.openqa.selenium.remote.http.netty.NettyClient.createHttpClient(NettyClient.java:77)
+                        	at org.openqa.selenium.remote.http.netty.NettyClient.&lt;clinit&gt;(NettyClient.java:47)
+                        	at org.openqa.selenium.remote.http.netty.NettyClient$Factory.createClient(NettyClient.java:135)
+                        	at org.openqa.selenium.remote.HttpCommandExecutor.&lt;init&gt;(HttpCommandExecutor.java:116)
+                        	at org.openqa.selenium.remote.HttpCommandExecutor.&lt;init&gt;(HttpCommandExecutor.java:94)
+                        	at org.openqa.selenium.remote.service.DriverCommandExecutor.&lt;init&gt;(DriverCommandExecutor.java:88)
+                        	at org.openqa.selenium.chromium.ChromiumDriverCommandExecutor.&lt;init&gt;(ChromiumDriverCommandExecutor.java:40)
+                        	at org.openqa.selenium.edge.EdgeDriver$EdgeDriverCommandExecutor.&lt;init&gt;(EdgeDriver.java:83)
+                        	at org.openqa.selenium.edge.EdgeDriver.generateExecutor(EdgeDriver.java:73)
+                        	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:60)
+                        	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:56)
+                        	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:48)
+                        	at newMMIS_Subsystems.Login.initializeEdge(Unknown Source)
                         	at newMMIS_Subsystems.Login.initializeBrowser(Unknown Source)
                         	at newMMIS_Subsystems.Login.testLoginBase(Unknown Source)
                         	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
@@ -173,6 +174,11 @@
                         	at org.testng.TestNG.run(TestNG.java:1048)
                         	at org.testng.TestNG.privateMain(TestNG.java:1355)
                         	at org.testng.TestNG.main(TestNG.java:1324)
+                        Caused by: java.lang.ClassNotFoundException: org.asynchttpclient.DefaultAsyncHttpClientConfig$Builder
+                        	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+                        	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+                        	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+                        	... 36 more
                      </pre>
                   </div>
                </td>
@@ -184,11 +190,11 @@
                      
                      ,
                      
-                     chrome)
+                     edge)
                   </a>
                </td>
-               <td nowrap="true">12:11:52</td>
-               <td nowrap="true" align="right">11 ms
+               <td nowrap="true">12:08:06</td>
+               <td nowrap="true" align="right">16 ms
                   
                </td>
                <td nowrap="true">
@@ -213,18 +219,18 @@
                         
                         ,
                         
-                        chrome
+                        edge
                         
                         
                      </div>
                      <div>
-                        <b>Start time: </b>12:11:52
+                        <b>Start time: </b>12:08:06
                      </div>
                      <div>
-                        <b>End time: </b>12:11:52
+                        <b>End time: </b>12:08:06
                      </div>
                      <div>
-                        <b>Duration: </b>11 ms
+                        <b>Duration: </b>16 ms
                         
                      </div>
                   </div>
@@ -236,8 +242,8 @@
                <td width="100%" class="firstMethodCell">
                   <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testDBconnect_byStatus_passed_PASS2_details')">testDBconnect()</a>
                </td>
-               <td nowrap="true">12:11:52</td>
-               <td nowrap="true" align="right">1s
+               <td nowrap="true">12:08:06</td>
+               <td nowrap="true" align="right">2s
                   
                </td>
                <td nowrap="true">
@@ -256,13 +262,13 @@
                         <b>Signature: </b>testDBconnect()[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]
                      </div>
                      <div>
-                        <b>Start time: </b>12:11:52
+                        <b>Start time: </b>12:08:06
                      </div>
                      <div>
-                        <b>End time: </b>12:11:53
+                        <b>End time: </b>12:08:08
                      </div>
                      <div>
-                        <b>Duration: </b>1s
+                        <b>Duration: </b>2s
                         
                      </div>
                   </div>
@@ -291,11 +297,11 @@
                      
                      ,
                      
-                     chrome)
+                     edge)
                   </a>
                </td>
-               <td nowrap="true">12:11:52</td>
-               <td nowrap="true" align="right">11 ms
+               <td nowrap="true">12:08:06</td>
+               <td nowrap="true" align="right">16 ms
                   
                </td>
                <td nowrap="true">
@@ -320,18 +326,18 @@
                         
                         ,
                         
-                        chrome
+                        edge
                         
                         
                      </div>
                      <div>
-                        <b>Start time: </b>12:11:52
+                        <b>Start time: </b>12:08:06
                      </div>
                      <div>
-                        <b>End time: </b>12:11:52
+                        <b>End time: </b>12:08:06
                      </div>
                      <div>
-                        <b>Duration: </b>11 ms
+                        <b>Duration: </b>16 ms
                         
                      </div>
                   </div>
@@ -343,8 +349,8 @@
                <td width="100%" class="firstMethodCell">
                   <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testDBconnect_byClass_PASS2_details')">testDBconnect()</a>
                </td>
-               <td nowrap="true">12:11:52</td>
-               <td nowrap="true" align="right">1s
+               <td nowrap="true">12:08:06</td>
+               <td nowrap="true" align="right">2s
                   
                </td>
                <td nowrap="true">
@@ -363,13 +369,13 @@
                         <b>Signature: </b>testDBconnect()[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]
                      </div>
                      <div>
-                        <b>Start time: </b>12:11:52
+                        <b>Start time: </b>12:08:06
                      </div>
                      <div>
-                        <b>End time: </b>12:11:53
+                        <b>End time: </b>12:08:08
                      </div>
                      <div>
-                        <b>Duration: </b>1s
+                        <b>Duration: </b>2s
                         
                      </div>
                   </div>
@@ -381,15 +387,13 @@
                <td width="100%" class="firstMethodCell">
                   <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testLoginBase_byClass_FAIL3_details')">testLoginBase()</a>
                </td>
-               <td nowrap="true">12:11:53</td>
-               <td nowrap="true" align="right">31s
+               <td nowrap="true">12:08:08</td>
+               <td nowrap="true" align="right">1s
                   
                </td>
                <td nowrap="true">
-                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testLoginBase_byClass_FAIL3_exception')">java.lang.NoSuchMethodError: 
-                     'com.google.common.collect.ImmutableMap com.google.common.collect.ImmutableMap.of(java.lang.Object, java.lang.Object, java.lang.Object,
-                     java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object,
-                     java.lang.Object, java.lang.Object)'
+                  <a onclick="toggleDetailsVisibility('newMMIS_Subsystems.Login_testLoginBase_byClass_FAIL3_exception')">java.lang.NoClassDefFoundError: 
+                     org/asynchttpclient/DefaultAsyncHttpClientConfig$Builder
                      
                   </a>
                    
@@ -407,13 +411,13 @@
                         <b>Signature: </b>testLoginBase()[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]
                      </div>
                      <div>
-                        <b>Start time: </b>12:11:53
+                        <b>Start time: </b>12:08:08
                      </div>
                      <div>
-                        <b>End time: </b>12:12:25
+                        <b>End time: </b>12:08:09
                      </div>
                      <div>
-                        <b>Duration: </b>31s
+                        <b>Duration: </b>1s
                         
                      </div>
                   </div>
@@ -423,17 +427,20 @@
                <td colspan="4" class="detailsBox">
                   <div id="newMMIS_Subsystems.Login_testLoginBase_byClass_FAIL3_exception"
                        class="testMethodDetails">
-                     <pre style="padding: 5px; margin: 0;">java.lang.NoSuchMethodError: 'com.google.common.collect.ImmutableMap com.google.common.collect.ImmutableMap.of(java.lang.Object,
-                        java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object,
-                        java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)'
-                        	at org.openqa.selenium.chrome.AddHasCasting.getAdditionalCommands(AddHasCasting.java:38)
-                        	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.getExtraCommands(ChromeDriver.java:116)
-                        	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.&lt;init&gt;(ChromeDriver.java:111)
-                        	at org.openqa.selenium.chrome.ChromeDriver.generateExecutor(ChromeDriver.java:101)
-                        	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:88)
-                        	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:84)
-                        	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:73)
-                        	at newMMIS_Subsystems.Login.initializeChrome(Unknown Source)
+                     <pre style="padding: 5px; margin: 0;">java.lang.NoClassDefFoundError: org/asynchttpclient/DefaultAsyncHttpClientConfig$Builder
+                        	at org.openqa.selenium.remote.http.netty.NettyClient.createHttpClient(NettyClient.java:77)
+                        	at org.openqa.selenium.remote.http.netty.NettyClient.&lt;clinit&gt;(NettyClient.java:47)
+                        	at org.openqa.selenium.remote.http.netty.NettyClient$Factory.createClient(NettyClient.java:135)
+                        	at org.openqa.selenium.remote.HttpCommandExecutor.&lt;init&gt;(HttpCommandExecutor.java:116)
+                        	at org.openqa.selenium.remote.HttpCommandExecutor.&lt;init&gt;(HttpCommandExecutor.java:94)
+                        	at org.openqa.selenium.remote.service.DriverCommandExecutor.&lt;init&gt;(DriverCommandExecutor.java:88)
+                        	at org.openqa.selenium.chromium.ChromiumDriverCommandExecutor.&lt;init&gt;(ChromiumDriverCommandExecutor.java:40)
+                        	at org.openqa.selenium.edge.EdgeDriver$EdgeDriverCommandExecutor.&lt;init&gt;(EdgeDriver.java:83)
+                        	at org.openqa.selenium.edge.EdgeDriver.generateExecutor(EdgeDriver.java:73)
+                        	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:60)
+                        	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:56)
+                        	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:48)
+                        	at newMMIS_Subsystems.Login.initializeEdge(Unknown Source)
                         	at newMMIS_Subsystems.Login.initializeBrowser(Unknown Source)
                         	at newMMIS_Subsystems.Login.testLoginBase(Unknown Source)
                         	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
@@ -457,6 +464,11 @@
                         	at org.testng.TestNG.run(TestNG.java:1048)
                         	at org.testng.TestNG.privateMain(TestNG.java:1355)
                         	at org.testng.TestNG.main(TestNG.java:1324)
+                        Caused by: java.lang.ClassNotFoundException: org.asynchttpclient.DefaultAsyncHttpClientConfig$Builder
+                        	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+                        	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+                        	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+                        	... 36 more
                      </pre>
                   </div>
                </td>

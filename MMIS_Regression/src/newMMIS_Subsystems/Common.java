@@ -433,7 +433,7 @@ public class Common extends Login {
 	//MIP DB connection
 		public static boolean connectMIP() throws Exception {
 			try{ 
-				String host = "10.220.64.82";
+				String host = "ehspr-mis-rds8.csxzdz8uzlt0.us-east-1.rds.amazonaws.com";
 			    String svcName = "madocp1";
 			    
 			    connection1 = DriverManager.getConnection("jdbc:oracle:thin:@"+host+":1521:"+svcName,"automation","mn6ag+kh");

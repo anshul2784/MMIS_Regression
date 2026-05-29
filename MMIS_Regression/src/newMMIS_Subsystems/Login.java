@@ -47,6 +47,7 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.Reporter;
@@ -312,70 +313,47 @@ public class Login  {
 		System.out.println("****************************" +env+" BASE"
 				+ "****************************");
 
-        //setting chrome profile for download xml without user interaction
-		
-		/*Map<String, Object> prefs = new HashMap<String, Object>();
-		prefs.put("credentials_enable_service", false);
-		prefs.put("profile.password_manager_enabled", false); //For disabling do you want to save this password
-		prefs.put("safebrowsing.enabled", true); //For MA21 file download-no popup
-		prefs.put("autofill.profile_enabled", false); //For disabling save address popup
-		prefs.put("download.default_directory", tempDirPath); //For auto download to tempDirPath
-		//prefs.put("download.default_directory", "C:\\Users\\MMohsunov\\eclipse-workspace\\SmokeChrome\\temp_Reports"); //For auto download to tempDirPath
-		prefs.put("plugins.plugins_disabled", new String[] { "Chrome PDF Viewer" }); //For not opening PDF files in a new chrome tab/chrome viewer
-        prefs.put("plugins.always_open_pdf_externally", true); //Downloads the pdf file on launching the respective file link
-	    prefs.put("download.directory_upgrade", true);
-	    prefs.put("plugins.always_open_pdf_externally", true);
-
-		options.setExperimentalOption("prefs", prefs);
-		
-		System.out.println("Chrome is set with profile settings...");*/
-
-//		driver = new FirefoxDriver(firefoxProfile);
-//		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-//		driver.manage().window().maximize();
-		//driver = new ChromeDriver(options); 
-	
 		//Create an instance of chrome webdriver
         initializeBrowser(browser);
-
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS); //Added by Anshul for page load issues on 04/26/2024
 		driver.manage().window().maximize();
 		
-		//Logon to Base
-		driver.get(vgmain); Thread.sleep(5000);
-
-		if(driver.findElements(By.xpath("(//button[text()='Log In'])[2]")).size()>0)
-			driver.findElement(By.xpath("(//button[text()='Log In'])[2]")).click(); Thread.sleep(2000);
-			
+		//Login to Base
+		driver.get(vgmain); Thread.sleep(2000);
+		
+		driver.findElement(By.xpath("(//button[text()='Log In'])[2]")).click(); Thread.sleep(2000);
 		driver.findElement(By.xpath("//*[text()='Business Log In']")).click();  Thread.sleep(2000);
-		driver.findElement(By.xpath("//*[text()='Proceed to Login']")).click(); Thread.sleep(3000);
+		driver.findElement(By.xpath("//*[text()='Proceed']")).click();          Thread.sleep(5000);
 
-		driver.findElement(By.id("signInName")).clear();
+		driver.findElement(By.id("signInName")).clear();              Thread.sleep(2000);
 		driver.findElement(By.id("signInName")).sendKeys(email);
 		
 		driver.findElement(By.name("Password")).clear();
-		driver.findElement(By.name("Password")).sendKeys(pwd); Thread.sleep(2000);
-		driver.findElement(By.xpath("//button[text()='Log in']")).click();
-		Thread.sleep(2000);
+		driver.findElement(By.name("Password")).sendKeys(pwd);             Thread.sleep(2000);
+		driver.findElement(By.xpath("//button[text()='Log in']")).click(); Thread.sleep(5000);
 
-		driver.findElement(By.xpath("//span[@class='multiselect__single']")).click();
-		driver.findElement(By.xpath("//span[text()='EOHHS - 0000999']")).click();
-		driver.findElement(By.xpath("//button[text()='Proceed']")).click();
-		Thread.sleep(2000);
+		try {
+			driver.findElement(By.xpath("//span[@class='multiselect__single']")).click();
+			driver.findElement(By.xpath("//span[text()='EOHHS - 0000999']")).click(); Thread.sleep(2000);
+			driver.findElement(By.xpath("//button[text()='Proceed']")).click();       Thread.sleep(3000);
+		} catch (Exception e) {e.printStackTrace();}
 		
-		int loginTry=0;
-		do {
-			driver.get(envpath); 
-			
-			++loginTry;
-			if(loginTry==5)
-				break;
-		} while ( driver.findElements(By.xpath("//*[@title='MassHealth Member and Provider Services']")).size()==0);
+		driver.get(envpath); Thread.sleep(2000);
 		
-		if(loginTry==5)
-			throw new SkipException("Login issue:\nCould not open url: "+envpath+" after trying 5 times.");
+		while (driver.findElements(By.xpath("//*[@title='MassHealth Member and Provider Services']")).size() == 0) {
+
+			//if login not successfull
+			try {
+				driver.findElement(By.xpath("//*[text()='Business Log In']")).click();  Thread.sleep(2000);
+				driver.findElement(By.xpath("//*[text()='Proceed']")).click(); 			Thread.sleep(3000);
+			} catch (Exception e) {/*ignore*/}
 			
+			try {
+				driver.findElement(By.xpath("//span[@class='multiselect__single']")).click();
+				driver.findElement(By.xpath("//span[text()='EOHHS - 0000999']")).click();  Thread.sleep(2000);
+				driver.findElement(By.xpath("//button[text()='Proceed']")).click();        Thread.sleep(3000);
+			} catch (Exception e) {e.printStackTrace();}
+		}
+
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		String PostLoginText = driver.findElement(By.cssSelector("h1.header")).getText();
 
@@ -387,8 +365,6 @@ public class Login  {
 	@Test
 	public static void testLoginPortal() throws Exception {
 
-//		setFireFoxProfile();
-		
 		if(env.equals("AWSUAT")) {
 			uid="mnarala4";
 		}else if(env.equals("AWSMO") || env.equals("AWSMO2")) {
@@ -405,81 +381,55 @@ public class Login  {
 		email = colValues.get(1);
 		pwd = colValues.get(2);
 		
-		System.out.println("****************************" +env+" PORTAL"
-				+ "****************************");
+		System.out.println("****************************" +env+" PORTAL ****************************");
 		
-//		//Create an instance of selenium webdriver
-//		driver = new FirefoxDriver(firefoxProfile);
-//		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-//		driver.manage().window().maximize();
-		
-		//only uncomment if you are trying to skip logging into base
-	    //setting chrome profile for download xml without user interaction
-		System.setProperty("webdriver.chrome.driver","C:\\Users\\MMohsunov\\eclipse-workspace\\MMIS_Regression_25\\chromedriver\\chromedriver.exe");
-		options = new ChromeOptions(); 
-		options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"}); 
-		options.addArguments("--ignore-certificate-errors"); //for disabling SSL warnings
-		options.addArguments("--disable-notifications");
-		options.addArguments("--disable-features=LocalNetworkAccessChecks");
-		
-		//Create an instance of chrome webdriver
-		driver = new ChromeDriver(options); 
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS); //Added by Anshul for page load issues on 04/26/2024
-		driver.manage().window().maximize();
-		
+        initializeBrowser(browser);
+
 		driver.get(vgmain);
-		Thread.sleep(2000);
 			
 		driver.findElement(By.xpath("(//button[text()='Log In'])[2]")).click(); Thread.sleep(2000);
 		driver.findElement(By.xpath("//*[text()='Business Log In']")).click();  Thread.sleep(2000);
-		driver.findElement(By.xpath("//*[text()='Proceed to Login']")).click(); Thread.sleep(5000);
+		driver.findElement(By.xpath("//*[text()='Proceed']")).click(); Thread.sleep(5000);
 
 		driver.findElement(By.xpath("//*[@id='localAccountForm']/div[3]/div[1]/input")).clear(); Thread.sleep(1000);
 		driver.findElement(By.xpath("//*[@id='localAccountForm']/div[3]/div[1]/input")).sendKeys(email);
 		
 		driver.findElement(By.id("password")).clear(); Thread.sleep(1000);
 		driver.findElement(By.id("password")).sendKeys(pwd);
-		driver.findElement(By.xpath("//button[text()='Log in']")).click();
+		driver.findElement(By.xpath("//button[text()='Log in']")).click(); Thread.sleep(2000);
 
-		if(driver.findElements(By.xpath("//span[@class='multiselect__single']")).size()>0) {
+		//Select dropdown
+		try {
 			driver.findElement(By.xpath("//span[@class='multiselect__single']")).click();
 			driver.findElement(By.xpath("//span[text()='EOHHS - 0000999']")).click();
-			driver.findElement(By.xpath("//button[text()='Proceed']")).click();
-			Thread.sleep(2000);
-		}
+			driver.findElement(By.xpath("//button[text()='Proceed']")).click(); Thread.sleep(2000);
+		} catch (Exception e) {/*ignore*/}
 			
-		driver.get(envpath); //This and below step is done because at this point we get a "Medicaid Provider Portal" link, which opens application in a new tab, so to avoid this we send the envpath again
-		Thread.sleep(1000);
+		driver.get(envpath); Thread.sleep(2000);
 			
-		if(driver.findElements(By.xpath("//*[contains(text(),'LOGIN')]")).size() > 0) 
-			driver.findElement(By.xpath("//*[contains(text(),'LOGIN')]")).click(); Thread.sleep(1000);
+		try {
+			driver.findElement(By.xpath("//*[contains(text(),'LOGIN')]")).click(); Thread.sleep(2000);
+		} catch (Exception e) {/* ignore */}
+		
+		System.out.println("*************** First login attempt to Portal done ***************");
+		
+		while(driver.findElements(By.xpath("//*[text()='MassHealth Provider Online Service Center (POSC)']")).size()==0) {
 			
-		while (driver.findElements(By.xpath("//*[text()='MassHealth Provider Online Service Center (POSC)']")).size()==0) {
-			Thread.sleep(5000);
-			driver.get(vgmain);
-			driver.get(envpath); 
-			if(driver.findElements(By.xpath("//*[contains(text(),'LOGIN')]")).size() > 0) 
-				driver.findElement(By.xpath("//*[contains(text(),'LOGIN')]")).click(); Thread.sleep(5000);
-			System.out.println("Login Again to POSC");
-			
-			if(driver.findElements(By.xpath("//*[text()='Business Log In']")).size()>0) {
+			try {
 				driver.findElement(By.xpath("//*[text()='Business Log In']")).click();  Thread.sleep(2000);
-				driver.findElement(By.xpath("//*[text()='Proceed to Login']")).click(); Thread.sleep(2000);
-			}
-			if(driver.findElements(By.name("Email")).size()>0) {
-				driver.findElement(By.name("Email")).clear();
-				driver.findElement(By.name("Email")).sendKeys(email);
-			
-				driver.findElement(By.id("password")).clear(); Thread.sleep(1000);
-				driver.findElement(By.id("password")).sendKeys(pwd);
-				driver.findElement(By.xpath("//button[text()='Log in']")).click();
-			}
+				driver.findElement(By.xpath("//*[text()='Proceed']")).click(); Thread.sleep(5000);
+			} catch (Exception e) {/* ignore */}
+			if(driver.findElements(By.xpath("//*[text()='MassHealth Provider Online Service Center (POSC)']")).size()>0) 
+				break;
+
+			driver.get(envpath); Thread.sleep(2000);
+			driver.findElement(By.xpath("//*[contains(text(),'LOGIN')]")).click(); Thread.sleep(3000);
+			if(driver.findElements(By.xpath("//*[text()='MassHealth Provider Online Service Center (POSC)']")).size()>0) 
+				break;
 		}
-			
+
 		if (!(driver.findElements(By.xpath("//*[text()='Welcome "+uid+"']")).size() > 0) )
 				throw new SkipException("Skipping further tests because user not logged into Portal successfully");
-		
 	}
 	
 	public static void loginAgain() throws InterruptedException {

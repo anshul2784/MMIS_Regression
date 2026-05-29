@@ -4,7 +4,7 @@
   <parameter name="selenium.port" value="4444"/>
   <parameter name="environment" value="AWSMO"/>
   <parameter name="selenium.host" value="localhost"/>
-  <parameter name="selenium.browser" value="chrome"/>
+  <parameter name="selenium.browser" value="edge"/>
   <parameter name="selenium.url" value="www.google.com"/>
   <listeners>
     <listener class-name="org.uncommons.reportng.HTMLReporter"/>

@@ -2,15 +2,15 @@
 <testng-results total="4" passed="2" failed="1" skipped="1">
   <reporter-output>
     <line>
-      <![CDATA[1.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_15_Apr_2026__12_12_25PM_192.168.1.130_TC (test_case_number).png]]>
+      <![CDATA[1.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_17_Apr_2026__12_10_13PM_192.168.1.130_TC (test_case_number).png]]>
     </line>
   </reporter-output>
-  <suite started-at="2026-04-15T16:11:52Z" name="NewMMIS regression test suite" finished-at="2026-04-15T16:12:25Z" duration-ms="33183">
+  <suite started-at="2026-04-17T16:10:10Z" name="NewMMIS regression test suite" finished-at="2026-04-17T16:10:14Z" duration-ms="3209">
     <groups>
     </groups>
-    <test started-at="2026-04-15T16:11:52Z" name="Login test" finished-at="2026-04-15T16:12:25Z" duration-ms="32844">
+    <test started-at="2026-04-17T16:10:10Z" name="Login test" finished-at="2026-04-17T16:10:13Z" duration-ms="2740">
       <class name="newMMIS_Subsystems.Login">
-        <test-method is-config="true" signature="init(java.lang.String, java.lang.String)[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]" started-at="2026-04-15T12:11:52Z" name="init" finished-at="2026-04-15T12:11:52Z" duration-ms="11" status="PASS">
+        <test-method is-config="true" signature="init(java.lang.String, java.lang.String)[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]" started-at="2026-04-17T12:10:10Z" name="init" finished-at="2026-04-17T12:10:10Z" duration-ms="22" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -19,32 +19,37 @@
             </param>
             <param index="1">
               <value>
-                <![CDATA[chrome]]>
+                <![CDATA[edge]]>
               </value>
             </param>
           </params>
           <reporter-output>
           </reporter-output>
         </test-method> <!-- init -->
-        <test-method signature="testDBconnect()[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]" started-at="2026-04-15T12:11:52Z" name="testDBconnect" finished-at="2026-04-15T12:11:53Z" duration-ms="1244" status="PASS">
+        <test-method signature="testDBconnect()[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]" started-at="2026-04-17T12:10:10Z" name="testDBconnect" finished-at="2026-04-17T12:10:12Z" duration-ms="1386" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testDBconnect -->
-        <test-method signature="testLoginBase()[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]" started-at="2026-04-15T12:11:53Z" name="testLoginBase" finished-at="2026-04-15T12:12:25Z" duration-ms="31181" status="FAIL">
-          <exception class="java.lang.NoSuchMethodError">
+        <test-method signature="testLoginBase()[pri:0, instance:newMMIS_Subsystems.Login@77167fb7]" started-at="2026-04-17T12:10:12Z" name="testLoginBase" finished-at="2026-04-17T12:10:13Z" duration-ms="903" status="FAIL">
+          <exception class="java.lang.NoClassDefFoundError">
             <message>
-              <![CDATA['com.google.common.collect.ImmutableMap com.google.common.collect.ImmutableMap.of(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)']]>
+              <![CDATA[org/asynchttpclient/DefaultAsyncHttpClientConfig$Builder]]>
             </message>
             <full-stacktrace>
-              <![CDATA[java.lang.NoSuchMethodError: 'com.google.common.collect.ImmutableMap com.google.common.collect.ImmutableMap.of(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)'
-	at org.openqa.selenium.chrome.AddHasCasting.getAdditionalCommands(AddHasCasting.java:38)
-	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.getExtraCommands(ChromeDriver.java:116)
-	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.<init>(ChromeDriver.java:111)
-	at org.openqa.selenium.chrome.ChromeDriver.generateExecutor(ChromeDriver.java:101)
-	at org.openqa.selenium.chrome.ChromeDriver.<init>(ChromeDriver.java:88)
-	at org.openqa.selenium.chrome.ChromeDriver.<init>(ChromeDriver.java:84)
-	at org.openqa.selenium.chrome.ChromeDriver.<init>(ChromeDriver.java:73)
-	at newMMIS_Subsystems.Login.initializeChrome(Unknown Source)
+              <![CDATA[java.lang.NoClassDefFoundError: org/asynchttpclient/DefaultAsyncHttpClientConfig$Builder
+	at org.openqa.selenium.remote.http.netty.NettyClient.createHttpClient(NettyClient.java:77)
+	at org.openqa.selenium.remote.http.netty.NettyClient.<clinit>(NettyClient.java:47)
+	at org.openqa.selenium.remote.http.netty.NettyClient$Factory.createClient(NettyClient.java:135)
+	at org.openqa.selenium.remote.HttpCommandExecutor.<init>(HttpCommandExecutor.java:116)
+	at org.openqa.selenium.remote.HttpCommandExecutor.<init>(HttpCommandExecutor.java:94)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.<init>(DriverCommandExecutor.java:88)
+	at org.openqa.selenium.chromium.ChromiumDriverCommandExecutor.<init>(ChromiumDriverCommandExecutor.java:40)
+	at org.openqa.selenium.edge.EdgeDriver$EdgeDriverCommandExecutor.<init>(EdgeDriver.java:83)
+	at org.openqa.selenium.edge.EdgeDriver.generateExecutor(EdgeDriver.java:73)
+	at org.openqa.selenium.edge.EdgeDriver.<init>(EdgeDriver.java:60)
+	at org.openqa.selenium.edge.EdgeDriver.<init>(EdgeDriver.java:56)
+	at org.openqa.selenium.edge.EdgeDriver.<init>(EdgeDriver.java:48)
+	at newMMIS_Subsystems.Login.initializeEdge(Unknown Source)
 	at newMMIS_Subsystems.Login.initializeBrowser(Unknown Source)
 	at newMMIS_Subsystems.Login.testLoginBase(Unknown Source)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
@@ -68,28 +73,33 @@
 	at org.testng.TestNG.run(TestNG.java:1048)
 	at org.testng.TestNG.privateMain(TestNG.java:1355)
 	at org.testng.TestNG.main(TestNG.java:1324)
+Caused by: java.lang.ClassNotFoundException: org.asynchttpclient.DefaultAsyncHttpClientConfig$Builder
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	... 36 more
 ]]>
             </full-stacktrace>
-          </exception> <!-- java.lang.NoSuchMethodError -->
+          </exception> <!-- java.lang.NoClassDefFoundError -->
           <reporter-output>
             <line>
-              <![CDATA[1.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_15_Apr_2026__12_12_25PM_192.168.1.130_TC (test_case_number).png]]>
+              <![CDATA[1.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_17_Apr_2026__12_10_13PM_192.168.1.130_TC (test_case_number).png]]>
             </line>
           </reporter-output>
         </test-method> <!-- testLoginBase -->
       </class> <!-- newMMIS_Subsystems.Login -->
     </test> <!-- Login test -->
-    <test started-at="2026-04-15T16:12:25Z" name="COB Claims Test" finished-at="2026-04-15T16:12:25Z" duration-ms="318">
+    <test started-at="2026-04-17T16:10:13Z" name="COB Claims Test" finished-at="2026-04-17T16:10:14Z" duration-ms="443">
       <class name="newMMIS_Subsystems.claims">
-        <test-method is-config="true" signature="claimsStartup()[pri:0, instance:newMMIS_Subsystems.claims@351d00c0]" started-at="2026-04-15T12:12:25Z" name="claimsStartup" finished-at="2026-04-15T12:12:25Z" duration-ms="58" status="PASS">
+        <test-method is-config="true" signature="claimsStartup()[pri:0, instance:newMMIS_Subsystems.claims@351d00c0]" started-at="2026-04-17T12:10:13Z" name="claimsStartup" finished-at="2026-04-17T12:10:13Z" duration-ms="88" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- claimsStartup -->
-        <test-method is-config="true" signature="startup()[pri:0, instance:newMMIS_Subsystems.claims@351d00c0]" started-at="2026-04-15T12:12:25Z" name="startup" finished-at="2026-04-15T12:12:25Z" duration-ms="0" status="PASS">
+        <test-method is-config="true" signature="startup()[pri:0, instance:newMMIS_Subsystems.claims@351d00c0]" started-at="2026-04-17T12:10:13Z" name="startup" finished-at="2026-04-17T12:10:13Z" duration-ms="0" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- startup -->
-        <test-method is-config="true" signature="init(java.lang.String, java.lang.String)[pri:0, instance:newMMIS_Subsystems.claims@351d00c0]" started-at="2026-04-15T12:12:25Z" name="init" finished-at="2026-04-15T12:12:25Z" duration-ms="1" status="PASS">
+        <test-method is-config="true" signature="init(java.lang.String, java.lang.String)[pri:0, instance:newMMIS_Subsystems.claims@351d00c0]" started-at="2026-04-17T12:10:13Z" name="init" finished-at="2026-04-17T12:10:13Z" duration-ms="0" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -98,14 +108,14 @@
             </param>
             <param index="1">
               <value>
-                <![CDATA[chrome]]>
+                <![CDATA[edge]]>
               </value>
             </param>
           </params>
           <reporter-output>
           </reporter-output>
         </test-method> <!-- init -->
-        <test-method is-config="true" signature="LoginCheck()[pri:0, instance:newMMIS_Subsystems.claims@351d00c0]" started-at="2026-04-15T12:12:25Z" name="LoginCheck" finished-at="2026-04-15T12:12:25Z" duration-ms="0" status="FAIL">
+        <test-method is-config="true" signature="LoginCheck()[pri:0, instance:newMMIS_Subsystems.claims@351d00c0]" started-at="2026-04-17T12:10:13Z" name="LoginCheck" finished-at="2026-04-17T12:10:13Z" duration-ms="0" status="FAIL">
           <exception class="java.lang.NullPointerException">
             <message>
               <![CDATA[Cannot invoke "org.openqa.selenium.WebDriver.manage()" because "newMMIS_Subsystems.Common.driver" is null]]>
@@ -143,19 +153,19 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- LoginCheck -->
-        <test-method signature="test31143edit()[pri:0, instance:newMMIS_Subsystems.claims@351d00c0]" started-at="2026-04-15T12:12:25Z" name="test31143edit" finished-at="2026-04-15T12:12:25Z" duration-ms="0" status="SKIP">
+        <test-method signature="test31143edit()[pri:0, instance:newMMIS_Subsystems.claims@351d00c0]" started-at="2026-04-17T12:10:13Z" name="test31143edit" finished-at="2026-04-17T12:10:13Z" duration-ms="0" status="SKIP">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- test31143edit -->
-        <test-method is-config="true" signature="teardown()[pri:0, instance:newMMIS_Subsystems.claims@351d00c0]" started-at="2026-04-15T12:12:25Z" name="teardown" finished-at="2026-04-15T12:12:25Z" duration-ms="28" status="PASS">
+        <test-method is-config="true" signature="teardown()[pri:0, instance:newMMIS_Subsystems.claims@351d00c0]" started-at="2026-04-17T12:10:13Z" name="teardown" finished-at="2026-04-17T12:10:14Z" duration-ms="44" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- teardown -->
       </class> <!-- newMMIS_Subsystems.claims -->
     </test> <!-- COB Claims Test -->
-    <test started-at="2026-04-15T16:12:25Z" name="Close Logs test" finished-at="2026-04-15T16:12:25Z" duration-ms="3">
+    <test started-at="2026-04-17T16:10:14Z" name="Close Logs test" finished-at="2026-04-17T16:10:14Z" duration-ms="3">
       <class name="newMMIS_Subsystems.Login">
-        <test-method is-config="true" signature="init(java.lang.String, java.lang.String)[pri:0, instance:newMMIS_Subsystems.Login@4c371370]" started-at="2026-04-15T12:12:25Z" name="init" finished-at="2026-04-15T12:12:25Z" duration-ms="0" status="PASS">
+        <test-method is-config="true" signature="init(java.lang.String, java.lang.String)[pri:0, instance:newMMIS_Subsystems.Login@4c371370]" started-at="2026-04-17T12:10:14Z" name="init" finished-at="2026-04-17T12:10:14Z" duration-ms="0" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -164,14 +174,14 @@
             </param>
             <param index="1">
               <value>
-                <![CDATA[chrome]]>
+                <![CDATA[edge]]>
               </value>
             </param>
           </params>
           <reporter-output>
           </reporter-output>
         </test-method> <!-- init -->
-        <test-method signature="closeLogs()[pri:0, instance:newMMIS_Subsystems.Login@4c371370]" started-at="2026-04-15T12:12:25Z" name="closeLogs" finished-at="2026-04-15T12:12:25Z" duration-ms="1" status="PASS">
+        <test-method signature="closeLogs()[pri:0, instance:newMMIS_Subsystems.Login@4c371370]" started-at="2026-04-17T12:10:14Z" name="closeLogs" finished-at="2026-04-17T12:10:14Z" duration-ms="1" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- closeLogs -->

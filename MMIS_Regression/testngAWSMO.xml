@@ -4,7 +4,7 @@
 
  <parameter name="selenium.host" value="localhost"></parameter>
  <parameter name="selenium.port" value="4444"></parameter>
- <parameter name="selenium.browser" value="chrome"></parameter>
+ <parameter name="selenium.browser" value="edge"></parameter>
  <parameter name="selenium.url" value="www.google.com"></parameter>
  <parameter name="environment" value="AWSMO"></parameter>
  <listeners>

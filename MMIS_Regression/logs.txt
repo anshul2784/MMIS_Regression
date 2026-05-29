@@ -1,6 +1,6 @@
 
 
-****************************Starting NewMMIS regression test Suite in AWSMO on Wed Apr 15 12:11:52 EDT 2026****************************
+****************************Starting NewMMIS regression test Suite in AWSMO on Fri Apr 17 12:10:10 EDT 2026****************************
 
 Starting Claims Subsystem......
 

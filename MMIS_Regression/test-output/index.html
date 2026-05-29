@@ -160,17 +160,27 @@
                   <a name="testLoginBase">
                   </a> <!-- testLoginBase -->
                   <span class="method-name">testLoginBase</span>
-                  <div class="stack-trace">java.lang.NoSuchMethodError: &apos;com.google.common.collect.ImmutableMap com.google.common.collect.ImmutableMap.of(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)&apos;
-	at org.openqa.selenium.chrome.AddHasCasting.getAdditionalCommands(AddHasCasting.java:38)
-	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.getExtraCommands(ChromeDriver.java:116)
-	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.&lt;init&gt;(ChromeDriver.java:111)
-	at org.openqa.selenium.chrome.ChromeDriver.generateExecutor(ChromeDriver.java:101)
-	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:88)
-	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:84)
-	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:73)
-	at newMMIS_Subsystems.Login.initializeChrome(Unknown Source)
+                  <div class="stack-trace">java.lang.NoClassDefFoundError: org/asynchttpclient/DefaultAsyncHttpClientConfig$Builder
+	at org.openqa.selenium.remote.http.netty.NettyClient.createHttpClient(NettyClient.java:77)
+	at org.openqa.selenium.remote.http.netty.NettyClient.&lt;clinit&gt;(NettyClient.java:47)
+	at org.openqa.selenium.remote.http.netty.NettyClient$Factory.createClient(NettyClient.java:135)
+	at org.openqa.selenium.remote.HttpCommandExecutor.&lt;init&gt;(HttpCommandExecutor.java:116)
+	at org.openqa.selenium.remote.HttpCommandExecutor.&lt;init&gt;(HttpCommandExecutor.java:94)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.&lt;init&gt;(DriverCommandExecutor.java:88)
+	at org.openqa.selenium.chromium.ChromiumDriverCommandExecutor.&lt;init&gt;(ChromiumDriverCommandExecutor.java:40)
+	at org.openqa.selenium.edge.EdgeDriver$EdgeDriverCommandExecutor.&lt;init&gt;(EdgeDriver.java:83)
+	at org.openqa.selenium.edge.EdgeDriver.generateExecutor(EdgeDriver.java:73)
+	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:60)
+	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:56)
+	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:48)
+	at newMMIS_Subsystems.Login.initializeEdge(Unknown Source)
 	at newMMIS_Subsystems.Login.initializeBrowser(Unknown Source)
 	at newMMIS_Subsystems.Login.testLoginBase(Unknown Source)
+Caused by: java.lang.ClassNotFoundException: org.asynchttpclient.DefaultAsyncHttpClientConfig$Builder
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	... 36 more
 ... Removed 21 stack frames
 </div> <!-- stack-trace -->
                 </div> <!-- method-content -->
@@ -227,7 +237,7 @@
   &lt;parameter name=&quot;selenium.port&quot; value=&quot;4444&quot;/&gt;
   &lt;parameter name=&quot;environment&quot; value=&quot;AWSMO&quot;/&gt;
   &lt;parameter name=&quot;selenium.host&quot; value=&quot;localhost&quot;/&gt;
-  &lt;parameter name=&quot;selenium.browser&quot; value=&quot;chrome&quot;/&gt;
+  &lt;parameter name=&quot;selenium.browser&quot; value=&quot;edge&quot;/&gt;
   &lt;parameter name=&quot;selenium.url&quot; value=&quot;www.google.com&quot;/&gt;
   &lt;listeners&gt;
     &lt;listener class-name=&quot;org.uncommons.reportng.HTMLReporter&quot;/&gt;
@@ -305,13 +315,13 @@ data.addColumn('string', 'Class');
 data.addColumn('number', 'Time (ms)');
 data.addRows(4);
 data.setCell(0, 0, 0)
-data.setCell(0, 1, 'testLoginBase')
+data.setCell(0, 1, 'testDBconnect')
 data.setCell(0, 2, 'newMMIS_Subsystems.Login')
-data.setCell(0, 3, 31181);
+data.setCell(0, 3, 1386);
 data.setCell(1, 0, 1)
-data.setCell(1, 1, 'testDBconnect')
+data.setCell(1, 1, 'testLoginBase')
 data.setCell(1, 2, 'newMMIS_Subsystems.Login')
-data.setCell(1, 3, 1244);
+data.setCell(1, 3, 903);
 data.setCell(2, 0, 2)
 data.setCell(2, 1, 'closeLogs')
 data.setCell(2, 2, 'newMMIS_Subsystems.Login')
@@ -324,7 +334,7 @@ window.suiteTableData['NewMMIS_regression_test_suite']= { tableData: data, table
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 32 seconds</span>
+              <span class="suite-total-time">Total running time: 2 seconds</span>
               <div id="times-div-NewMMIS_regression_test_suite">
               </div> <!-- times-div-NewMMIS_regression_test_suite -->
             </div> <!-- times-div -->
@@ -338,7 +348,7 @@ return data;
             <div class="reporter-method-div">
               <span class="reporter-method-name">testLoginBase</span>
               <div class="reporter-method-output-div">
-                <span class="reporter-method-output">1.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_15_Apr_2026__12_12_25PM_192.168.1.130_TC (test_case_number).png</span>
+                <span class="reporter-method-output">1.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_17_Apr_2026__12_10_13PM_192.168.1.130_TC (test_case_number).png</span>
               </div> <!-- reporter-method-output-div -->
             </div> <!-- reporter-method-div -->
           </div> <!-- main-panel-content rounded-window-bottom -->
@@ -368,17 +378,17 @@ return data;
               <div class="ignored-methods-div">
                 <span class="ignored-method-name">test46053</span>
                 <br/>
-                <span class="ignored-method-name">test46052</span>
-                <br/>
                 <span class="ignored-method-name">test31229</span>
                 <br/>
                 <span class="ignored-method-name">test32318</span>
                 <br/>
-                <span class="ignored-method-name">test46051</span>
+                <span class="ignored-method-name">test46052</span>
                 <br/>
                 <span class="ignored-method-name">test32317</span>
                 <br/>
                 <span class="ignored-method-name">test35949</span>
+                <br/>
+                <span class="ignored-method-name">test46051</span>
                 <br/>
                 <span class="ignored-method-name">test27408</span>
                 <br/>
@@ -394,31 +404,31 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test27405</span>
                 <br/>
-                <span class="ignored-method-name">test31343</span>
-                <br/>
                 <span class="ignored-method-name">test31222</span>
+                <br/>
+                <span class="ignored-method-name">test31343</span>
                 <br/>
                 <span class="ignored-method-name">test35704</span>
                 <br/>
                 <span class="ignored-method-name">test32310</span>
                 <br/>
-                <span class="ignored-method-name">test46050</span>
-                <br/>
                 <span class="ignored-method-name">test32316</span>
                 <br/>
-                <span class="ignored-method-name">test31226</span>
+                <span class="ignored-method-name">test46050</span>
                 <br/>
                 <span class="ignored-method-name">test32315</span>
                 <br/>
-                <span class="ignored-method-name">test31225</span>
+                <span class="ignored-method-name">test31226</span>
                 <br/>
                 <span class="ignored-method-name">test32314</span>
                 <br/>
-                <span class="ignored-method-name">test31345</span>
+                <span class="ignored-method-name">test31225</span>
                 <br/>
                 <span class="ignored-method-name">test32313</span>
                 <br/>
                 <span class="ignored-method-name">test31224</span>
+                <br/>
+                <span class="ignored-method-name">test31345</span>
                 <br/>
                 <span class="ignored-method-name">test46054</span>
                 <br/>
@@ -428,13 +438,13 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test32254b</span>
                 <br/>
-                <span class="ignored-method-name">test31344</span>
-                <br/>
                 <span class="ignored-method-name">test32312</span>
                 <br/>
-                <span class="ignored-method-name">test46048</span>
+                <span class="ignored-method-name">test31344</span>
                 <br/>
                 <span class="ignored-method-name">test25474</span>
+                <br/>
+                <span class="ignored-method-name">test46048</span>
                 <br/>
                 <span class="ignored-method-name">test23977</span>
                 <br/>
@@ -448,9 +458,9 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test35715</span>
                 <br/>
-                <span class="ignored-method-name">test32321</span>
-                <br/>
                 <span class="ignored-method-name">test32200</span>
+                <br/>
+                <span class="ignored-method-name">test32321</span>
                 <br/>
                 <span class="ignored-method-name">test32320</span>
                 <br/>
@@ -510,9 +520,9 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test38923</span>
                 <br/>
-                <span class="ignored-method-name">test32012</span>
-                <br/>
                 <span class="ignored-method-name">test31165</span>
+                <br/>
+                <span class="ignored-method-name">test32012</span>
                 <br/>
                 <span class="ignored-method-name">test35885</span>
                 <br/>
@@ -556,17 +566,17 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test31171</span>
                 <br/>
-                <span class="ignored-method-name">test32267</span>
-                <br/>
                 <span class="ignored-method-name">test32388</span>
                 <br/>
                 <span class="ignored-method-name">test31178</span>
                 <br/>
+                <span class="ignored-method-name">test32267</span>
+                <br/>
                 <span class="ignored-method-name">test32387</span>
                 <br/>
-                <span class="ignored-method-name">test32265</span>
-                <br/>
                 <span class="ignored-method-name">test31176</span>
+                <br/>
+                <span class="ignored-method-name">test32265</span>
                 <br/>
                 <span class="ignored-method-name">test32196A</span>
                 <br/>
@@ -602,19 +612,19 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test34305a</span>
                 <br/>
-                <span class="ignored-method-name">test32268</span>
-                <br/>
                 <span class="ignored-method-name">test31179</span>
                 <br/>
                 <span class="ignored-method-name">test32389</span>
+                <br/>
+                <span class="ignored-method-name">test32268</span>
                 <br/>
                 <span class="ignored-method-name">test32235_PAS</span>
                 <br/>
                 <span class="ignored-method-name">test26394</span>
                 <br/>
-                <span class="ignored-method-name">test32271</span>
-                <br/>
                 <span class="ignored-method-name">test32392</span>
+                <br/>
+                <span class="ignored-method-name">test32271</span>
                 <br/>
                 <span class="ignored-method-name">test32517</span>
                 <br/>
@@ -662,15 +672,15 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test31800</span>
                 <br/>
-                <span class="ignored-method-name">test32212</span>
-                <br/>
                 <span class="ignored-method-name">test31244</span>
                 <br/>
-                <span class="ignored-method-name">test32210</span>
+                <span class="ignored-method-name">test32212</span>
                 <br/>
                 <span class="ignored-method-name">test31363</span>
                 <br/>
                 <span class="ignored-method-name">test35963</span>
+                <br/>
+                <span class="ignored-method-name">test32210</span>
                 <br/>
                 <span class="ignored-method-name">test32217</span>
                 <br/>
@@ -700,9 +710,9 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test27438</span>
                 <br/>
-                <span class="ignored-method-name">test46061</span>
-                <br/>
                 <span class="ignored-method-name">test32349</span>
+                <br/>
+                <span class="ignored-method-name">test46061</span>
                 <br/>
                 <span class="ignored-method-name">test32227</span>
                 <br/>
@@ -754,9 +764,9 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test25992</span>
                 <br/>
-                <span class="ignored-method-name">test31193</span>
-                <br/>
                 <span class="ignored-method-name">test31072</span>
+                <br/>
+                <span class="ignored-method-name">test31193</span>
                 <br/>
                 <span class="ignored-method-name">test41541</span>
                 <br/>
@@ -770,15 +780,15 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test32185d</span>
                 <br/>
-                <span class="ignored-method-name">test31199</span>
-                <br/>
                 <span class="ignored-method-name">test32288</span>
+                <br/>
+                <span class="ignored-method-name">test31199</span>
                 <br/>
                 <span class="ignored-method-name">test32287</span>
                 <br/>
-                <span class="ignored-method-name">test35679</span>
-                <br/>
                 <span class="ignored-method-name">test32185a</span>
+                <br/>
+                <span class="ignored-method-name">test35679</span>
                 <br/>
                 <span class="ignored-method-name">test32185c</span>
                 <br/>
@@ -822,9 +832,9 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test39618</span>
                 <br/>
-                <span class="ignored-method-name">test31322</span>
-                <br/>
                 <span class="ignored-method-name">test31201</span>
+                <br/>
+                <span class="ignored-method-name">test31322</span>
                 <br/>
                 <span class="ignored-method-name">test41498</span>
                 <br/>
@@ -834,9 +844,9 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test31215_PAS</span>
                 <br/>
-                <span class="ignored-method-name">test39053</span>
-                <br/>
                 <span class="ignored-method-name">test31219</span>
+                <br/>
+                <span class="ignored-method-name">test39053</span>
                 <br/>
                 <span class="ignored-method-name">test31258_PAS</span>
                 <br/>
@@ -876,17 +886,17 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test32238_PAS</span>
                 <br/>
-                <span class="ignored-method-name">test31143</span>
-                <br/>
                 <span class="ignored-method-name">test32232</span>
+                <br/>
+                <span class="ignored-method-name">test31143</span>
                 <br/>
                 <span class="ignored-method-name">test34653</span>
                 <br/>
                 <span class="ignored-method-name">test34532</span>
                 <br/>
-                <span class="ignored-method-name">test34533</span>
-                <br/>
                 <span class="ignored-method-name">test34654</span>
+                <br/>
+                <span class="ignored-method-name">test34533</span>
                 <br/>
                 <span class="ignored-method-name">test24068a</span>
                 <br/>
@@ -932,9 +942,9 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test32178A</span>
                 <br/>
-                <span class="ignored-method-name">test35996</span>
-                <br/>
                 <span class="ignored-method-name">test32243</span>
+                <br/>
+                <span class="ignored-method-name">test35996</span>
                 <br/>
                 <span class="ignored-method-name">test32178B</span>
                 <br/>
@@ -950,9 +960,9 @@ return data;
                 <br/>
                 <span class="ignored-method-name">test32179A</span>
                 <br/>
-                <span class="ignored-method-name">test32253</span>
-                <br/>
                 <span class="ignored-method-name">test31164</span>
+                <br/>
+                <span class="ignored-method-name">test32253</span>
                 <br/>
                 <span class="ignored-method-name">test41507</span>
                 <br/>
@@ -1064,59 +1074,59 @@ return data;
             <div class="chronological-class">
               <div class="chronological-class-name">newMMIS_Subsystems.Login</div> <!-- chronological-class-name -->
               <div class="configuration-class before">
-                <span class="method-name">init(AWSMO, chrome)</span>
+                <span class="method-name">init(AWSMO, edge)</span>
                 <span class="method-start">0 ms</span>
               </div> <!-- configuration-class before -->
               <div class="test-method">
                 <span class="method-name">testDBconnect</span>
-                <span class="method-start">13 ms</span>
+                <span class="method-start">26 ms</span>
               </div> <!-- test-method -->
               <div class="test-method">
                 <img src="failed.png">
                 </img>
                 <span class="method-name">testLoginBase</span>
-                <span class="method-start">1257 ms</span>
+                <span class="method-start">1412 ms</span>
               </div> <!-- test-method -->
             </div> <!-- chronological-class -->
             <div class="chronological-class">
               <div class="chronological-class-name">newMMIS_Subsystems.claims</div> <!-- chronological-class-name -->
               <div class="configuration-test before">
                 <span class="method-name">claimsStartup</span>
-                <span class="method-start">32850 ms</span>
+                <span class="method-start">2749 ms</span>
               </div> <!-- configuration-test before -->
-              <div class="configuration-class before">
-                <span class="method-name">init(AWSMO, chrome)</span>
-                <span class="method-start">32908 ms</span>
-              </div> <!-- configuration-class before -->
               <div class="configuration-test before">
                 <span class="method-name">startup</span>
-                <span class="method-start">32908 ms</span>
+                <span class="method-start">2838 ms</span>
               </div> <!-- configuration-test before -->
               <div class="configuration-method before">
                 <img src="failed.png">
                 </img>
                 <span class="method-name">LoginCheck</span>
-                <span class="method-start">32909 ms</span>
+                <span class="method-start">2839 ms</span>
               </div> <!-- configuration-method before -->
+              <div class="configuration-class before">
+                <span class="method-name">init(AWSMO, edge)</span>
+                <span class="method-start">2839 ms</span>
+              </div> <!-- configuration-class before -->
               <div class="test-method">
                 <span class="method-name">test31143edit</span>
-                <span class="method-start">32922 ms</span>
+                <span class="method-start">2851 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-test after">
                 <span class="method-name">teardown</span>
-                <span class="method-start">33140 ms</span>
+                <span class="method-start">3147 ms</span>
               </div> <!-- configuration-test after -->
             </div> <!-- chronological-class -->
             <div class="chronological-class">
               <div class="chronological-class-name">newMMIS_Subsystems.Login</div> <!-- chronological-class-name -->
+              <div class="configuration-class before">
+                <span class="method-name">init(AWSMO, edge)</span>
+                <span class="method-start">3202 ms</span>
+              </div> <!-- configuration-class before -->
               <div class="test-method">
                 <span class="method-name">closeLogs</span>
-                <span class="method-start">33173 ms</span>
+                <span class="method-start">3203 ms</span>
               </div> <!-- test-method -->
-              <div class="configuration-class before">
-                <span class="method-name">init(AWSMO, chrome)</span>
-                <span class="method-start">33173 ms</span>
-              </div> <!-- configuration-class before -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->
       </div> <!-- main-panel-root -->

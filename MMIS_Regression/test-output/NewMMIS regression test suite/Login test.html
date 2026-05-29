@@ -57,9 +57,9 @@ function toggleAllBoxes() {
 <tr>
 <td>Tests passed/Failed/Skipped:</td><td>1/1/0</td>
 </tr><tr>
-<td>Started on:</td><td>Wed Apr 15 12:11:52 EDT 2026</td>
+<td>Started on:</td><td>Fri Apr 17 12:10:10 EDT 2026</td>
 </tr>
-<tr><td>Total time:</td><td>32 seconds (32844 ms)</td>
+<tr><td>Total time:</td><td>2 seconds (2740 ms)</td>
 </tr><tr>
 <td>Included groups:</td><td></td>
 </tr><tr>
@@ -76,34 +76,49 @@ function toggleAllBoxes() {
 </tr>
 <tr>
 <td title='newMMIS_Subsystems.Login.testLoginBase()'><b>testLoginBase</b><br>Test class: newMMIS_Subsystems.Login<br/>
-<a href="#Output-1433568941" onClick='toggleBox("Output-1433568941", this, "Show output", "Hide output");'>Show output</a>
+<a href="#Output-2066366456" onClick='toggleBox("Output-2066366456", this, "Show output", "Hide output");'>Show output</a>
 
-<a href="#Output-1433568941" onClick="toggleAllBoxes();">Show all outputs</a>
-<div class='log' id="Output-1433568941">
-1.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_15_Apr_2026__12_12_25PM_192.168.1.130_TC (test_case_number).png<br/>
+<a href="#Output-2066366456" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-2066366456">
+1.C:\Users\agandhi20\Git\MMIS_Regression\MMIS_Regression\ScreenShots\_17_Apr_2026__12_10_13PM_192.168.1.130_TC (test_case_number).png<br/>
 </div>
 </td>
-<td><div><pre>java.lang.NoSuchMethodError: &apos;com.google.common.collect.ImmutableMap com.google.common.collect.ImmutableMap.of(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)&apos;
-	at org.openqa.selenium.chrome.AddHasCasting.getAdditionalCommands(AddHasCasting.java:38)
-	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.getExtraCommands(ChromeDriver.java:116)
-	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.&lt;init&gt;(ChromeDriver.java:111)
-	at org.openqa.selenium.chrome.ChromeDriver.generateExecutor(ChromeDriver.java:101)
-	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:88)
-	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:84)
-	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:73)
-	at newMMIS_Subsystems.Login.initializeChrome(Unknown Source)
+<td><div><pre>java.lang.NoClassDefFoundError: org/asynchttpclient/DefaultAsyncHttpClientConfig$Builder
+	at org.openqa.selenium.remote.http.netty.NettyClient.createHttpClient(NettyClient.java:77)
+	at org.openqa.selenium.remote.http.netty.NettyClient.&lt;clinit&gt;(NettyClient.java:47)
+	at org.openqa.selenium.remote.http.netty.NettyClient$Factory.createClient(NettyClient.java:135)
+	at org.openqa.selenium.remote.HttpCommandExecutor.&lt;init&gt;(HttpCommandExecutor.java:116)
+	at org.openqa.selenium.remote.HttpCommandExecutor.&lt;init&gt;(HttpCommandExecutor.java:94)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.&lt;init&gt;(DriverCommandExecutor.java:88)
+	at org.openqa.selenium.chromium.ChromiumDriverCommandExecutor.&lt;init&gt;(ChromiumDriverCommandExecutor.java:40)
+	at org.openqa.selenium.edge.EdgeDriver$EdgeDriverCommandExecutor.&lt;init&gt;(EdgeDriver.java:83)
+	at org.openqa.selenium.edge.EdgeDriver.generateExecutor(EdgeDriver.java:73)
+	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:60)
+	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:56)
+	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:48)
+	at newMMIS_Subsystems.Login.initializeEdge(Unknown Source)
 	at newMMIS_Subsystems.Login.initializeBrowser(Unknown Source)
 	at newMMIS_Subsystems.Login.testLoginBase(Unknown Source)
-... Removed 21 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1433568941", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
-<div class='stack-trace' id='stack-trace1433568941'><pre>java.lang.NoSuchMethodError: &apos;com.google.common.collect.ImmutableMap com.google.common.collect.ImmutableMap.of(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)&apos;
-	at org.openqa.selenium.chrome.AddHasCasting.getAdditionalCommands(AddHasCasting.java:38)
-	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.getExtraCommands(ChromeDriver.java:116)
-	at org.openqa.selenium.chrome.ChromeDriver$ChromeDriverCommandExecutor.&lt;init&gt;(ChromeDriver.java:111)
-	at org.openqa.selenium.chrome.ChromeDriver.generateExecutor(ChromeDriver.java:101)
-	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:88)
-	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:84)
-	at org.openqa.selenium.chrome.ChromeDriver.&lt;init&gt;(ChromeDriver.java:73)
-	at newMMIS_Subsystems.Login.initializeChrome(Unknown Source)
+Caused by: java.lang.ClassNotFoundException: org.asynchttpclient.DefaultAsyncHttpClientConfig$Builder
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	... 36 more
+... Removed 21 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace2066366456", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace2066366456'><pre>java.lang.NoClassDefFoundError: org/asynchttpclient/DefaultAsyncHttpClientConfig$Builder
+	at org.openqa.selenium.remote.http.netty.NettyClient.createHttpClient(NettyClient.java:77)
+	at org.openqa.selenium.remote.http.netty.NettyClient.&lt;clinit&gt;(NettyClient.java:47)
+	at org.openqa.selenium.remote.http.netty.NettyClient$Factory.createClient(NettyClient.java:135)
+	at org.openqa.selenium.remote.HttpCommandExecutor.&lt;init&gt;(HttpCommandExecutor.java:116)
+	at org.openqa.selenium.remote.HttpCommandExecutor.&lt;init&gt;(HttpCommandExecutor.java:94)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.&lt;init&gt;(DriverCommandExecutor.java:88)
+	at org.openqa.selenium.chromium.ChromiumDriverCommandExecutor.&lt;init&gt;(ChromiumDriverCommandExecutor.java:40)
+	at org.openqa.selenium.edge.EdgeDriver$EdgeDriverCommandExecutor.&lt;init&gt;(EdgeDriver.java:83)
+	at org.openqa.selenium.edge.EdgeDriver.generateExecutor(EdgeDriver.java:73)
+	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:60)
+	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:56)
+	at org.openqa.selenium.edge.EdgeDriver.&lt;init&gt;(EdgeDriver.java:48)
+	at newMMIS_Subsystems.Login.initializeEdge(Unknown Source)
 	at newMMIS_Subsystems.Login.initializeBrowser(Unknown Source)
 	at newMMIS_Subsystems.Login.testLoginBase(Unknown Source)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
@@ -127,8 +142,13 @@ function toggleAllBoxes() {
 	at org.testng.TestNG.run(TestNG.java:1048)
 	at org.testng.TestNG.privateMain(TestNG.java:1355)
 	at org.testng.TestNG.main(TestNG.java:1324)
+Caused by: java.lang.ClassNotFoundException: org.asynchttpclient.DefaultAsyncHttpClientConfig$Builder
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	... 36 more
 </pre></div></td>
-<td>31</td>
+<td>0</td>
 <td>newMMIS_Subsystems.Login@77167fb7</td></tr>
 </table><p>
 <table width='100%' border='1' class='invocation-passed'>

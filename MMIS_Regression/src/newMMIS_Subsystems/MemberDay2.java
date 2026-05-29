@@ -2,6 +2,7 @@ package newMMIS_Subsystems;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -864,5 +865,8 @@ public class MemberDay2 extends Login{
 		
 		log("Successfully validated that DAILY MA21 ERROR COUNT REPORT has Original Member, Case number and Warning Message");
     }
+    
+
+
     
 }
