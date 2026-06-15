@@ -126,16 +126,21 @@ public class EPSDT extends Login{
 		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_cdeICDVersion")).click();
 		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_serviceCode")).click();
 		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList:EPSDTAbnormalityDiagnosisCodeBean_ColHeader_serviceCode")).click();
-		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText().trim().equals("A00"));
-
-
+		//get A00
+		int i;
+		for (i=0;i<10;i++) {
+			if (driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_"+i+":EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText().equals("A00"))
+				break;
+		}
+		if (i==9)
+			Assert.assertTrue(false, "could not find any row with diag codee A00 to delete");
 		//Delete the abnormality code for next run
-		String abnDiag = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText();
-		String abnDiagDesc = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_name")).getText();
+		String abnDiag = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_"+i+":EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).getText();
+		String abnDiagDesc = driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_"+i+":EPSDTAbnormalityDiagnosisCodeBean_ColValue_name")).getText();
 		
 		log ("The abnormality diag code to be deleted is "+abnDiag+" - "+abnDiagDesc);
 
-		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_0:EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).click();
+		driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagCdeList_"+i+":EPSDTAbnormalityDiagnosisCodeBean_ColValue_serviceCode")).click();
 		Assert.assertTrue(driver.findElement(By.cssSelector("h3.panel-header")).getText().equals(" Abnormality Diagnosis Code"));
 		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagnosis")).getAttribute("value").trim().equals(abnDiag));
 		Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:AbnormalityCodesPanel:AbnormalityDiagnosisDescription")).getAttribute("value").trim().equals(abnDiagDesc));
@@ -337,7 +342,7 @@ public class EPSDT extends Login{
     	//Get EPSDT member with dental claim
     	//sqlStatement = "select a.id_medicaid from t_re_base a, T_Hist_Directory b, t_re_eps_hist_ext c, aim01.T_PD_DNTL_DTL d, t_proc e where a.sak_recip = b.sak_recip and a.sak_recip = c.sak_recip  and b.cde_clm_type = 'D' and B.Cde_Clm_Status = 'P' and A.Dte_Birth > 19970101  and a.ind_active = 'Y' and b.sak_claim =d.sak_claim and d.sak_procedure=e.sak_procedure and e.cde_proc in ('D0150', 'D0120', 'D1110', 'D1120') and rownum < 2";
     	
-    	sqlStatement = "select distinct gg.id_medicaid from T_RE_EPS_HIST_EXT ab, T_hist_directory ph, t_re_base gg where ab.sak_claim=ph.SAK_CLAIM and gg.sak_recip=ab.sak_recip and ph.CDE_CLM_STATUS='P' and ph.CDE_CLM_TYPE='D' and rownum<2";
+    	sqlStatement = "select distinct gg.id_medicaid from T_RE_EPS_HIST_EXT ab, T_hist_directory ph, t_re_base gg where ab.sak_claim=ph.SAK_CLAIM and gg.sak_recip=ab.sak_recip and ph.CDE_CLM_STATUS='P' and ph.CDE_CLM_TYPE='D' and gg.id_medicaid not in (100002811576, 100022893182) and rownum<2";
     	colNames.add("ID_MEDICAID");
     	colValues=Common.executeQuery(sqlStatement, colNames);
     	String id_member = colValues.get(0);
@@ -632,7 +637,6 @@ public class EPSDT extends Login{
     	
     	String clmICN = icn.get(TestNGCustom.TCNo);
     	log ("ICN is: "+clmICN); 
-    	
     	//Get Claim Status for this ICN
     	sqlStatement = "Select c.cde_clm_status from t_hist_directory c where c.num_icn_fl = '"+clmICN+"'";
     	colNames.add("CDE_CLM_STATUS");

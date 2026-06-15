@@ -97,6 +97,9 @@ public class Login  {
 	protected static String OUTPUT_FORMAT = "%-45s: %s";
 	protected static boolean logmode;
 	protected static boolean debugLogmode;
+	
+	//Counter for log verification steps
+	public static int logCounter=0;
 		
 	//environment variable is passed from testng*.xml file do define the environment the
 	//application needs to run e.g. MO,UAT
@@ -515,7 +518,12 @@ public class Login  {
 			out.newLine();
 			out.newLine();
 			out.write(input);
-		} 
+			logCounter=0;
+		} else if(input.contains("Successfully validated")) {
+			logCounter++;
+			out.newLine();
+			out.write(logCounter+". "+ input);
+		}
 		else {
 			out.newLine();
 			out.write(input);
