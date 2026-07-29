@@ -12,6 +12,7 @@ import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
@@ -24,8 +25,6 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-
-	
 	@Listeners({ newMMIS_Subsystems.TestNGCustom.class })
 	public class advSubmitClaims extends Login{
 		public static String sex;
@@ -169,7 +168,13 @@ import org.testng.annotations.Test;
 		//Billing and Services tab data
 		public static void billnSvc(String ct, String provider, String sql, String referral) throws Exception {
 			//Select Billing provider
-			list=new Select(driver.findElement(By.xpath("//select[contains(@id,'billingProviderID')]"))).getOptions();
+			driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+			try {
+				list=new Select(driver.findElement(By.xpath("//select[contains(@id,'billingProviderID')]"))).getOptions();
+			} catch (NoSuchElementException e) {
+				list=new Select(driver.findElement(By.xpath("//select[contains(@id,'claimBillingProviderId')]"))).getOptions();
+			}
+			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 			for (WebElement i:list) 
 				if ((i.getText()).contains(provider)) {
 					i.click();
@@ -287,12 +292,14 @@ import org.testng.annotations.Test;
 		    //Extended Services
 		    driver.findElement(By.id("professionalBillingTab:_MENUITEM_ExtendedServices")).click();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that data was entered without any error on Billing and Services tab");
 			new Select(driver.findElement(By.xpath("//select[contains(@id,'delayReasonCde')]"))).selectByVisibleText(delayRsn);
 		    
 		    //PROCEDURE
 		    driver.findElement(By.id("instExtendedTab:_MENUITEM_Procedures")).click();
 		    Common.getPageError(trgt);
-		    
+		    log("Successfully validated that data was entered without any error on Extended Services tab");
+
 		    sqlStatement="select PROC,DIAG_XREF,CHARGES,UNITS,UNITS_MEAS,EMER,EPSDT,MOD1,MOD2,MOD3,MOD4,FDOS,TDOS,DTL from  R_PROC where TC='"+testCase+"' order by DTL";
 		    dataList = Common.getDBTestData(sqlStatement, 14, Common.connection1);
 		    
@@ -359,11 +366,13 @@ import org.testng.annotations.Test;
 		   //Confirmation Tab
 		    driver.findElement(By.id("proceduresTab:_MENUITEM_Confirmation")).click();
 		    Common.getPageError(trgt);
-		    
+		    log("Successfully validated that data was entered without any error on Procedures tab");
+
 		    //Submit
 		    submit();
 		    resetValues();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that claims was submitted successfully on the Confirmation tab");
 		    
 			//Add to report - This will only execute if calling class is claims.java. See function starting for details.
 			claims.fillReport("prof", CT);
@@ -412,6 +421,8 @@ import org.testng.annotations.Test;
 		    //EXTENDED SERVICES
 		    driver.findElement(By.id("instBillingTab:_MENUITEM_ExtendedServices")).click();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that data was entered without any error on Billing and Services tab");
+
 		    
 		    //Diag codes - Check if ICD9 version and select the ICD 9 radio button then
 		    if (icdVersion9(Common.convertSysdatecustom(fdos)))
@@ -508,6 +519,7 @@ import org.testng.annotations.Test;
 		    //PROCEDURE
 		    driver.findElement(By.id("instExtendedTab:_MENUITEM_Procedures")).click();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that data was entered without any error on Extended Services tab");
 		    
 		    sqlStatement="select PROC,CHARGES,UNITS,UNITS_MEAS,REV,MOD1,MOD2,MOD3,MOD4,FDOS,TDOS,DTL from  R_PROC where TC='"+testCase+"'";
 		    dataList = Common.getDBTestData(sqlStatement, 12, Common.connection1);
@@ -551,11 +563,13 @@ import org.testng.annotations.Test;
 		    //Confirmation Tab
 		    driver.findElement(By.id("proceduresTab:_MENUITEM_Confirmation")).click();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that data was entered without any error on Procedures tab");
 		    
 		    //Submit
 		    submit();
 		    resetValues();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that claims was submitted successfully on the Confirmation tab");
 		    
 			//Add to report
 			claims.fillReport("inst", CT);
@@ -603,6 +617,7 @@ import org.testng.annotations.Test;
 		    //EXTENDED SERVICES
 		    driver.findElement(By.id("instBillingTab:_MENUITEM_ExtendedServices")).click();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that data was entered without any error on Billing and Services tab");
 		    
 		    //Diag codes - Check if ICD9 version and select the ICD 9 radio button then
 		    if (icdVersion9(Common.convertSysdatecustom(fdos)))
@@ -746,7 +761,8 @@ import org.testng.annotations.Test;
 		    //PROCEDURE
 		    driver.findElement(By.id("instExtendedTab:_MENUITEM_Procedures")).click();
 		    Common.getPageError(trgt);
-		    
+		    log("Successfully validated that data was entered without any error on Extended Services tab");
+
 		    sqlStatement="select PROC,CHARGES,UNITS,UNITS_MEAS,REV,MOD1,MOD2,MOD3,MOD4,FDOS,TDOS,DTL from  R_PROC where TC='"+testCase+"'";
 		    dataList = Common.getDBTestData(sqlStatement, 12, Common.connection1);
 		    
@@ -788,11 +804,13 @@ import org.testng.annotations.Test;
 		   //Confirmation Tab
 		    driver.findElement(By.id("proceduresTab:_MENUITEM_Confirmation")).click();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that data was entered without any error on Procedures tab");
 		    
 		    //Submit
 		    submit();
 		    resetValues();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that claims was submitted successfully on the Confirmation tab");
 		    
 			//Add to report
 			claims.fillReport("inst", CT);
@@ -849,7 +867,8 @@ import org.testng.annotations.Test;
 		    //EXTENDED SERVICES
 		    driver.findElement(By.id("instBillingTab:_MENUITEM_ExtendedServices")).click();
 		    Common.getPageError(trgt);
-		    	    
+		    log("Successfully validated that data was entered without any error on Billing and Services tab");
+	    
 		    //Check if ICD9 version and select the ICD 9 radio button then
 		    if (icdVersion9(Common.convertSysdatecustom(fdos)))
 		    	driver.findElement(By.xpath("//input[contains(@name, 'icdVersion') and @value='9']")).click();
@@ -949,6 +968,7 @@ import org.testng.annotations.Test;
 		    //CoB
 		    driver.findElement(By.id("instExtendedTab:_MENUITEM_COB")).click();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that data was entered without any error on Extended Services tab");
 
 //		    //Add CoB Info
 //			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
@@ -1094,6 +1114,7 @@ import org.testng.annotations.Test;
 		    //PROCEDURE
 		    driver.findElement(By.id("cobTab:_MENUITEM_Procedures")).click();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that data was entered without any error on CoB tab");
 		    
 		    sqlStatement="select PROC,CHARGES,UNITS,UNITS_MEAS,REV,MOD1,MOD2,MOD3,MOD4,FDOS,TDOS,DTL from  R_PROC where TC='"+testCase+"'";
 		    dataList = Common.getDBTestData(sqlStatement, 12, Common.connection1);
@@ -1208,7 +1229,8 @@ import org.testng.annotations.Test;
 		   //Confirmation Tab
 		    driver.findElement(By.id("proceduresTab:_MENUITEM_Confirmation")).click();
 		    Common.getPageError(trgt);
-		    		    
+		    log("Successfully validated that data was entered without any error on Procedures tab");
+		    
 		    //Submit
 		    submit();
 		    resetValues();
@@ -1216,7 +1238,8 @@ import org.testng.annotations.Test;
 				return;
 			
 			Common.getPageError(trgt);
-		    
+			log("Successfully validated that claims was submitted successfully on the Confirmation tab");
+			
 			//Add to report
 			claims.fillReport("inst", CT);
 		    
@@ -1654,7 +1677,8 @@ import org.testng.annotations.Test;
 		    //EXTENDED SERVICES
 		    driver.findElement(By.id("instBillingTab:_MENUITEM_ExtendedServices")).click();
 		    Common.getPageError(trgt);
-		    
+		    log("Successfully validated that data was entered without any error on Billing and Services tab");
+
 		    //Add Diagnosis
 		    //Get Principal Diag code
 		    sqlStatement = "select diag,ind from  R_DIAG_INST where diag_type = 'Principal' and TC='"+testCase+"'";
@@ -1715,6 +1739,7 @@ import org.testng.annotations.Test;
 		    //CoB
 		    driver.findElement(By.id("instExtendedTab:_MENUITEM_COB")).click();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that data was entered without any error on Extended Services tab");
 
 //		    //Add CoB Info
 //			driver.findElement(By.xpath("//input[@class='buttonFunctional' and @alt='New Item']")).click();
@@ -1900,7 +1925,8 @@ import org.testng.annotations.Test;
 		    //PROCEDURE
 		    driver.findElement(By.id("cobTab:_MENUITEM_Procedures")).click();
 		    Common.getPageError(trgt);
-		    
+		    log("Successfully validated that data was entered without any error on CoB tab");
+
 		    sqlStatement="select PROC,CHARGES,UNITS,UNITS_MEAS,REV,MOD1,MOD2,MOD3,MOD4,FDOS,TDOS,DTL from  R_PROC where TC='"+testCase+"'";
 		    dataList = Common.getDBTestData(sqlStatement, 12, Common.connection1);
 		    
@@ -2014,11 +2040,13 @@ import org.testng.annotations.Test;
 		   //Confirmation Tab
 		    driver.findElement(By.id("proceduresTab:_MENUITEM_Confirmation")).click();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that data was entered without any error on Procedures tab");
 		    
 		    //Submit
 			driver.findElement(By.xpath("//input[@class='buttonCommand' and @alt='Submit']")).click();
 		    resetValues();
 		    Common.getPageError(trgt);
+		    log("Successfully validated that claims was submitted successfully on the Confirmation tab");
 		    
 			//Add to report
 			claims.fillReport("inst", CT);
@@ -2096,7 +2124,8 @@ import org.testng.annotations.Test;
 		    //CoB
 		    driver.findElement(By.id("professionalBillingTab:_MENUITEM_COB")).click();
 		    Common.getPageError(trgt);
-		    
+		    log("Successfully validated that data was entered without any error on Billing and Services tab");
+
 		    //Add CoB Info
 		    sqlStatement="select TC,CARRIER,RESP,PPAID,NONCOVAMT,PATLIAB,CLMIND,DTL,nvl(cast(remitdt as varchar2(10)), ' ') from  R_COB where TC='"+testCase+"'";
 		    dataList = Common.getDBTestData(sqlStatement, 9, Common.connection1);
@@ -2164,7 +2193,8 @@ import org.testng.annotations.Test;
 		    //PROCEDURE
 		    driver.findElement(By.id("cobTab:_MENUITEM_Procedures")).click();
 		    Common.getPageError(trgt);
-		    
+		    log("Successfully validated that data was entered without any error on CoB tab");
+
 		    sqlStatement="select PROC,DIAG_XREF,CHARGES,UNITS,UNITS_MEAS,EMER,EPSDT,MOD1,MOD2,MOD3,MOD4,FDOS,TDOS,DTL from  R_PROC where TC='"+testCase+"'";
 		    dataList = Common.getDBTestData(sqlStatement, 14, Common.connection1);
 		    
@@ -2305,7 +2335,8 @@ import org.testng.annotations.Test;
 		   //Confirmation Tab
 		    driver.findElement(By.id("proceduresTab:_MENUITEM_Confirmation")).click();
 		    Common.getPageError(trgt);
-		    		    
+		    log("Successfully validated that data was entered without any error on Procedures tab");
+		    
 		    //Submit
 		    submit();
 		    resetValues();
@@ -2313,14 +2344,18 @@ import org.testng.annotations.Test;
 //				return;
 			
 			Common.getPageError(trgt);
-		    
+			log("Successfully validated that claims was submitted successfully on the Confirmation tab");
+			
 			//Add to report
 			claims.fillReport("prof", CT);
 
 		}
 		
 		public static String clmICN(String ct) throws Exception {
-			return driver.findElement(By.xpath("//*[contains(@id,'icnText')]")).getText();
+			String clmICN = driver.findElement(By.xpath("//*[contains(@id,'icnText')]")).getText();
+			log("Successfully validated that ICN was generated. ICN: "+clmICN);
+
+			return clmICN;
 		}
 		
 		
@@ -2350,8 +2385,10 @@ import org.testng.annotations.Test;
 		    driver.findElement(By.id("MMISForm:MMISBodyContent:RfLineItemPanel:RfLineItemDataPanel_UntSvcRequirementQuantity")).clear();
 		    driver.findElement(By.id("MMISForm:MMISBodyContent:RfLineItemPanel:RfLineItemDataPanel_UntSvcRequirementQuantity")).sendKeys(unit);
 		    Common.SaveWarnings();
-		    return driver.findElement(By.xpath("//*[@id='MMISForm:MMISBodyContent:RfInformationBean_DataPanel']/tbody/tr/td/table/tbody/tr/td[1]/table/tbody/tr[2]/td[2]")).getText().trim();
-		   }
+		    String RefferalNum = driver.findElement(By.xpath("//*[@id='MMISForm:MMISBodyContent:RfInformationBean_DataPanel']/tbody/tr/td/table/tbody/tr/td[1]/table/tbody/tr[2]/td[2]")).getText().trim();
+			log("Successfully validated that Referral was generated. Referral no.: "+RefferalNum);
+		    return RefferalNum;
+		}
 
 		public static void resetValues() {
 				pos="11 - OFFICE";

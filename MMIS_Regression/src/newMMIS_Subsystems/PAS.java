@@ -300,7 +300,7 @@ public class PAS extends Login{
 	 driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:ClmIcnNumber")).sendKeys(icn);
 	 driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchBean_CriteriaPanel:SEARCH")).click();
 	 driver.findElement(By.id("MMISForm:MMISBodyContent:ClaimSearchResultsDataTable_0:_id14")).click();
-	 driver.findElement(By.id("MMISForm:MMISBodyContent:UB92ClaimNavigatorPanel:UB92ClaimNavigator:ITM_UB92Claim12")).click();//Clicking Health Program link
+	 driver.findElement(By.linkText("Health Program")).click();
 	 driver.findElement(By.id("MMISForm:MMISBodyContent:HealthProgramPanel:HealthProgramList_0:PaymentInfoBean_ColValue_status")).click();
 	 String RateId=driver.findElement(By.xpath("//*[@id='MMISForm:MMISBodyContent:HealthProgramPanel:PaymentInfoBean_DataPanel']/tbody/tr/td/table/tbody/tr/td[1]/table/tbody/tr[11]/td[2]")).getText().trim();
 	 if (RateId.contains(rateId)) {

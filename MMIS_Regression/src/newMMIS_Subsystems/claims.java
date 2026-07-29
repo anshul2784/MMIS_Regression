@@ -938,7 +938,7 @@ public class claims extends Login{
        	Assert.assertTrue(driver.findElements(By.xpath("//select[@id='MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_QualifyingCode']/option[@selected='selected']")).size()==0, "Rx Qualifier number found. Its should be absent for detail 1");
        	Assert.assertTrue(driver.findElements(By.xpath("//select[@id='MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_UomCode']/option[@selected='selected']")).size()==0, "NDC Units of Measurement found. Its should be absent for detail 1");
        	driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_Quantity")).getAttribute("value").equals(""), "NDC units found. Its should be absent for detail 1");
+       	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_Quantity")).getAttribute("value").equals("0.000"), "NDC units found. Its should be absent for detail 1");
        	Assert.assertTrue(driver.findElement(By.id("MMISForm:MMISBodyContent:PhysicianClaimDetailPanel:PhysicianDetailDataPanel_DisplayPrescriptionDate")).getAttribute("value").equals(""), "NDC Rx Date found. Its should be absent for detail 1");
        	log("No NDC information found on Base App for detail 1");
        	
@@ -7045,7 +7045,6 @@ public class claims extends Login{
  	    	
  	 	      //Verify Edit--- 
  	 	       	chkEdit("inst", "00", "2604", "OTHER PAYER DENIAL NOT PAYABLE");
- 	 	       	
  	   	   //Check that claim is denied
  	       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
  	       	if (!(clmStatus.equals("Denied")))
@@ -12957,6 +12956,7 @@ public class claims extends Login{
 		}
 		
 		//////// Mahammad start 2
+//TODO:New claims test cases
 		
 		@Test
 		public void test26929() throws Exception{
@@ -27445,9 +27445,95 @@ public class claims extends Login{
 	 	    //																		  RAJESH's SUITE END
 	 	    // ********************************************************************* 
 	     
+	 		
+	 	    // ********************************************************************* 
+	 	    //																		  Suraj's SUITE Start
+	 	    // ********************************************************************* 
 	     
 	     
-	     
+	 		@Test
+	 	    public void test43775() throws Exception{
+	 	    	TestNGCustom.TCNo="43775";
+	 	    	log("//TC 43775");
+	 	    	
+	 		    //Get Claims Data
+	 			sqlStatement="select * from R_CLAIMS_BILLING where TC = '43775'";
+	 			colNames.add("TC"); 
+	 			colNames.add("CT");  
+	 			colNames.add("PROV_BILLING"); 
+	 			colNames.add("AMT_BILLED");   
+	 			colNames.add("TOB"); 
+	 			colNames.add("NPI_ATTEND");   
+	 			colNames.add("REFERRAL"); 
+	 			colNames.add("PAS"); 
+	 			colNames.add("FDOS"); 
+	 			colNames.add("TDOS"); 
+	 		    colValues=Common.executeQuery1(sqlStatement, colNames);
+	 		    
+	 		    String TC = colValues.get(0); 
+	 		    String CT = colValues.get(1);  
+	 		    String PROV_BILLING = colValues.get(2); 
+	 		    String AMT_BILLED = colValues.get(3);   
+	 		    String TOB = colValues.get(4); 
+	 		    String NPI_ATTEND = colValues.get(5);   
+	 		    String REFERRAL = colValues.get(6); 
+	 		    String PAS = colValues.get(7); 
+	 		    String fdos = colValues.get(8); 
+	 		    String tdos = colValues.get(9); 
+	 		    
+	 		    String provider=PROV_BILLING.substring(0, PROV_BILLING.length()-1),
+	 				    svcloc=PROV_BILLING.substring(PROV_BILLING.length()-1);
+	 		    
+	 		    String sql = "select /*+ NO_PARALLEL OPT_PARAM('_hash_join_enabled','FALSE') OPT_PARAM('_optimizer_sortmerge_join_enabled','FALSE') OPT_PARAM('_b_tree_bitmap_plans','FALSE') */ base.* from t_re_base base, t_pub_hlth_pgm pgm,t_pub_hlth_aid pubaid," +
+	 					"t_cde_aid aid,t_re_aid_elig elig where " +
+	 					"elig.sak_recip=base.sak_recip " +
+	 					"and pgm.SAK_PUB_HLTH=pubaid.SAK_PUB_HLTH " +
+	 					"and pubaid.SAK_CDE_AID=aid.SAK_CDE_AID "  +
+	 					"and  aid.SAK_CDE_AID= elig.SAK_CDE_AID "  +
+	 					"and pgm. CDE_PGM_HEALTH='STD' " +
+	 					"and elig.DTE_END='22991231' " + 
+	 					"and elig.cde_status1<>'H' " +
+	 					"and not exists ( select sak_recip from t_re_pmp_assign asg where asg.sak_recip=base.sak_recip and asg.dte_end> 20130401) " +
+	 					"and not exists ( select sak_recip from t_re_mds_loc mdsloc where mdsloc.sak_recip=base.sak_recip ) " + //make sure the member is not selected which already has LTC - MDS
+	 					"and not exists ( select sak_recip from t_tpl_resource rs Where rs.Sak_Recip=Base.Sak_Recip) " +
+	 					"and not exists (select sak_recip from t_re_hib hib where hib.sak_recip=base.sak_recip and hib.dte_end> '"+Common.convertDatetoInt(Common.convertSysdatecustom(Integer.parseInt(fdos)))+"') " +
+//	 					"And Not Exists ( Select Sak_Recip From t_hist_directory hist Where hist.Sak_Recip=Base.Sak_Recip) " +
+	 					"and base.ind_active='Y' "+ 
+	 					"and base.sak_recip > dbms_random.value * 6300000 " +
+	 					"and rownum<2 ";
+	 			    
+	 			    //First get the member
+	 				colNames.add("ID_MEDICAID");
+	 				colValues = Common.executeQuery(sql, colNames);
+	 				String mem = colValues.get(0);
+	 				
+	 				//Change the sql to use this member for advSubmitClaims
+	 				sql = "Select * from T_RE_BASE where ID_MEDICAID = " + mem;
+	 			
+	 			// Add MDS LTC
+	 			    addLongTimeCareToSpecificMember(svcloc,provider,mem, fdos);
+	 	 	       	log("Successfully Validated that MDS value I was inserted for member");
+
+	 	 		     
+	 	 		    advSubmitClaims.I(TC, CT, PROV_BILLING, AMT_BILLED, TOB, NPI_ATTEND, REFERRAL, PAS, sql, fdos,tdos);
+	 	 	    	String clmNo = advSubmitClaims.clmICN("inst");
+	 	 	       	log("ICN: "+clmNo);
+	 	 	       	
+	 	 	    	
+	 	 	 	      //Verify Edit--- 
+	 	 	 	       NOTchkEdit("inst", "456");
+	 	 	 	    log("Successfully Validated that edit 456 was not received");
+	 	 	   	   //Check that claim is paid
+	 	 	       	clmStatus = driver.findElement(By.xpath("//*[contains(@id,'claimStatusText')]")).getText();
+	 	 	       	if (!(clmStatus.equals("Paid")))
+	 	 	       		Assert.assertTrue(false, "ICN "+clmNo+" is not PAID. It is "+clmStatus);
+	 	 	       	log("Successfully Validated that The claim is Paid");
+	 	 	       	
+	 	    }
+	 		
+	 	    // ********************************************************************* 
+	 	    //																		  SURAJ's SUITE END
+	 	    // ********************************************************************* 
 	     
 	     
 	     
